@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Enums;
+
+enum MissionType: string
+{
+    // Login streak tracking
+    case LOGIN_STREAK = 'LOGIN_STREAK';
+
+    // XP
+    case XP_TOTAL = 'XP_TOTAL';
+
+    // Posts and Comments
+    case TOTAL_OWNED_POSTS = 'TOTAL_OWNED_POSTS';
+    case TOTAL_MADE_COMMENTS = 'TOTAL_MADE_COMMENTS';
+
+    // Posts Votes
+    case TOTAL_POSTS_VOTES = 'TOTAL_POSTS_VOTES';
+    case MADE_POSTS_VOTE_UPS = 'MADE_POSTS_VOTE_UPS';
+    case MADE_POSTS_VOTE_DOWNS = 'MADE_POSTS_VOTE_DOWNS';
+    case RECEIVED_POSTS_VOTE_UPS = 'RECEIVED_POSTS_VOTE_UPS';
+    case RECEIVED_POSTS_VOTE_DOWNS = 'RECEIVED_POSTS_VOTE_DOWNS';
+
+    // Comments Votes
+    case TOTAL_COMMENTS_VOTES = 'TOTAL_COMMENTS_VOTES';
+    case MADE_COMMENTS_VOTE_UPS = 'MADE_COMMENTS_VOTE_UPS';
+    case MADE_COMMENTS_VOTE_DOWNS = 'MADE_COMMENTS_VOTE_DOWNS';
+    case RECEIVED_COMMENTS_VOTE_UPS = 'RECEIVED_COMMENTS_VOTE_UPS';
+    case RECEIVED_COMMENTS_VOTE_DOWNS = 'RECEIVED_COMMENTS_VOTE_DOWNS';
+
+    // Custom missions
+    case CUSTOM = 'CUSTOM';
+}
