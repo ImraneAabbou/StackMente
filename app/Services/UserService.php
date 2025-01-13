@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\ProviderEmailAlreadyLinked;
 use App\Exceptions\UserNotFound;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Two\User as SocialiteUser;
 
@@ -127,5 +128,37 @@ class UserService
         if ($linkedProviders->count() == 3)
             return true;
         return $linkedProviders->contains($provider);
+    }
+
+    /**
+     * @return Collection<int,User>
+     */
+    static function getBannedUsers(): Collection
+    {
+        return User::onlyTrashed()->get();
+    }
+
+    /*
+     * Bans user (using soft delete)
+     */
+    public function ban(): ?bool
+    {
+        return $this->user->delete();
+    }
+
+    /*
+     * Detects if user is banned or not
+     */
+    public function isBanned(): bool
+    {
+        return !!$this->user->deleted_at;
+    }
+
+    /*
+     * Unban user
+     */
+    public function unban(): void
+    {
+        $this->user->restore();
     }
 }
