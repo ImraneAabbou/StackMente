@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\ProviderEmailAlreadyLinked;
 use App\Exceptions\UserNotFound;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -92,8 +93,28 @@ class UserService
         return $userQuery->count();
     }
 
+    /*
+     * Returns true if the provided user's email
+     * exists in specific users' provider
+     *
+     * @return bool
+     */
+    static function isEmailReservedByProvider(string $provider, string $email): bool
+    {
+        if (!$email)
+            return false;
+
+        $userQuery = User::where('providers->' . $provider . '->email', $email);
+
+        return $userQuery->count();
+    }
+
     public function linkWith(string $provider, SocialiteUser $providedUser): void
     {
+        if (static::isEmailReservedByProvider($provider, $providedUser->email)) {
+            throw new ProviderEmailAlreadyLinked('The provider is already linked to another account');
+        }
+
         $newProviders = collect($this->user->providers);
         $newProviders[$provider] = $providedUser;
         $this->user->providers = $newProviders->toArray();
@@ -103,6 +124,8 @@ class UserService
     public function isLinkedWith(string $provider): bool
     {
         $linkedProviders = collect($this->user->providers)->keys();
-        return !($linkedProviders->count() == 3) && $linkedProviders->contains($provider);
+        if ($linkedProviders->count() == 3)
+            return true;
+        return $linkedProviders->contains($provider);
     }
 }
