@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
 
-    Route::prefix("/auth/{provider}/")->group(function() {
+    Route::prefix("/auth/{provider}/")->whereIn("provider", config("services.providers"))->group(function() {
         Route::get("callback", [SocialiteController::class, "callback"])->name("socialite.callback");
         Route::get("redirect", [SocialiteController::class, "redirect"])->name("socialite.redirect");
     });
