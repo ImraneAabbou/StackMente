@@ -13,6 +13,10 @@ use Laravel\Socialite\Two\User as SocialiteUser;
  */
 class UserService
 {
+    public function __construct(
+        public User $user
+    ) {}
+
     /*
      * find a user by the given provided user
      * or create one if not exists
@@ -86,5 +90,19 @@ class UserService
             ->each(fn($p) => $userQuery->orWhere('providers->' . $p . '->email', $email));
 
         return $userQuery->count();
+    }
+
+    public function linkWith(string $provider, SocialiteUser $providedUser): void
+    {
+        $newProviders = collect($this->user->providers);
+        $newProviders[$provider] = $providedUser;
+        $this->user->providers = $newProviders->toArray();
+        $this->user->save();
+    }
+
+    public function isLinkedWith(string $provider): bool
+    {
+        $linkedProviders = collect($this->user->providers)->keys();
+        return !($linkedProviders->count() == 3) && $linkedProviders->contains($provider);
     }
 }

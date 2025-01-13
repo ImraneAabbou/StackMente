@@ -5,18 +5,17 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+Route::prefix('/auth/{provider}/')->whereIn('provider', config('services.providers'))->group(function () {
+    Route::get('callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
+    Route::get('redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
+});
+
 Route::middleware('guest')->group(function () {
-
-    Route::prefix("/auth/{provider}/")->whereIn("provider", config("services.providers"))->group(function() {
-        Route::get("callback", [SocialiteController::class, "callback"])->name("socialite.callback");
-        Route::get("redirect", [SocialiteController::class, "redirect"])->name("socialite.redirect");
-    });
-
     Route::get('register', [UserController::class, 'create'])
         ->name('register');
 
@@ -38,7 +37,6 @@ Route::middleware('guest')->group(function () {
 
     Route::put('reset-password', [PasswordResetController::class, 'update'])
         ->name('password.store');
-
 });
 
 Route::middleware('auth')->group(function () {
