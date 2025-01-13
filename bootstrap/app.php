@@ -23,8 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->respond(function (Response $response, Throwable $_, Request $request) {
-             /*if (!app()->environment(['local', 'testing']) && in_array($response->getStatusCode(), [500, 503, 404, 403])) {*/
-            if (in_array($response->getStatusCode(), [500, 503, 404, 403])) {
+            if (in_array($response->getStatusCode(), [500, 503, 404, 403]) && config("inertia.enable_custom_error_pages")) {
                 return Inertia::render('Error', ['status' => $response->getStatusCode()])
                     ->toResponse($request)
                     ->setStatusCode($response->getStatusCode());
