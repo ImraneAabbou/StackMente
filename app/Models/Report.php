@@ -17,7 +17,7 @@ class Report extends Model
         'reportable_id',
         'reportable_type',
         'reason',
-        'explaination',
+        'explanation',
     ];
 
     /**
