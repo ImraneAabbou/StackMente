@@ -16,7 +16,7 @@ use Laravel\Socialite\Two\User as SocialiteUser;
 class UserService
 {
     public function __construct(
-        public User $user
+        private User $user
     ) {}
 
     /*
