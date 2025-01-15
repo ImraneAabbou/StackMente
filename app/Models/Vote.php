@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\VotableType;
+use App\Enums\VoteType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +19,10 @@ class Vote extends Model
         'votable_id',
         'votable_type',
         'type',
+    ];
+    protected $casts = [
+        "type" => VoteType::class,
+        "votable_type" => VotableType::class,
     ];
     /**
      * @return MorphTo<Model,Vote>

@@ -23,8 +23,8 @@ class VoteSeeder extends Seeder
                 Vote::create([
                     'user_id' => $userId,
                     'votable_id' => $postId,
-                    'votable_type' => VotableType::POST->value,
-                    'type' => fake()->numberBetween(0, 5) === 4 ? VoteType::DOWN->value : VoteType::UP->value,
+                    'votable_type' => VotableType::POST,
+                    'type' => fake()->numberBetween(0, 5) === 4 ? VoteType::DOWN : VoteType::UP,
                 ]);
             }
         });
@@ -35,8 +35,8 @@ class VoteSeeder extends Seeder
                 Vote::create([
                     'user_id' => $userId,
                     'votable_id' => $commentId,
-                    'votable_type' => VotableType::COMMENT->value,
-                    'type' => fake()->numberBetween(0, 5) === 4 ? VoteType::DOWN->value : VoteType::UP->value,
+                    'votable_type' => VotableType::COMMENT,
+                    'type' => fake()->numberBetween(0, 5) === 4 ? VoteType::DOWN : VoteType::UP,
                 ]);
             }
         });

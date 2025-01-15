@@ -29,7 +29,7 @@ class PostService
      */
     static function getAllDiscussions(): Collection
     {
-        return Post::where('type', PostType::SUBJECT->value)->get();
+        return Post::where('type', PostType::SUBJECT)->get();
     }
 
     /**
@@ -37,7 +37,7 @@ class PostService
      */
     static function getAllQuestions(): Collection
     {
-        return Post::where('type', PostType::QUESTION->value)->get();
+        return Post::where('type', PostType::QUESTION)->get();
     }
 
     /**
@@ -45,6 +45,6 @@ class PostService
      */
     static function getAllArticles(): Collection
     {
-        return Post::where('type', PostType::ARTICLE->value)->get();
+        return Post::where('type', PostType::ARTICLE)->get();
     }
 }

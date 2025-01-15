@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MissionType;
 use Illuminate\Database\Eloquent\Model;
 
 class Mission extends Model
@@ -12,5 +13,9 @@ class Mission extends Model
         'description',
         'type',
         'threshold',
+    ];
+
+    protected $casts = [
+        'type' => MissionType::class
     ];
 }

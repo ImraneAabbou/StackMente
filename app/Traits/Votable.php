@@ -50,7 +50,7 @@ trait Votable
      */
     public function totalUpVotes(): int
     {
-        return $this->votes()->where('type', VoteType::UP->value)->count();
+        return $this->votes()->where('type', VoteType::UP)->count();
     }
 
     /*
@@ -58,7 +58,7 @@ trait Votable
      */
     public function totalDownVotes(): int
     {
-        return $this->votes()->where('type', VoteType::DOWN->value)->count();
+        return $this->votes()->where('type', VoteType::DOWN)->count();
     }
 
     /*
