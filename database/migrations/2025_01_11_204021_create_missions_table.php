@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('description');
             $table->enum('type', array_column(MissionType::cases(), 'value'));
             $table->integer('threshold');
+            $table->integer('xp_reward');
             $table->timestamps();
         });
 

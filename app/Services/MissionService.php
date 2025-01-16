@@ -71,50 +71,88 @@ class MissionService
         $stats = $this->user->stats;
 
         switch ($mission->type) {
+            // Non-configurable missions
+
+            case MissionType::LINKING_WITH_PROVIDERS:
+                $numOfLinkedProviders = collect($this->user->providers)->keys()->count();
+                return $numOfLinkedProviders === $mission->threshold;
+
+            case MissionType::PROFILE_SETUP:
+                $u = $this->user;
+                $isSetup =
+                    $u->email &&
+                    $u->email_verified_at &&
+                    $u->bio &&
+                    $u->password &&
+                    $u->avatar;
+
+                return $isSetup;
+
+            case MissionType::EMAIL_VERIFICATION:
+                $isEmailVerified = !!$this->user->email_verified_at;
+                return $isEmailVerified;
+
+                // Configurable missions
+
             case MissionType::LOGIN_STREAK:
-                return $stats['login']['streak'] <= $mission->threshold;
+                return $stats['login']['streak'] >= $mission->threshold;
+
+            case MissionType::LEVEL:
+                return $stats['level'] >= $mission->threshold;
+
+            case MissionType::TIMESPENT:
+                return $stats['timespent'] >= $mission->threshold;
 
             case MissionType::XP_TOTAL:
-                return $stats['xp']['total'] <= $mission->threshold;
+                return $stats['xp']['total'] >= $mission->threshold;
+
+            case MissionType::XP_WEEKLY:
+                return $stats['xp']['weekly'] >= $mission->threshold;
+
+            case MissionType::XP_MONTHLY:
+                return $stats['xp']['monthly'] >= $mission->threshold;
+
+            case MissionType::XP_YEARLY:
+                return $stats['xp']['yearly'] >= $mission->threshold;
 
             case MissionType::TOTAL_OWNED_POSTS:
-                return $stats['xp']['total'] <= $mission->threshold;
+                return $this->user->posts()->count() >= $mission->threshold;
 
             case MissionType::TOTAL_OWNED_ARTICLES:
                 $totalOwned = $this->user->posts()->where('type', PostType::ARTICLE)->count();
-                return $totalOwned <= $mission->threshold;
+                return $totalOwned >= $mission->threshold;
 
             case MissionType::TOTAL_OWNED_QUESTIONS:
                 $totalOwned = $this->user->posts()->where('type', PostType::QUESTION)->count();
-                return $totalOwned <= $mission->threshold;
+                return $totalOwned >= $mission->threshold;
 
             case MissionType::TOTAL_OWNED_SUBJECTS:
                 $totalOwned = $this->user->posts()->where('type', PostType::SUBJECT)->count();
-                return $totalOwned <= $mission->threshold;
+                return $totalOwned >= $mission->threshold;
 
             case MissionType::TOTAL_MADE_COMMENTS:
-                return $this->user->comments()->count() <= $mission->threshold;
+                return $this->user->comments()->count() >= $mission->threshold;
 
             case MissionType::RECEIVED_POSTS_VOTE_UPS:
                 $totalMarkedComments = $this->user->posts->map(
                     fn(Post $p) => $p->totalUpVotes()
                 )->sum();
 
-                return $totalMarkedComments <= $mission->threshold;
+                return $totalMarkedComments >= $mission->threshold;
 
             case MissionType::RECEIVED_COMMENTS_VOTE_UPS:
                 $totalCommentsVoteUps = $this->user->comments->map(
                     fn(Comment $p) => $p->totalUpVotes()
                 )->sum();
 
-                return $totalCommentsVoteUps <= $mission->threshold;
+                return $totalCommentsVoteUps >= $mission->threshold;
 
             case MissionType::TOTAL_MARKED_COMMENTS:
                 $totalMarkedComments = $this->user->comments->filter(
                     fn(Comment $p) => $p->is_marked
                 )->count();
 
-                return $totalMarkedComments <= $mission->threshold;
+                return $totalMarkedComments >= $mission->threshold;
 
             case MissionType::MADE_POSTS_VOTE_UPS:
                 $totalMadePostsVoteUps = Vote::where([
@@ -123,7 +161,7 @@ class MissionService
                     ['user_id', $this->user->id]
                 ])->count();
 
-                return $totalMadePostsVoteUps <= $mission->threshold;
+                return $totalMadePostsVoteUps >= $mission->threshold;
 
             case MissionType::MADE_POSTS_VOTE_DOWNS:
                 $totalMadePostsVoteDowns = Vote::where([
@@ -132,7 +170,7 @@ class MissionService
                     ['user_id', $this->user->id]
                 ])->count();
 
-                return $totalMadePostsVoteDowns <= $mission->threshold;
+                return $totalMadePostsVoteDowns >= $mission->threshold;
 
             case MissionType::MADE_COMMENTS_VOTE_UPS:
                 $totalMadeCommentsVoteUps = Vote::where([
@@ -141,7 +179,7 @@ class MissionService
                     ['user_id', $this->user->id]
                 ])->count();
 
-                return $totalMadeCommentsVoteUps <= $mission->threshold;
+                return $totalMadeCommentsVoteUps >= $mission->threshold;
 
             case MissionType::MADE_COMMENTS_VOTE_DOWNS:
                 $totalMadeCommentsVoteDowns = Vote::where([
@@ -150,7 +188,7 @@ class MissionService
                     ['user_id', $this->user->id]
                 ])->count();
 
-                return $totalMadeCommentsVoteDowns <= $mission->threshold;
+                return $totalMadeCommentsVoteDowns >= $mission->threshold;
         }
 
         return false;
@@ -171,23 +209,26 @@ class MissionService
 
     /*
      * Syncs user's missions if needed
-     * Returns the result of method shouldSyncMissions
+     * Returns the total of xp reward
      *
-     * @return bool
+     * @return int
      */
-    public function syncMissions(): bool
+    public function syncMissions(): int
     {
         if (!$this->shouldSyncMissions())
-            return false;
+            return 0;
 
-        $this->getNonAchievedMissions()->each(
-            fn(Mission $m) =>
-                $this->shouldMarkAccomplishment($m)
-                    ? $this->markAccomplished($m)
-                    : null
+        $t = $this->getNonAchievedMissions()->reduce(
+            function (int $totalXP, Mission $m) {
+                if (!$this->shouldMarkAccomplishment($m))
+                    return $totalXP;
+                $this->markAccomplished($m);
+                return $totalXP + $m->xp_reward;
+            },
+            0
         );
 
-        return true;
+        return $t;
     }
 
     /*

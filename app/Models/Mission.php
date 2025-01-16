@@ -13,6 +13,7 @@ class Mission extends Model
         'description',
         'type',
         'threshold',
+        'xp_reward',
     ];
 
     protected $casts = [

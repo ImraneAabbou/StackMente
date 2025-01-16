@@ -4,11 +4,20 @@ namespace App\Enums;
 
 enum MissionType: string
 {
-    // Login streak tracking
-    case LOGIN_STREAK = 'LOGIN_STREAK';
+    // Account Related (Non Configurable)
+    case EMAIL_VERIFICATION = 'EMAIL_VERIFICATION';
+    case LINKING_WITH_PROVIDERS = 'LINKING_WITH_PROVIDERS';
+    case PROFILE_SETUP = 'PROFILE_SETUP';
 
-    // XP
+    // Stats
+    case LOGIN_STREAK = 'LOGIN_STREAK';
+    case LEVEL = 'LEVEL';
     case XP_TOTAL = 'XP_TOTAL';
+    case XP_DAILY = 'XP_DAILY';
+    case XP_WEEKLY = 'XP_WEEKLY';
+    case XP_MONTHLY = 'XP_MONTHLY';
+    case XP_YEARLY = 'XP_YEARLY';
+    case TIMESPENT = "TIMESPENT";
 
     // Posts and Comments
     case TOTAL_OWNED_POSTS = 'TOTAL_OWNED_POSTS';
@@ -28,6 +37,4 @@ enum MissionType: string
     case MADE_COMMENTS_VOTE_DOWNS = 'MADE_COMMENTS_VOTE_DOWNS';
     case RECEIVED_COMMENTS_VOTE_UPS = 'RECEIVED_COMMENTS_VOTE_UPS';
 
-    // Custom missions
-    case CUSTOM = 'CUSTOM';
 }
