@@ -11,7 +11,7 @@ use App\Models\Mission;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Vote;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * Class MissionService
@@ -209,26 +209,22 @@ class MissionService
 
     /*
      * Syncs user's missions if needed
-     * Returns the total of xp reward
+     * Returns the missions that were recently marked accomplished
      *
-     * @return int
+     * @return Collection<int,Mission>
      */
-    public function syncMissions(): int
+    public function syncMissions(): Collection
     {
         if (!$this->shouldSyncMissions())
-            return 0;
+            return collect();
 
-        $t = $this->getNonAchievedMissions()->reduce(
-            function (int $totalXP, Mission $m) {
-                if (!$this->shouldMarkAccomplishment($m))
-                    return $totalXP;
-                $this->markAccomplished($m);
-                return $totalXP + $m->xp_reward;
-            },
-            0
-        );
+        $missions = $this
+            ->getNonAchievedMissions()
+            ->filter(fn(Mission $m) => $this->shouldMarkAccomplishment($m));
 
-        return $t;
+        $missions->each(fn(Mission $m) => $this->markAccomplished($m));
+
+        return $missions;
     }
 
     /*
