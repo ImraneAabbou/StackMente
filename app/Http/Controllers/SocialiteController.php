@@ -10,7 +10,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
 {
-    private User|null $user;
+    private ?User $user;
     private UserService $userService;
 
     public function __construct()
