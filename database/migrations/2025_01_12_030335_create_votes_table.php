@@ -16,7 +16,8 @@ return new class extends Migration {
             $table->id();
             $table->morphs('votable');
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->enum('type', array_column(VoteType::cases(), 'value'));
+            $table->enum('type', array_column(VoteType::cases(), 'value'))->nullable();
+            $table->unique(['votable_id', 'votable_type', 'user_id']);
             $table->timestamps();
         });
     }

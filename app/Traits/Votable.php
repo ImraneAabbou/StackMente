@@ -19,14 +19,20 @@ trait Votable
     }
 
     /*
-     * the given user will vote UP/DOWN a votable
+     * The given user will vote UP/DOWN or unvote a votable
+     * Keep type null to unvote
+     *
+     * @param User $user The voter
+     * @param VoteType $type type of the vote, null to unvote
      */
-    public function vote(User $user, string $type): void
+    public function vote(User $user, VoteType $type = null): void
     {
-        $this->votes()->create([
+        $this->votes()->upsert([
+            'votable_id' => $this->id,
+            'votable_type' => self::class,
             'user_id' => $user->id,
             'type' => $type
-        ]);
+        ], ['votable_id', 'votable_type', 'user_id'], ['type']);
     }
 
     /*
@@ -34,7 +40,7 @@ trait Votable
      */
     public function unvote(User $user): void
     {
-        $this->votes()->where('user_id', $user->id)->delete();
+        $this->vote($user);
     }
 
     /*

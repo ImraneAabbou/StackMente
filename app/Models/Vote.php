@@ -4,11 +4,14 @@ namespace App\Models;
 
 use App\Enums\VotableType;
 use App\Enums\VoteType;
+use App\Models\Scopes\NoNullVoteScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Model;
 
+#[ScopedBy([NoNullVoteScope::class])]
 class Vote extends Model
 {
     /** @use HasFactory<\Database\Factories\VoteFactory> */
@@ -20,10 +23,12 @@ class Vote extends Model
         'votable_type',
         'type',
     ];
+
     protected $casts = [
-        "type" => VoteType::class,
-        "votable_type" => VotableType::class,
+        'type' => VoteType::class,
+        'votable_type' => VotableType::class,
     ];
+
     /**
      * @return MorphTo<Model,Vote>
      */
@@ -31,10 +36,12 @@ class Vote extends Model
     {
         return $this->morphTo();
     }
+
     /**
      * @return BelongsTo<User,Vote>
      */
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 }
