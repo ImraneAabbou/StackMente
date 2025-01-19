@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 Route::inertia('/', 'Welcome', [
     'canLogin' => Route::has('login'),
     'canRegister' => Route::has('register'),
-]);
+])->name("landing");
 
-Route::inertia('/dashboard', 'Dashboard')->middleware(['auth', 'verified'])->name('dashboard');
+Route::inertia('/dashboard', 'Dashboard')->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
