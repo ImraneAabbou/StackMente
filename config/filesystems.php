@@ -45,10 +45,10 @@ return [
             'throw' => false,
         ],
 
-        'avatar' => [
+        'images' => [
             'driver' => 'local',
-            'root' => public_path('images/users'),
-            'url' => env('APP_URL').'/images/users/',
+            'root' => public_path('images'),
+            'url' => env('APP_URL').'/images',
             'visibility' => 'public',
             'throw' => false,
         ],
