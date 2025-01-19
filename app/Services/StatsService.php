@@ -68,16 +68,15 @@ class StatsService
 
     /*
      * Sync login streak
-     * returns true if synced and false if not
+     * returns true if incremented and false if not
      *
      * @return bool
      */
     public function syncLoginStreak(): bool
     {
-        $willSync = $this->shouldSyncLoginStreak();
         $stats = $this->user->stats;
 
-        if (!$willSync)
+        if (!$this->shouldSyncLoginStreak())
             $stats['login']['streak_started_at'] = now();
 
         $stats['login']['streak'] = (int) now()->diffInDays(
@@ -90,10 +89,11 @@ class StatsService
         $stats['last_interaction'] = now();
 
         $this->user->stats = $stats;
+        $isChanged = $this->user->isDirty("stats");
         $this->user->save();
         $this->user->refresh();
 
-        return $willSync;
+        return $isChanged;
     }
 
     /*
