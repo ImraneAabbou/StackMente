@@ -24,23 +24,29 @@ trait Votable
      *
      * @param User $user The voter
      * @param VoteType $type type of the vote, null to unvote
+     * @return \App\Models\Vote
      */
-    public function vote(User $user, VoteType $type = null): void
+    public function vote(User $user, VoteType $type = null): Vote
     {
-        $this->votes()->upsert([
-            'votable_id' => $this->id,
-            'votable_type' => self::class,
-            'user_id' => $user->id,
-            'type' => $type
-        ], ['votable_id', 'votable_type', 'user_id'], ['type']);
+        return Vote::updateOrCreate(
+            [
+                'votable_id' => $this->id,
+                'votable_type' => $this->getMorphClass(),
+                'user_id' => $user->id
+            ],
+            [
+                'type' => $type
+            ]
+        );
     }
 
     /*
-     * the given user will unvote the votable
+     * The given user will unvote the votable
+     * @return \App\Models\Vote
      */
-    public function unvote(User $user): void
+    public function unvote(User $user): Vote
     {
-        $this->vote($user);
+        return $this->vote($user);
     }
 
     /*
