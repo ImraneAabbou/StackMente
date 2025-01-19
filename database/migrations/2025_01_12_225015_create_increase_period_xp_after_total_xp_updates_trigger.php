@@ -8,6 +8,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        DB::unprepared('DROP TRIGGER IF EXISTS increase_xp_after_total_update');
         DB::unprepared("
             CREATE TRIGGER increase_xp_after_total_update
             BEFORE UPDATE ON users

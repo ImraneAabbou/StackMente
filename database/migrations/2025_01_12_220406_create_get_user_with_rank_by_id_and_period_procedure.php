@@ -8,6 +8,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        DB::unprepared('DROP PROCEDURE IF EXISTS getUserWithRankById');
         DB::unprepared('
             CREATE PROCEDURE getUserWithRankById(IN user_id INT, IN period VARCHAR(10))
             BEGIN
