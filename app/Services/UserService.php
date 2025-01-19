@@ -27,7 +27,7 @@ class UserService
     static function findOrCreateUserFromProvidedUser(string $provider, SocialiteUser $providedUser): User
     {
         try {
-            $user = static::getUserFromProvidedEmail($provider, $providedUser->getEmail());
+            $user = static::getUserFromProvidedId($provider, $providedUser->getId());
         } catch (UserNotFound) {
             $user = User::create(static::formatProvidedUser($provider, $providedUser));
         }
@@ -35,12 +35,22 @@ class UserService
         return $user;
     }
 
+    /*
+     * Generates a unique username based on the given name
+     *
+     * @return string
+     */
+    static function generateUsernameFromFullname(string $fullname): string
+    {
+        return Str::replace(' ', '', Str::headline($fullname) . Str::random(8));
+    }
+
     /**
      * @return array<string,string>
      */
     static function formatProvidedUser(string $provider, SocialiteUser $providedUser): array
     {
-        $generatedUsername = Str::replace(' ', '', Str::headline($providedUser->getName()) . Str::random(8));
+        $generatedUsername = static::generateUsernameFromFullname($providedUser->getName());
         $email = $providedUser->getEmail() ?? '';
         $email = static::isEmailReserved($email) ? null : $email;
 
@@ -62,11 +72,11 @@ class UserService
      * @throws UserNotFound
      * @return User
      */
-    static function getUserFromProvidedEmail(string $provider, string $email): User
+    static function getUserFromProvidedId(string $provider, string $providerId): User
     {
-        $user = User::where('providers->' . $provider . '->email', $email);
-
-        $user = $user->first();
+        $user = User::withTrashed()  // For banned users
+            ->where('providers->' . $provider . '->id', $providerId)
+            ->first();
 
         if (!$user)
             throw new UserNotFound;
