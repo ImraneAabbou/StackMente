@@ -14,8 +14,9 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,22 +24,30 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userHasPassword = !!$this->user()?->password;
+
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
+            'fullname' => ['required', 'string', 'max:255'],
+            'username' => [
                 'required',
                 'string',
-                'lowercase',
+                'max:25',
+                'regex:/^[a-zA-Z0-9_-]+$/',
+                Rule::unique(User::class)->ignore($this->user()->id),
+            ],
+            'email' => [
+                $this->user()?->email ? 'required' : 'nullable',
+                'string',
                 'email',
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
-            'photo' => ['nullable', 'image'],
-            'current_password' => [
+            'avatar' => ['nullable', 'image'],
+            'current_password' => array_filter([
                 'nullable',
-                'required_with:password',
-                'current_password',
-            ],
+                $userHasPassword ? 'required_with:password' : null,
+                $userHasPassword ? 'current_password' : null,
+            ]),
             'password' => [
                 'nullable',
                 'confirmed',

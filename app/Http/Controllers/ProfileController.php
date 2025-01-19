@@ -3,21 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\RegisterationRequest;
+use App\Http\Requests\DeleteAccountRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\Services\UserService;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class UserController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Display the registration view.
@@ -34,13 +32,15 @@ class UserController extends Controller
      */
     public function store(RegisterationRequest $request): RedirectResponse
     {
-        $user = User::create($request->validated());
+        $validated = $request->validated();
+        $generatedUsername = UserService::generateUsernameFromFullname($validated['fullname']);
 
-        event(new Registered($user));
+        User::create([
+            ...$validated,
+            'username' => $generatedUsername
+        ]);
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        return to_route('login')->with('status', 'account-created');
     }
 
     /**
@@ -50,7 +50,7 @@ class UserController extends Controller
     {
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
-            'status' => session('status'),
+            'hasPassword' => !!$user->password,
         ]);
     }
 
@@ -59,15 +59,17 @@ class UserController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $photo = $request->file('photo');
-        $password = $request->input('password');
+        $user = $request->user();
+        $validated = $request->validated();
+        $validated['avatar'] =
+            $validated['avatar']
+                ? basename($validated['avatar']->store('users', 'images'))
+                : null;
 
-        $request->user()->fill(
-            array_merge(
-                $request->validated(),
-                ['photo' => $photo ? '/storage/' . $photo->store('images', 'public') : null],
-                ['password', $password ?? $user->password]
-            )
+        $validated = array_filter($validated);
+
+        $user->update(
+            $validated,
         );
 
         if ($user->isDirty('email')) {
@@ -76,18 +78,14 @@ class UserController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit');
+        return back()->with('status', 'informations-updated');
     }
 
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(DeleteAccountRequest $request): RedirectResponse
     {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
-
         $user = $request->user();
 
         Auth::logout();
