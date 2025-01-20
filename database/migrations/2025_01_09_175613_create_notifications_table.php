@@ -15,8 +15,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->enum('type', array_column(NotificationType::cases(), 'value'))->default(NotificationType::OTHER->value);
             $table->morphs('notifiable');
-            $table->string('data');
-            $table->string('link')->nullable();
+            $table->string('data', 500);
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });
