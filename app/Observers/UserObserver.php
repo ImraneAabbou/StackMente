@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\User;
+use App\Services\StatsService;
 
 class UserObserver
 {
@@ -27,7 +28,7 @@ class UserObserver
      */
     public function deleted(User $user): void
     {
-        // TODO: reset user's stats
+        (new StatsService($user))->resetStats();
     }
 
     /**
