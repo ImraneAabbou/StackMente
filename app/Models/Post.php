@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Traits\Reportable;
 use App\Traits\Votable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([ObservedBy::class])]
 class Post extends Model
 {
     /** @use HasFactory<\Database\Factories\PostFactory> */

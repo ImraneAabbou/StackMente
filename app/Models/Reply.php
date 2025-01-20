@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Observers\ReplyObserver;
 use App\Traits\Reportable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy(ReplyObserver::class)]
 class Reply extends Model
 {
     /** @use HasFactory<\Database\Factories\ReplyFactory> */
