@@ -3,7 +3,11 @@
 namespace App\Observers;
 
 use App\Actions\SyncEverything;
+use App\Enums\VotableType;
+use App\Enums\VoteType;
+use App\Events\Voted;
 use App\Models\Vote;
+use App\Services\StatsService;
 
 class VoteObserver
 {
@@ -12,9 +16,22 @@ class VoteObserver
      */
     public function created(Vote $vote): void
     {
-        // TODO: voted event (postvoted/commentvoted)
-        // TODO: reward voter
-        // TODO: reward post owner (only if up vote)
+        event(new Voted($vote));
+
+        if ($vote->type === VoteType::UP)
+            (new StatsService($vote->votable->user))
+                ->incrementXPBy(
+                    ($vote->votable->votable_type === VotableType::POST)
+                        ? config('rewards.receive_post_vote')
+                        : config('rewards.receive_comment_vote')
+                );
+
+        (new StatsService($vote->user))
+            ->incrementXPBy(
+                ($vote->votable->votable_type === VotableType::POST)
+                    ? config('rewards.send_post_vote')
+                    : config('rewards.send_comment_vote')
+            );
 
         SyncEverything::execute();
     }
@@ -24,9 +41,20 @@ class VoteObserver
      */
     public function updated(Vote $vote): void
     {
-        // TODO: reward voter
-        // TODO: reward post owner (only if up vote)
-        // TODO: decrese increased xp for post owner (only if down vote or unvote)
+        if ($vote->type === VoteType::UP)
+            (new StatsService($vote->votable->user))
+                ->incrementXPBy(
+                    ($vote->votable->votable_type === VotableType::POST)
+                        ? config('rewards.receive_post_vote')
+                        : config('rewards.receive_comment_vote')
+                );
+        else
+            (new StatsService($vote->votable->user))
+                ->incrementXPBy(
+                    ($vote->votable->votable_type === VotableType::POST)
+                        ? -config('rewards.receive_post_vote')
+                        : -config('rewards.receive_comment_vote')
+                );
 
         SyncEverything::execute();
     }
