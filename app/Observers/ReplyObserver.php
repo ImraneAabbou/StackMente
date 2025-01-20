@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Events\Replied;
 use App\Models\Reply;
 
 class ReplyObserver
@@ -11,7 +12,7 @@ class ReplyObserver
      */
     public function created(Reply $reply): void
     {
-        // TODO: dispatch replied event
+        event(new Replied($reply));
     }
 
     /**

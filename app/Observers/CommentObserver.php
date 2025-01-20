@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Actions\SyncEverything;
+use App\Events\Commented;
 use App\Models\Comment;
+use App\Services\StatsService;
 
 class CommentObserver
 {
@@ -12,8 +14,12 @@ class CommentObserver
      */
     public function created(Comment $comment): void
     {
-        // TODO: dispatch commented event
-        // TODO: reward post owner
+        event(new Commented($comment));
+
+        (new StatsService($comment->post->user))
+            ->incrementXPBy(
+                config('rewards.receive_comment')
+            );
 
         SyncEverything::execute();
     }

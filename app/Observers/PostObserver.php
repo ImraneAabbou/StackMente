@@ -12,8 +12,6 @@ class PostObserver
      */
     public function created(Post $post): void
     {
-        // TODO: dispatch posted event
-
         SyncEverything::execute();
     }
 
