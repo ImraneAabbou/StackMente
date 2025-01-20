@@ -89,7 +89,7 @@ class StatsService
         $stats['last_interaction'] = now();
 
         $this->user->stats = $stats;
-        $isChanged = $this->user->isDirty("stats");
+        $isChanged = $this->user->isDirty('stats');
         $this->user->save();
         $this->user->refresh();
 
@@ -184,5 +184,34 @@ class StatsService
         $growthFactor = 1 + ($currentLevel - $curveLevel) * 0.075;
 
         return $base * 10 + (($currentLevel * $currentLevel) * ($currentLevel - $curveLevel)) * $growthFactor;
+    }
+
+    /**
+     * Reset user's stats
+     *
+     * @return void
+     */
+    public function resetStats(): void
+    {
+        $this->user->stats =
+            json_encode([
+                'xp' => [
+                    'total' => 0,
+                    'daily' => 0,
+                    'weekly' => 0,
+                    'monthly' => 0,
+                    'yearly' => 0,
+                ],
+                'login' => [
+                    'streak' => 0,
+                    'max_streak' => 0,
+                    'streak_started_at' => now(),
+                ],
+                'level' => 1,
+                'timespent' => 0,
+                'last_interaction' => now(),
+            ]);
+
+        $this->user->save();
     }
 }
