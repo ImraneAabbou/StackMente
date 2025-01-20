@@ -15,7 +15,8 @@ class ReplySeeder extends Seeder
     {
         Comment::pluck('id')->each(function ($commentId) {
             Reply::factory(fake()->numberBetween(0, 4))->create([
-                'comment_id' => $commentId
+                'comment_id' => $commentId,
+                'user_id' => fake()->numberBetween(1, 100)
             ]);
         });
     }

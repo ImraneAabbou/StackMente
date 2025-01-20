@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             TagSeeder::class,
             PostSeeder::class,
             CommentSeeder::class,
+            ReplySeeder::class,
             VoteSeeder::class,
             ReportSeeder::class
         ]);
