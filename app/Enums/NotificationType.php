@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum NotificationType: string
 {
-    case ACHIEVEMENT = "ACHIEVEMENT";
+    case MISSION_ACCOMPLISHED = "MISSION_ACCOMPLISHED";
     case COMMENT_RECEIVED = "COMMENT_RECEIVED";
     case REPLY_RECEIVED = "REPLY_RECEIVED";
     case POST_VOTE_RECEIVED = "POST_VOTE_RECEIVED";
