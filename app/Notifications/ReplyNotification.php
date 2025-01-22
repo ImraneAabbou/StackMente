@@ -8,7 +8,6 @@ use App\Models\Reply;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Str;
 
 class ReplyNotification extends Notification
 {
@@ -40,9 +39,9 @@ class ReplyNotification extends Notification
      *
      * @return string
      */
-    public function databaseType(object $notifiable): string
+    public function databaseType(object $notifiable): NotificationType
     {
-        return NotificationType::REPLY_RECEIVED->value;
+        return NotificationType::REPLY_RECEIVED;
     }
 
     /**
@@ -53,18 +52,9 @@ class ReplyNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'post' => [
-                'slug' => $this->post->slug
-            ],
-            'reply' => [
-                'id' => $this->reply->id,
-                'content' => Str::limit($this->reply->content)
-            ],
-            'replier' => [
-                'id' => $this->replier->id,
-                'fullname' => $this->replier->fullname,
-                'avatar' => $this->replier->avatar,
-            ],
+            'post_id' => $this->post->id,
+            'reply_id' =>$this->reply->id,
+            'from_id' => $this->replier->id,
         ];
     }
 }

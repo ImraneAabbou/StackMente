@@ -40,9 +40,9 @@ class CommentNotification extends Notification
      *
      * @return string
      */
-    public function databaseType(object $notifiable): string
+    public function databaseType(object $notifiable): NotificationType
     {
-        return NotificationType::COMMENT_RECEIVED->value;
+        return NotificationType::COMMENT_RECEIVED;
     }
 
     /**
@@ -53,18 +53,9 @@ class CommentNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'post' => [
-                'slug' => $this->post->slug
-            ],
-            'comment' => [
-                'id' => $this->comment->id,
-                'content' => Str::limit($this->comment->content)
-            ],
-            'commenter' => [
-                'id' => $this->commenter->id,
-                'fullname' => $this->commenter->fullname,
-                'avatar' => $this->commenter->avatar,
-            ],
+            'post_id' => $this->post->id,
+            'from_id' => $this->comment->id,
+            'comment_id' => $this->comment->id,
         ];
     }
 }

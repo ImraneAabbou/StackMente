@@ -37,9 +37,9 @@ class PostVotedNotification extends Notification
      *
      * @return string
      */
-    public function databaseType(object $notifiable): string
+    public function databaseType(object $notifiable): NotificationType
     {
-        return NotificationType::POST_VOTE_RECEIVED->value;
+        return NotificationType::POST_VOTE_RECEIVED;
     }
 
     /**
@@ -50,14 +50,8 @@ class PostVotedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'post' => [
-                'slug' => $this->post->slug
-            ],
-            'voter' => [
-                'id' => $this->voter->id,
-                'fullname' => $this->voter->fullname,
-                'avatar' => $this->voter->avatar,
-            ],
+            'post_id' => $this->post->id,
+            'from_id' => $this->voter->id,
         ];
     }
 }

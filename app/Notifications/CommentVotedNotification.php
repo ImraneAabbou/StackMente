@@ -8,7 +8,6 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Str;
 
 class CommentVotedNotification extends Notification
 {
@@ -40,9 +39,9 @@ class CommentVotedNotification extends Notification
      *
      * @return string
      */
-    public function databaseType(object $notifiable): string
+    public function databaseType(object $notifiable): NotificationType
     {
-        return NotificationType::COMMENT_VOTE_RECEIVED->value;
+        return NotificationType::COMMENT_VOTE_RECEIVED;
     }
 
     /**
@@ -53,18 +52,9 @@ class CommentVotedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'post' => [
-                'slug' => $this->post->slug
-            ],
-            'voter' => [
-                'id' => $this->voter->id,
-                'fullname' => $this->voter->fullname,
-                'avatar' => $this->voter->avatar,
-            ],
-            'comment' => [
-                'id' => $this->comment->id,
-                'content' => Str::limit($this->comment->content)
-            ]
+            'post_id' => $this->post->id,
+            'from_id' => $this->voter->id,
+            'comment_id' => $this->comment->id,
         ];
     }
 }
