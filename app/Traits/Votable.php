@@ -52,32 +52,24 @@ trait Votable
     /*
      * is the user already voted on the votable or no
      */
-    public function didUserVoted(User $user): bool
+    public function getUserVote(User $user): ?VoteType
     {
-        return $this->votes()->where('user_id', $user->id)->count();
+        return $this->votes()->select('type')->where('user_id', $user->id)->first()?->type;
     }
 
     /*
      * returns total up votes of the votable
      */
-    public function totalUpVotes(): int
+    public function upVotes(): MorphMany
     {
-        return $this->votes()->where('type', VoteType::UP)->count();
+        return $this->votes()->where('type', VoteType::UP);
     }
 
     /*
      * returns total down votes of the votable
      */
-    public function totalDownVotes(): int
+    public function downVotes(): MorphMany
     {
-        return $this->votes()->where('type', VoteType::DOWN)->count();
-    }
-
-    /*
-     * returns total votes of the votable
-     */
-    public function totalVotes(): int
-    {
-        return $this->totalUpVotes() - $this->totalDownVotes();
+        return $this->votes()->where('type', VoteType::DOWN);
     }
 }

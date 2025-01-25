@@ -135,14 +135,14 @@ class MissionService
 
             case MissionType::RECEIVED_POSTS_VOTE_UPS:
                 $totalMarkedComments = $this->user->posts->map(
-                    fn(Post $p) => $p->totalUpVotes()
+                    fn(Post $p) => $p->upVotes()->count()
                 )->sum();
 
                 return $totalMarkedComments >= $mission->threshold;
 
             case MissionType::RECEIVED_COMMENTS_VOTE_UPS:
                 $totalCommentsVoteUps = $this->user->comments->map(
-                    fn(Comment $p) => $p->totalUpVotes()
+                    fn(Comment $p) => $p->upVotes()->count()
                 )->sum();
 
                 return $totalCommentsVoteUps >= $mission->threshold;

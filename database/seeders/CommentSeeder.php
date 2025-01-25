@@ -17,7 +17,7 @@ class CommentSeeder extends Seeder
      */
     private function getRandomUserIds(): Collection
     {
-        return User::inRandomOrder()->take(fake()->numberBetween(1, 5))->pluck('id');
+        return User::inRandomOrder()->take(fake()->numberBetween(1, 8))->pluck('id');
     }
 
     /**
@@ -27,7 +27,7 @@ class CommentSeeder extends Seeder
     {
         Post::pluck("id")->each(function ($postId) {
             $this->getRandomUserIds()->each(fn($id) =>
-                Comment::factory(fake()->numberBetween(0, 1))->create([
+                Comment::factory(1)->create([
                     'post_id' => $postId,
                     'user_id' => $id,
                 ]));

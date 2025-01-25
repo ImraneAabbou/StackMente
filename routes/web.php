@@ -1,19 +1,19 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'Welcome', [
-    'canLogin' => Route::has('login'),
-    'canRegister' => Route::has('register'),
-]);
+Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts/{post}', [PostController::class, 'show']);
 
-Route::inertia('/home', 'Home')->middleware(['auth'])->name('home');
+Route::post('/posts/{votable}/vote', [PostController::class, 'vote']);
+Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+Route::post('/posts/{post}/comments', [CommentController::class, 'store']);
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
+
+Route::post('/comments/{votable}/vote', [CommentController::class, 'vote']);
+Route::delete('/comments/{votable}/vote', [CommentController::class, 'unvote']);
 
 require __DIR__ . '/auth.php';

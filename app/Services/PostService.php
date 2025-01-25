@@ -16,10 +16,9 @@ class PostService
 {
     public function __construct(
         private Post $post,
-        private Request $request
     ) {}
 
-    /*
+    /**
      * Increments the view if first time or key gets decayed
      * Returns either the view of the given request
      * was counted or not

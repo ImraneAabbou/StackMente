@@ -2,58 +2,90 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
+use App\Http\Requests\Post\StorePostRequest;
+use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Post;
+use App\Services\PostService;
+use App\Traits\VotableCtrl;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PostController extends Controller
 {
+    use VotableCtrl;
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
-        //
-    }
+        $posts_pagination = Post::with('tags')
+            ->withCount(['comments', 'upVotes', 'downVotes'])
+            ->cursorPaginate(15);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return Inertia::render('Posts/Index', [
+            'next_page_url' => $posts_pagination->nextPageUrl(),
+            'posts' => collect($posts_pagination->items())
+                ->map(fn($p) => [
+                    ...$p->toArray(),
+                    'user_vote' => auth()->user()
+                        ? $p->getUserVote(auth()->user())
+                        : null
+                ])
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request): void
     {
-        //
+        Post::create($request->validated());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Post $post, Request $request): Response
     {
-        //
-    }
+        (new PostService($post))
+            ->syncViews($request);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
+        return Inertia::render('Posts/Show', [
+            'post' => [
+                ...$post
+                    ->load(['tags', 'user'])
+                    ->loadCount(['comments', 'upVotes', 'downVotes'])
+                    ->toArray(),
+                'user_vote' => auth()->user() ? $post->getUserVote(auth()->user()) : null
+            ],
+            'comments' => $post
+                ->comments()
+                ->orderByDesc('is_marked')
+                ->orderByDesc('up_votes_count')
+                ->orderBy('down_votes_count')
+                ->with(['user'])
+                ->withCount(['upVotes', 'downVotes', 'replies'])
+                ->get()
+                ->map(
+                    fn($c) => [
+                        ...$c->toArray(),
+                        'user_vote' => auth()->user()
+                            ? $c->getUserVote(auth()->user())
+                            : null
+                    ]
+                ),
+            'is_commented' => auth()->user() ? $post->comments()->where('user_id', auth()->user()->id)->exists() : false
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post): void
     {
-        //
+        $post->update($request->validated());
     }
 
     /**
@@ -61,6 +93,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return back()->with('status', 'deleted-successfuly');
     }
 }

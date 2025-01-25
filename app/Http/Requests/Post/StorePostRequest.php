@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Post;
 
 use App\Enums\PostType;
 use App\Rules\UniquePost;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdatePostRequest extends FormRequest
+class StorePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,7 +29,7 @@ class UpdatePostRequest extends FormRequest
                 'required',
                 'string',
                 'max:200',
-                new UniquePost($this->route('post')->id)
+                new UniquePost
             ],
             'content' => ['required', 'string', 'max:65000'],
             'type' => ['required', Rule::enum(PostType::class)],
