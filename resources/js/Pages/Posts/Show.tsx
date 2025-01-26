@@ -1,5 +1,5 @@
 import { router, useForm, usePage } from "@inertiajs/react";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { Link } from "@inertiajs/react"
 
 export default function PostsIndex() {
@@ -56,84 +56,11 @@ export default function PostsIndex() {
         <h2 className="font-bold text-2xl">Comments</h2>
         <div className="flex gap-4 flex-col">
             {
-                comments.map(c => <div key={c.id} className="p-4 target:border-2" key={c.id} id={`comment-${c.id}`}>
-                    <div className="flex gap-2 items-center">
-                        <img src={"/images/users/" + c.user.avatar} className="size-12 rounded-full" />
-                        {c.is_marked ? <div className="bg-green-600 size-4 inline-flex" /> : null}
-                        <small className="font-bold">{c.user.fullname}</small>
-                        <small>{c.replies_count} replies</small>
-                        {
-                            auth.user?.id === c.user_id
-                            &&
-                            <Link
-                                href={`/comments/${c.id}`}
-                                method="delete"
-                                preserveState={false}
-                                className="text-red-400"
-                            >
-                                delete
-                            </Link>
-                        }
-                    </div>
-                    <p className="ms-14">{c.content}</p>
-                    <div className="flex gap-1 items-center">
-                        <Link
-                            href={`/comments/${c.id}/vote`}
-                            method={c.user_vote === "UP" ? "delete" : "post"}
-                            data={{
-                                type: "UP"
-                            }}
-                            preserveScroll
-                            preserveState={false}
-                            onSuccess={() => router.visit(`#comment-${c.id}`)}
-                            className={c.user_vote === "UP" ? "bg-gray-400 rounded-full p-2" : ""}
-                        >
-                            {c.up_votes_count} up
-                        </Link>
-                        <Link
-                            href={`/comments/${c.id}/vote`}
-                            method={c.user_vote === "DOWN" ? "delete" : "post"}
-                            data={{
-                                type: "DOWN"
-                            }}
-                            preserveScroll
-                            preserveState={false}
-                            onSuccess={() => router.visit(`#comment-${c.id}`)}
-                            className={c.user_vote === "DOWN" ? "bg-gray-400 rounded-full p-2" : ""}
-                        >
-                            {c.down_votes_count} down
-                        </Link>
-                    </div>
-                    <ul className="flex gap-2 flex-col ms-12">{
-                        !!c.replies_count &&
-                        c.replies.map(r => <li key={r.id} className="border-b-black target:border-2" id={`reply-${r.id}`}>
-                            <div className="flex gap-2 items-center">
-                                <img src={"/images/users/" + r.user.avatar} className="size-6 rounded-full" />
-                                <small className="font-bold">{r.user.fullname}</small>
-                                {
-                                    auth.user?.id === r.user_id
-                                    &&
-                                    <Link
-                                        href={`/replies/${r.id}`}
-                                        method="delete"
-                                        preserveState={false}
-                                        className="text-red-400"
-                                    >
-                                        delete
-                                    </Link>
-                                }
-                            </div>
-                            <p className="text-gray-600 text-sm ms-8">
-                                {r.content}
-                            </p>
-                        </li>)
-                    }
-                        <li>
-                            <ReplyingForm action={`/comments/${c.id}/replies`} />
-                        </li>
-                    </ul>
-                </div>
-                )
+                comments
+                    .map(comment => auth.user?.id === comment.user_id
+                        ? <UpdatableComment key={comment.id} comment={comment} action={`/comments/${comment.id}`} />
+                        : <Comment comment={comment} />
+                    )
             }
         </div>
         {
@@ -182,4 +109,233 @@ const ReplyingForm = ({ action }: { action: string }) => {
         <button type="submit">send</button>
         {errors.content && <p className="text-red-400">{errors.content}</p>}
     </form>
+}
+const UpdatableComment = ({ comment, action }) => {
+    const auth = usePage().props.auth
+    const [editable, setEditable] = useState(false)
+    const { errors, data, setData, put, isDirty } = useForm(action, {
+        content: comment.content
+    })
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault()
+
+        if (!isDirty) return setEditable(false)
+
+        put(action, {
+            onSuccess: () => {
+                setEditable(false)
+                router.visit(`#comment-${comment.id}`)
+            }
+
+        })
+    }
+
+    return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
+        <div className="flex gap-2 items-center">
+            <img src={"/images/users/" + comment.user.avatar} className="size-12 rounded-full" />
+            {comment.is_marked ? <div className="bg-green-600 size-4 inline-flex" /> : null}
+            <small className="font-bold">{comment.user.fullname}</small>
+            <small>{comment.replies_count} replies</small>
+            {
+                !editable
+                && <button onClick={() => setEditable(true)}>edit</button>
+            }
+            <Link
+                href={`/comments/${comment.id}`}
+                method="delete"
+                preserveState={false}
+                className="text-red-400"
+            >
+                delete
+            </Link>
+        </div>
+        {
+            editable
+                ? <form onSubmit={handleSubmit}>
+                    <textarea
+                        onChange={e => setData("content", e.target.value)}
+                        value={data.content ?? comment.content}
+                        className="text-gray-600 text-sm ms-8"
+                    />
+                    <button type="submit">save</button>
+                </form>
+                : <p className="ms-16">
+                    {comment.content}
+                </p>
+        }
+        {errors.content && <p className="text-red-400 text-sm">{errors.content}</p>}
+        <div className="flex gap-1 items-center">
+            <Link
+                href={`/comments/${comment.id}/vote`}
+                method={comment.user_vote === "UP" ? "delete" : "post"}
+                data={{
+                    type: "UP"
+                }}
+                preserveScroll
+                preserveState={false}
+                onSuccess={() => router.visit(`#comment-${comment.id}`)}
+                className={comment.user_vote === "UP" ? "bg-gray-400 rounded-full p-2" : ""}
+            >
+                {comment.up_votes_count} up
+            </Link>
+            <Link
+                href={`/comments/${comment.id}/vote`}
+                method={comment.user_vote === "DOWN" ? "delete" : "post"}
+                data={{
+                    type: "DOWN"
+                }}
+                preserveScroll
+                preserveState={false}
+                onSuccess={() => router.visit(`#comment-${comment.id}`)}
+                className={comment.user_vote === "DOWN" ? "bg-gray-400 rounded-full p-2" : ""}
+            >
+                {comment.down_votes_count} down
+            </Link>
+        </div>
+        {
+            comment.replies_count
+                ? <details>
+                    <summary>{comment.replies_count} replies</summary>
+                    <ul className="flex gap-2 flex-col ms-12">
+                        {
+                            comment.replies.map(r => r.user_id === auth.user?.id
+                                ? <UpdatableReply reply={r} action={`/replies/${r.id}`} key={r.id} />
+                                : <Reply reply={r} key={r.id} />
+                            )
+                        }
+                        <li>
+                            <ReplyingForm action={`/comments/${comment.id}/replies`} />
+                        </li>
+                    </ul>
+                </details>
+                : <ReplyingForm action={`/comments/${comment.id}/replies`} />
+        }
+    </div>
+}
+
+const Comment = ({ comment }) => {
+    const auth = usePage().props.auth
+    return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
+        <div className="flex gap-2 items-center">
+            <img src={"/images/users/" + comment.user.avatar} className="size-12 rounded-full" />
+            {comment.is_marked ? <div className="bg-green-600 size-4 inline-flex" /> : null}
+            <small className="font-bold">{comment.user.fullname}</small>
+            <small>{comment.replies_count} replies</small>
+        </div>
+        <p className="ms-14">{comment.content}</p>
+        <div className="flex gap-1 items-center">
+            <Link
+                href={`/comments/${comment.id}/vote`}
+                method={comment.user_vote === "UP" ? "delete" : "post"}
+                data={{
+                    type: "UP"
+                }}
+                preserveScroll
+                preserveState={false}
+                onSuccess={() => router.visit(`#comment-${comment.id}`)}
+                className={comment.user_vote === "UP" ? "bg-gray-400 rounded-full p-2" : ""}
+            >
+                {comment.up_votes_count} up
+            </Link>
+            <Link
+                href={`/comments/${comment.id}/vote`}
+                method={comment.user_vote === "DOWN" ? "delete" : "post"}
+                data={{
+                    type: "DOWN"
+                }}
+                preserveScroll
+                preserveState={false}
+                onSuccess={() => router.visit(`#comment-${comment.id}`)}
+                className={comment.user_vote === "DOWN" ? "bg-gray-400 rounded-full p-2" : ""}
+            >
+                {comment.down_votes_count} down
+            </Link>
+        </div>
+        {
+            comment.replies_count
+                ? <details>
+                    <summary>{comment.replies_count} replies</summary>
+                    <ul className="flex gap-2 flex-col ms-12">
+                        {
+                            comment.replies.map(r => r.user_id === auth.user?.id
+                                ? <UpdatableReply reply={r} action={`/replies/${r.id}`} key={r.id} />
+                                : <Reply reply={r} key={r.id} />
+                            )
+                        }
+                        <li>
+                            <ReplyingForm action={`/comments/${comment.id}/replies`} />
+                        </li>
+                    </ul>
+                </details>
+                : <ReplyingForm action={`/comments/${comment.id}/replies`} />
+        }
+    </div>
+}
+
+const UpdatableReply = ({ reply, action }) => {
+    const [editable, setEditable] = useState(false)
+    const { errors, data, setData, put, isDirty } = useForm(action, {
+        content: reply.content
+    })
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault()
+
+        if (!isDirty) return setEditable(false)
+
+        put(action, {
+            onSuccess: () => {
+                setEditable(false)
+                router.visit(`#reply-${reply.id}`)
+            }
+
+        })
+    }
+
+    return <li className="border-b-black target:border-2" id={`reply-${reply.id}`}>
+        <div className="flex gap-2 items-center">
+            <img src={"/images/users/" + reply.user.avatar} className="size-6 rounded-full" />
+            <small className="font-bold">{reply.user.fullname}</small>
+            {
+                !editable
+                && <button onClick={() => setEditable(true)}>edit</button>
+            }
+            <Link
+                href={`/replies/${reply.id}`}
+                method="delete"
+                preserveState={false}
+                className="text-red-400"
+            >
+                delete
+            </Link>
+        </div>
+        {
+            editable
+                ? <form onSubmit={handleSubmit}>
+                    <input
+                        onChange={e => setData("content", e.target.value)}
+                        value={data.content ?? reply.content}
+                        className="text-gray-600 text-sm ms-8"
+                    />
+                    <button type="submit">save</button>
+                </form>
+                : <p>
+                    {reply.content}
+                </p>
+        }
+        {errors.content && <p className="text-red-400 text-sm">{errors.content}</p>}
+    </li>
+}
+
+const Reply = ({ reply }) => {
+    return <li className="border-b-black target:border-2" id={`reply-${reply.id}`}>
+        <div className="flex gap-2 items-center">
+            <img src={"/images/users/" + reply.user.avatar} className="size-6 rounded-full" />
+            <small className="font-bold">{reply.user.fullname}</small>
+        </div>
+        <p className="text-gray-600 text-sm ms-8">
+            {reply.content}
+        </p>
+    </li>
 }

@@ -22,12 +22,14 @@ Route::post('/posts/{votable}/vote', [PostController::class, 'vote']);
 Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote']);
 
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::put('/comments/{comment}', [CommentController::class, 'update']);
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
 
 Route::post('/comments/{votable}/vote', [CommentController::class, 'vote']);
 Route::delete('/comments/{votable}/vote', [CommentController::class, 'unvote']);
 
 Route::post('/comments/{comment}/replies', [ReplyController::class, 'store'])->name('comments.store');
+Route::put('/replies/{reply}', [ReplyController::class, 'update']);
 Route::delete('/replies/{reply}', [ReplyController::class, 'destroy']);
 
 
