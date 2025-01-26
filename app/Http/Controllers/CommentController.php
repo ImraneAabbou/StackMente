@@ -16,12 +16,14 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Post $post, StoreCommentRequest $request): void
+    public function store(Post $post, StoreCommentRequest $request): RedirectResponse
     {
         $post->comments()->create([
             ...$request->validated(),
             'user_id' => auth()->user()->id,
         ]);
+
+        return back()->with("status", "commented");
     }
 
     /**

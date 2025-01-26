@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\PostType;
 use App\Traits\Reportable;
 use App\Traits\Votable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,6 +21,7 @@ class Post extends Model
 
     protected $fillable = [
         'title',
+        'user_id',
         'slug',
         'content',
         'views',
@@ -55,6 +58,27 @@ class Post extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(Reply::class);
+    }
+    /**
+     * @return Builder<Post>
+     */
+    static function subjects(): Builder
+    {
+        return Post::where('type', PostType::SUBJECT);
+    }
+    /**
+     * @return Builder<Post>
+     */
+    static function questions(): Builder
+    {
+        return Post::where('type', PostType::QUESTION);
+    }
+    /**
+     * @return Builder<Post>
+     */
+    static function articles(): Builder
+    {
+        return Post::where('type', PostType::ARTICLE);
     }
 
 }

@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\PostType;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -38,29 +36,5 @@ class PostService
             fn() => $this->post->increment('views'),
             10 * 60
         );
-    }
-
-    /**
-     * @return Collection<int,Post>
-     */
-    static function getAllDiscussions(): Collection
-    {
-        return Post::where('type', PostType::SUBJECT)->get();
-    }
-
-    /**
-     * @return Collection<int,Post>
-     */
-    static function getAllQuestions(): Collection
-    {
-        return Post::where('type', PostType::QUESTION)->get();
-    }
-
-    /**
-     * @return Collection<int,Post>
-     */
-    static function getAllArticles(): Collection
-    {
-        return Post::where('type', PostType::ARTICLE)->get();
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('title')->unique();
             $table->string('slug')->unique();
             $table->text('content');
-            $table->unsignedInteger('views');
+            $table->unsignedInteger('views')->default(0);
             $table->timestamps();
         });
     }

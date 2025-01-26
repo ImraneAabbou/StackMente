@@ -2,50 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreReplyRequest;
-use App\Http\Requests\UpdateReplyRequest;
+use App\Http\Requests\Reply\StoreReplyRequest;
+use App\Http\Requests\Reply\UpdateReplyRequest;
+use App\Models\Comment;
 use App\Models\Reply;
 
 class ReplyController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreReplyRequest $request)
+    public function store(StoreReplyRequest $request, Comment $comment)
     {
-        //
-    }
+        $comment->replies()->create([
+            ...$request->validated(),
+            'user_id' => auth()->user()->id
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Reply $reply)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Reply $reply)
-    {
-        //
+        return back()->with('status', 'replied');
     }
 
     /**
@@ -53,7 +27,8 @@ class ReplyController extends Controller
      */
     public function update(UpdateReplyRequest $request, Reply $reply)
     {
-        //
+        $reply->update($request->validated());
+        return back()->with('status', 'updated');
     }
 
     /**
@@ -61,6 +36,8 @@ class ReplyController extends Controller
      */
     public function destroy(Reply $reply)
     {
-        //
+        $reply->delete();
+
+        return back()->with('status', 'deleted');
     }
 }

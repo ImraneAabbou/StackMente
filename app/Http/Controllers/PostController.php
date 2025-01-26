@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PostType;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Post;
 use App\Services\PostService;
 use App\Traits\VotableCtrl;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Str;
 
 class PostController extends Controller
 {
@@ -18,9 +21,19 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $posts_pagination = Post::with('tags')
+        $type = $request->uri()->path();
+
+        $posts = match ($type) {
+            'articles' => Post::articles(),
+            'subjects' => Post::subjects(),
+            'questions' => Post::questions(),
+            default => Post::query()
+        };
+
+        $posts_pagination = $posts
+            ->with('tags')
             ->withCount(['comments', 'upVotes', 'downVotes'])
             ->cursorPaginate(15);
 
@@ -39,9 +52,19 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request): void
+    public function store(StorePostRequest $request): RedirectResponse
     {
-        Post::create($request->validated());
+        $postData = $request->validated();
+
+        $p = Post::create([
+            ...$postData,
+            'slug' => Str::slug($postData['title']),
+            'user_id' => auth()->user()->id
+        ]);
+
+        return to_route("posts.show", ["post" => $p->id])
+            ->withFragment("hfaisdfk")
+            ->with('status', 'posted-successfuly');
     }
 
     /**
@@ -65,7 +88,7 @@ class PostController extends Controller
                 ->orderByDesc('is_marked')
                 ->orderByDesc('up_votes_count')
                 ->orderBy('down_votes_count')
-                ->with(['user'])
+                ->with(['user', 'replies.user'])
                 ->withCount(['upVotes', 'downVotes', 'replies'])
                 ->get()
                 ->map(
@@ -91,7 +114,7 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post): RedirectResponse
     {
         $post->delete();
         return back()->with('status', 'deleted-successfuly');
