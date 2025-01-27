@@ -54,7 +54,7 @@ class ReplyNotification extends Notification
         return [
             'post_id' => $this->post->id,
             'reply_id' =>$this->reply->id,
-            'from_id' => $this->replier->id,
+            'user_id' => $this->replier->id,
         ];
     }
 }

@@ -53,7 +53,7 @@ class CommentVotedNotification extends Notification
     {
         return [
             'post_id' => $this->post->id,
-            'from_id' => $this->voter->id,
+            'user_id' => $this->voter->id,
             'comment_id' => $this->comment->id,
         ];
     }

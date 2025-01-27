@@ -54,7 +54,7 @@ class CommentNotification extends Notification
     {
         return [
             'post_id' => $this->post->id,
-            'from_id' => $this->comment->id,
+            'user_id' => $this->comment->id,
             'comment_id' => $this->comment->id,
         ];
     }
