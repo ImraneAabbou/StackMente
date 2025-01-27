@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Comment;
 use App\Models\Reply;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class ReplySeeder extends Seeder
@@ -14,10 +15,12 @@ class ReplySeeder extends Seeder
     public function run(): void
     {
         Comment::pluck('id')->each(function ($commentId) {
-            Reply::factory(fake()->numberBetween(0, 4))->create([
-                'comment_id' => $commentId,
-                'user_id' => fake()->numberBetween(1, 100)
-            ]);
+            collect(range(0, fake()->numberBetween(0, 4)))
+                ->each(fn() =>
+                    Reply::factory()->create([
+                        'comment_id' => $commentId,
+                        'user_id' => User::inRandomOrder()->first()
+                    ]));
         });
     }
 }
