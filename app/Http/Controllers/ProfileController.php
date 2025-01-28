@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\RegisterationRequest;
-use App\Http\Requests\DeleteAccountRequest;
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\Profile\DeleteAccountRequest;
+use App\Http\Requests\Profile\ProfileUpdateRequest;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Contracts\Auth\Authenticatable;
