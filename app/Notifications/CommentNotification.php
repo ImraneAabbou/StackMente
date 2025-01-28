@@ -8,7 +8,6 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Str;
 
 class CommentNotification extends Notification
 {
@@ -54,7 +53,7 @@ class CommentNotification extends Notification
     {
         return [
             'post_id' => $this->post->id,
-            'user_id' => $this->comment->id,
+            'user_id' => $this->comment->user_id,
             'comment_id' => $this->comment->id,
         ];
     }

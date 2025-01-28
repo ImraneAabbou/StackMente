@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReplyController;
 use Illuminate\Support\Facades\Route;
@@ -32,5 +33,8 @@ Route::post('/comments/{comment}/replies', [ReplyController::class, 'store'])->n
 Route::put('/replies/{reply}', [ReplyController::class, 'update']);
 Route::delete('/replies/{reply}', [ReplyController::class, 'destroy']);
 
+Route::put('/notifications/{id}', [NotificationController::class, 'update']);
+Route::delete('/notifications', [NotificationController::class, 'destroy']);
+Route::inertia('/notifications', 'Notifications/Index');
 
 require __DIR__ . '/auth.php';
