@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->enum('type', array_column(NotificationType::cases(), 'value'))->default(NotificationType::OTHER->value);
+            $table->enum('type', array_column(NotificationType::cases(), 'value'));
             $table->morphs('notifiable');
             $table->string('data', 500);
             $table->timestamp('read_at')->nullable();
