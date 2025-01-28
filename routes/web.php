@@ -6,6 +6,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReplyController;
 use Illuminate\Support\Facades\Route;
 
+Route::inertia("/", "Index");
+
 Route::inertia('/articles/create', 'Posts/CreateArticle')->name('articles.create');
 Route::get('/articles', [PostController::class, 'index'])->name('articles.index');
 
