@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MarkCommentRequest;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
@@ -23,7 +24,7 @@ class CommentController extends Controller
             'user_id' => auth()->user()->id,
         ]);
 
-        return back()->with("status", "commented");
+        return back()->with('status', 'commented');
     }
 
     /**
@@ -42,5 +43,14 @@ class CommentController extends Controller
     {
         $comment->delete();
         return back()->with('status', 'deleted');
+    }
+
+    public function mark(MarkCommentRequest $request, Comment $comment): RedirectResponse
+    {
+        $comment->update(
+            ['is_marked' => !$comment->is_marked]
+        );
+
+        return back()->with('status', $comment->is_marked ? 'marked' : 'unmarked');
     }
 }

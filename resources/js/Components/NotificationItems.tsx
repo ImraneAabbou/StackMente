@@ -179,3 +179,38 @@ export const MissionAccomplished = ({ notification: n }) => {
         }
     />
 }
+
+export const CommentMarked = ({ notification: n }) => {
+    const { t } = useLaravelReactI18n()
+
+    return <Base
+        src={"/images/users/" + n.user.avatar}
+        created_at={n.created_at}
+        read_at={n.read_at}
+        id={n.id}
+        url={`/posts/${n.post.id}#comment-${n.comment.id}`}
+        title={
+            t("notifications.comment_marked", {
+                author_fullname:
+                    <span className="font-bold">
+                        {
+                            n.user.fullname
+                        }
+                    </span>
+                ,
+                post_title:
+                    <span className="font-bold">
+                        {
+                            n.post.title
+                        }
+                    </span>
+            })
+        }
+    >
+        <span
+            className={`text-xs ${!n.read_at ? "font-bold" : "italic"}`}
+        >
+            "{n.comment.content}"
+        </span>
+    </Base>
+}

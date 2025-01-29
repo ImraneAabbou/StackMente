@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Actions\SyncEverything;
 use App\Events\Commented;
+use App\Events\CommentMarked;
 use App\Models\Comment;
 use App\Services\StatsService;
 
@@ -29,7 +30,30 @@ class CommentObserver
      */
     public function updated(Comment $comment): void
     {
-        //
+        if ((!$comment->is_marked))
+            return;
+
+        // unmark old marked comments
+        Comment::whereIn(
+            'id',
+            $comment
+                ->post
+                ->comments
+                ->pluck('id')
+                ->filter(fn(int $id) => $id !== $comment->id)
+        )->update(['is_marked' => false]);
+
+        // notify and reward if not the author
+        if (!($comment->post->user_id === $comment->user_id)) {
+            event(new CommentMarked($comment));
+
+            (new StatsService($comment->user))
+                ->incrementXPBy(
+                    config('rewards.comment_marked')
+                );
+        }
+
+        SyncEverything::execute();
     }
 
     /**

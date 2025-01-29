@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Events\Commented;
+use App\Events\CommentMarked;
 use App\Events\MissionAccomplished;
 use App\Events\Replied;
 use App\Events\Voted;
+use App\Listeners\SendCommentMarkedNotification;
 use App\Listeners\SendCommentNotification;
 use App\Listeners\SendMissionAccomplishedNotification;
 use App\Listeners\SendReplyNotification;
@@ -27,6 +29,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         MissionAccomplished::class => [
             SendMissionAccomplishedNotification::class
+        ],
+        CommentMarked::class => [
+            SendCommentMarkedNotification::class
         ]
     ];
 

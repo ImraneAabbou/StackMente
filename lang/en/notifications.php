@@ -6,4 +6,5 @@ return [
     'comment_received' => ':commenter_fullname commented on your post :post_title',
     'reply_received' => ':replier_fullname replied to your comment on :post_title',
     'mission_accomplished' => 'You accomplished :mission_title mission !',
+    'comment_marked' => ':author_fullname marked your comment on :post_title',
 ];

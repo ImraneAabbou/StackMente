@@ -25,6 +25,7 @@ Route::post('/posts/{votable}/vote', [PostController::class, 'vote']);
 Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote']);
 
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::put('/comments/{comment}/mark', [CommentController::class, 'mark']);
 Route::put('/comments/{comment}', [CommentController::class, 'update']);
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
 

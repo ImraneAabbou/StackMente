@@ -8,7 +8,6 @@ use App\Http\Requests\Profile\ProfileUpdateRequest;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -49,8 +48,11 @@ class ProfileController extends Controller
     public function edit(Authenticatable $user): Response
     {
         return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
-            'hasPassword' => !!$user->password,
+            'auth' => [
+                'user' => [
+                    'hasPassword' => !!$user->password,
+                ]
+            ]
         ]);
     }
 

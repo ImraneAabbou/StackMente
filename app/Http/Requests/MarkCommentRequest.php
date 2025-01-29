@@ -11,16 +11,14 @@ class MarkCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->id === $this->route("post")->user_id;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
-    {
-        return [];
+        return $this->user()?->id === $this->route('comment')->post->user_id &&
+            $this
+                ->route('comment')
+                ->post
+                ->comments
+                ->pluck('id')
+                ->contains(
+                    $this->route('comment')->id
+                );
     }
 }

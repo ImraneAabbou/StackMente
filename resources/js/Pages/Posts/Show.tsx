@@ -1,6 +1,7 @@
 import { router, useForm, usePage } from "@inertiajs/react";
 import { FormEvent, useState } from "react";
 import { Link } from "@inertiajs/react"
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function PostsIndex() {
     const { post, comments, is_commented, auth, status } = usePage().props;
@@ -111,11 +112,13 @@ const ReplyingForm = ({ action }: { action: string }) => {
     </form>
 }
 const UpdatableComment = ({ comment, action }) => {
-    const auth = usePage().props.auth
+    const { auth, post } = usePage().props
+    const isPostOwned = auth.user?.id === post.user_id
     const [editable, setEditable] = useState(false)
     const { errors, data, setData, put, isDirty } = useForm(action, {
         content: comment.content
     })
+    const {t} = useLaravelReactI18n()
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
@@ -134,8 +137,21 @@ const UpdatableComment = ({ comment, action }) => {
     return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
         <div className="flex gap-2 items-center">
             <img src={"/images/users/" + comment.user.avatar} className="size-12 rounded-full" />
-            {comment.is_marked ? <div className="bg-green-600 size-4 inline-flex" /> : null}
-            <small className="font-bold">{comment.user.fullname}</small>
+
+            {
+                isPostOwned
+                    ? <Link href={`/comments/${comment.id}/mark`} method="put" only={["post", "comments"]}>
+                        {
+                            comment.is_marked
+                                ? <div className="bg-green-600 size-8 inline-flex" />
+                                : <div className="bg-gray-600 size-8 inline-flex" />
+                        }
+                    </Link>
+                    : !!comment.is_marked
+                        && <div className="bg-green-600 size-8 inline-flex" />
+            }
+
+            <small className="font-bold">{ comment.user_id === auth.user?.id ? t("common.you") : comment.user.fullname}</small>
             <small>{comment.replies_count} replies</small>
             {
                 !editable
@@ -215,11 +231,24 @@ const UpdatableComment = ({ comment, action }) => {
 }
 
 const Comment = ({ comment }) => {
-    const auth = usePage().props.auth
+    const { auth, post } = usePage().props
+    const isPostOwned = auth.user?.id === post.user_id
+
     return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
         <div className="flex gap-2 items-center">
             <img src={"/images/users/" + comment.user.avatar} className="size-12 rounded-full" />
-            {comment.is_marked ? <div className="bg-green-600 size-4 inline-flex" /> : null}
+            {
+                isPostOwned
+                    ? <Link href={`/comments/${comment.id}/mark`} method="put" only={["post", "comments"]}>
+                        {
+                            comment.is_marked
+                                ? <div className="bg-green-600 size-8 inline-flex" />
+                                : <div className="bg-gray-600 size-8 inline-flex" />
+                        }
+                    </Link>
+                    : !!comment.is_marked
+                        && <div className="bg-green-600 size-8 inline-flex" />
+            }
             <small className="font-bold">{comment.user.fullname}</small>
             <small>{comment.replies_count} replies</small>
         </div>

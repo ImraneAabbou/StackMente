@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link, usePage, usePoll } from "@inertiajs/react";
 import { NotificationType } from "@/types/notification";
-import { CommentReceived, CommentVoteReceived, PostVoteReceived, ReplyReceived, MissionAccomplished } from "@/Components/NotificationItems";
+import { CommentReceived, CommentVoteReceived, PostVoteReceived, ReplyReceived, MissionAccomplished, CommentMarked } from "@/Components/NotificationItems";
 
 export default function NotificationsIndex() {
     const { auth } = usePage().props;
@@ -61,6 +61,12 @@ export default function NotificationsIndex() {
                                     <MissionAccomplished notification={n} />
                                 </li>
 
+                            case NotificationType.COMMENT_MARKED:
+                                return <li
+                                    key={n.id}
+                                >
+                                    <CommentMarked notification={n} />
+                                </li>
                         }
 
                         return
