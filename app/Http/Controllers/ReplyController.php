@@ -6,9 +6,11 @@ use App\Http\Requests\Reply\StoreReplyRequest;
 use App\Http\Requests\Reply\UpdateReplyRequest;
 use App\Models\Comment;
 use App\Models\Reply;
+use App\Traits\ReportableCtrl;
 
 class ReplyController extends Controller
 {
+    use ReportableCtrl;
     /**
      * Store a newly created resource in storage.
      */

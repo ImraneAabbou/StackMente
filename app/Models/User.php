@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use App\Observers\UserObserver;
 use App\Traits\Reportable;
 use Illuminate\Auth\MustVerifyEmail;
@@ -41,6 +42,7 @@ class User extends Authenticatable implements IMustVerifyEmail
             'password' => 'hashed',
             'stats' => 'array',
             'providers' => 'array',
+            'role' => Role::class
         ];
     }
 

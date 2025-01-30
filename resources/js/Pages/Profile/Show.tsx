@@ -1,9 +1,12 @@
+import ReportForm from "@/Components/ReportForm"
 import { PostType } from "@/types/post"
 import useFixedDateFormat from "@/Utils/hooks/useFixedDateFormat"
 import useRelativeDateFormat from "@/Utils/hooks/useRelativeDateFormat"
 import { Link, usePage } from "@inertiajs/react"
+import { useState } from "react"
 
 export default function ProfileShow() {
+    const [showReportForm, setShowReportForm] = useState(false)
     const { user } = usePage().props
     const joinedAt = useRelativeDateFormat(user.created_at)
     const joinningDate = useFixedDateFormat(user.created_at)
@@ -30,7 +33,10 @@ export default function ProfileShow() {
                     </span> {joinningDate} <span className="text-gray-500">({joinedAt})</span>
                 </small>
                 <div className="font-bold">
-                        {user.stats.level}
+                    {user.stats.level}
+                </div>
+                <div>
+                    <button onClick={() => setShowReportForm(!showReportForm)} className="text-red-400">report</button>
                 </div>
             </div>
 
@@ -41,6 +47,12 @@ export default function ProfileShow() {
             </div>
 
         </div>
+
+
+            {
+
+                showReportForm && <ReportForm action={`/profile/${user.id}/reports`} onSuccess={() => setShowReportForm(false)} />
+            }
 
         <div>
             <h2 className="font-bold text-2xl mb-2.5">Missions</h2>

@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\ReportReason;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -14,17 +15,22 @@ trait Reportable
         return $this->morphMany(Report::class, 'reportable');
     }
 
-
     /*
      * report the reportable
      */
-    public function report(User $user, string $reason, string $explanation): void
+    public function report(User $user, ReportReason $reason, string $explanation): void
     {
-        $this->reports()->create([
-            'user_id' => $user->id,
-            'reason' => $reason,
-            'explanation' => $explanation,
-        ]);
+        $this->reports()->updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'reportable_type' => $this->getMorphClass(),
+                'reportable_id' => $this->id,
+            ],
+            [
+                'reason' => $reason,
+                'explanation' => $explanation,
+            ]
+        );
     }
 
     /*

@@ -6,6 +6,7 @@ use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Post;
 use App\Services\PostService;
+use App\Traits\ReportableCtrl;
 use App\Traits\VotableCtrl;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ use Str;
 
 class PostController extends Controller
 {
-    use VotableCtrl;
+    use VotableCtrl, ReportableCtrl;
 
     /**
      * Display a listing of the resource.

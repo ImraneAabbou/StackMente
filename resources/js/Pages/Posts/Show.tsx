@@ -2,9 +2,11 @@ import { router, useForm, usePage } from "@inertiajs/react";
 import { FormEvent, useState } from "react";
 import { Link } from "@inertiajs/react"
 import { useLaravelReactI18n } from "laravel-react-i18n";
+import ReportForm from "@/Components/ReportForm";
 
 export default function PostsIndex() {
     const { post, comments, is_commented, auth, status } = usePage().props;
+    const [showReportForm, setShowReportForm] = useState(false)
 
     return <div>
         {status && <div className="p-4 text-center bg-green-400">{status}</div>}
@@ -53,7 +55,12 @@ export default function PostsIndex() {
                     )
                 }
             </div>
+            <button onClick={() => setShowReportForm(!showReportForm)} className="text-red-400">report</button>
+            <Link href={`/posts/${post.id}/reports`} method="delete">clear reports</Link>
         </div>
+        {
+            showReportForm && <ReportForm action={`/posts/${post.id}/reports`} />
+        }
         <h2 className="font-bold text-2xl">Comments</h2>
         <div className="flex gap-4 flex-col">
             {
@@ -118,7 +125,7 @@ const UpdatableComment = ({ comment, action }) => {
     const { errors, data, setData, put, isDirty } = useForm(action, {
         content: comment.content
     })
-    const {t} = useLaravelReactI18n()
+    const { t } = useLaravelReactI18n()
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
@@ -148,10 +155,12 @@ const UpdatableComment = ({ comment, action }) => {
                         }
                     </Link>
                     : !!comment.is_marked
-                        && <div className="bg-green-600 size-8 inline-flex" />
+                    && <div className="bg-green-600 size-8 inline-flex" />
             }
 
-            <small className="font-bold">{ comment.user_id === auth.user?.id ? t("common.you") : comment.user.fullname}</small>
+            <Link href={`/profile/${comment.user.username}`} className="font-bold">
+                {t("common.you")}
+            </Link>
             <small>{comment.replies_count} replies</small>
             {
                 !editable
@@ -232,6 +241,7 @@ const UpdatableComment = ({ comment, action }) => {
 
 const Comment = ({ comment }) => {
     const { auth, post } = usePage().props
+    const [showReportForm, setShowReportForm] = useState(false)
     const isPostOwned = auth.user?.id === post.user_id
 
     return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
@@ -247,9 +257,11 @@ const Comment = ({ comment }) => {
                         }
                     </Link>
                     : !!comment.is_marked
-                        && <div className="bg-green-600 size-8 inline-flex" />
+                    && <div className="bg-green-600 size-8 inline-flex" />
             }
-            <small className="font-bold">{comment.user.fullname}</small>
+            <Link href={`/profile/${comment.user.username}`} className="font-bold">
+                {comment.user_id === auth.user?.id ? t("common.you") : comment.user.fullname}
+            </Link>
             <small>{comment.replies_count} replies</small>
         </div>
         <p className="ms-14">{comment.content}</p>
@@ -280,7 +292,11 @@ const Comment = ({ comment }) => {
             >
                 {comment.down_votes_count} down
             </Link>
+            <button onClick={() => setShowReportForm(!showReportForm)} className="text-red-400">report</button>
         </div>
+        {
+            showReportForm && <ReportForm action={`/comments/${comment.id}/reports`} />
+        }
         {
             comment.replies_count
                 ? <details>
@@ -304,6 +320,7 @@ const Comment = ({ comment }) => {
 
 const UpdatableReply = ({ reply, action }) => {
     const [editable, setEditable] = useState(false)
+    const {t} = useLaravelReactI18n()
     const { errors, data, setData, put, isDirty } = useForm(action, {
         content: reply.content
     })
@@ -325,7 +342,9 @@ const UpdatableReply = ({ reply, action }) => {
     return <li className="border-b-black target:border-2" id={`reply-${reply.id}`}>
         <div className="flex gap-2 items-center">
             <img src={"/images/users/" + reply.user.avatar} className="size-6 rounded-full" />
-            <small className="font-bold">{reply.user.fullname}</small>
+            <Link href={`/profile/${reply.user.username}`} className="font-bold">
+                {t('common.you')}
+            </Link>
             {
                 !editable
                 && <button onClick={() => setEditable(true)}>edit</button>
@@ -358,13 +377,21 @@ const UpdatableReply = ({ reply, action }) => {
 }
 
 const Reply = ({ reply }) => {
+    const [showReportForm, setShowReportForm] = useState(false)
+
     return <li className="border-b-black target:border-2" id={`reply-${reply.id}`}>
         <div className="flex gap-2 items-center">
             <img src={"/images/users/" + reply.user.avatar} className="size-6 rounded-full" />
-            <small className="font-bold">{reply.user.fullname}</small>
+            <Link href={`/profile/${reply.user.username}`} className="font-bold">
+                {reply.user.fullname}
+            </Link>
         </div>
         <p className="text-gray-600 text-sm ms-8">
             {reply.content}
         </p>
+        <button onClick={() => setShowReportForm(!showReportForm)} className="text-red-400">report</button>
+        {
+            showReportForm && <ReportForm action={`/replies/${reply.id}/reports`} />
+        }
     </li>
 }

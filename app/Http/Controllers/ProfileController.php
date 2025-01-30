@@ -7,6 +7,7 @@ use App\Http\Requests\Profile\DeleteAccountRequest;
 use App\Http\Requests\Profile\ProfileUpdateRequest;
 use App\Models\User;
 use App\Services\UserService;
+use App\Traits\ReportableCtrl;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,7 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    use ReportableCtrl;
     /**
      * Display the registration view.
      */

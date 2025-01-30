@@ -7,12 +7,13 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Traits\ReportableCtrl;
 use App\Traits\VotableCtrl;
 use Illuminate\Http\RedirectResponse;
 
 class CommentController extends Controller
 {
-    use VotableCtrl;
+    use VotableCtrl, ReportableCtrl;
 
     /**
      * Store a newly created resource in storage.
