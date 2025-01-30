@@ -99,4 +99,14 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    /**
+     * Show the user's profile.
+     */
+    public function show(User $user): Response|RedirectResponse
+    {
+        return $user->id === auth()->user()?->id
+            ? to_route("profile.me")
+            : Inertia::render('Profile/Show', ['user' => $user->load(['missions', 'posts'])]);
+    }
 }

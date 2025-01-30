@@ -1,12 +1,15 @@
 <?php
 
+use App\Actions\SyncEverything;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
+use App\Models\Mission;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia("/", "Index");
+Route::inertia('/', 'Index');
 
 Route::inertia('/articles/create', 'Posts/CreateArticle')->name('articles.create');
 Route::get('/articles', [PostController::class, 'index'])->name('articles.index');
@@ -39,5 +42,10 @@ Route::delete('/replies/{reply}', [ReplyController::class, 'destroy']);
 Route::put('/notifications/{id}', [NotificationController::class, 'update']);
 Route::delete('/notifications', [NotificationController::class, 'destroy']);
 Route::inertia('/notifications', 'Notifications/Index');
+
+Route::inertia('/profile/me', 'Profile/Me', ["missions" => Mission::all()])->name("profile.me");
+Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name("profile.show");
+
+Route::get("/sync", fn() => SyncEverything::execute());
 
 require __DIR__ . '/auth.php';
