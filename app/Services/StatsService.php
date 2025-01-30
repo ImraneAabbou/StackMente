@@ -164,26 +164,27 @@ class StatsService
     {
         $currentTotal = $this->user->stats['xp']['total'];
 
-        return $currentTotal >= $this->calculateNextLevelTotalXp();
+        return $currentTotal >= $this->calcToNextLevelTotalXPByLevel($this->user->stats['level']);
     }
 
-    /*
-     * Calculates the next total needed xp for next level
+    /**
+     * Calculates the needed xp total
+     * To reach to pass the given level
+     *
      * @return int
      */
-    public function calculateNextLevelTotalXp(): int
+    static function calcToNextLevelTotalXPByLevel(int $level): int
     {
-        $currentLevel = $this->user->stats['level'];
         $curveLevel = 10;
         $base = 100;
 
-        if ($currentLevel <= $curveLevel) {
-            return $base * ($currentLevel - 1) + 100;
+        if ($level <= $curveLevel) {
+            return $base * ($level - 1) + 100;
         }
 
-        $growthFactor = 1 + ($currentLevel - $curveLevel) * 0.075;
+        $growthFactor = 1 + ($level - $curveLevel) * 0.075;
 
-        return $base * 10 + (($currentLevel * $currentLevel) * ($currentLevel - $curveLevel)) * $growthFactor;
+        return $base * 10 + (($level * $level) * ($level - $curveLevel)) * $growthFactor;
     }
 
     /**
