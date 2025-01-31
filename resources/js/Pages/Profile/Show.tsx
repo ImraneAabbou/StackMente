@@ -55,7 +55,7 @@ export default function ProfileShow() {
 
         {
 
-            showReportForm && <ReportForm action={`/profile/${user.id}/reports`} onSuccess={() => setShowReportForm(false)} />
+            showReportForm && <ReportForm action={`/profile/${user.username}/reports`} onSuccess={() => setShowReportForm(false)} />
         }
 
         <div>

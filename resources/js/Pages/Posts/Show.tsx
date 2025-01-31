@@ -15,7 +15,7 @@ export default function PostsIndex() {
             <p className="text-gray-600">{post.content}</p>
             <div className="flex gap-1 items-center">
                 <Link
-                    href={`/posts/${post.id}/vote`}
+                    href={`/posts/${post.slug}/vote`}
                     method={post.user_vote === "UP" ? "delete" : "post"}
                     data={{
                         type: "UP"
@@ -28,7 +28,7 @@ export default function PostsIndex() {
                     {post.up_votes_count} up
                 </Link>
                 <Link
-                    href={`/posts/${post.id}/vote`}
+                    href={`/posts/${post.slug}/vote`}
                     method={post.user_vote === "DOWN" ? "delete" : "post"}
                     data={{
                         type: "DOWN"
@@ -56,10 +56,10 @@ export default function PostsIndex() {
                 }
             </div>
             <button onClick={() => setShowReportForm(!showReportForm)} className="text-red-400">report</button>
-            <Link href={`/posts/${post.id}/reports`} method="delete">clear reports</Link>
+            <Link href={`/posts/${post.slug}/reports`} method="delete">clear reports</Link>
         </div>
         {
-            showReportForm && <ReportForm action={`/posts/${post.id}/reports`} />
+            showReportForm && <ReportForm action={`/posts/${post.slug}/reports`} />
         }
         <h2 className="font-bold text-2xl">Comments</h2>
         <div className="flex gap-4 flex-col">
@@ -72,7 +72,7 @@ export default function PostsIndex() {
             }
         </div>
         {
-            !is_commented && <CommentingForm action={`/posts/${post.id}/comments`} />
+            !is_commented && <CommentingForm action={`/posts/${post.slug}/comments`} />
         }
     </div>
 }

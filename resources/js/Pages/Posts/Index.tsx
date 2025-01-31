@@ -12,11 +12,11 @@ export default function PostsIndex() {
     return <div>
         {
             posts.map(p => <div className="p-4 mb-8" key={p.id}>
-                <Link href={`/posts/${p.id}`}>{p.type}: {p.title} <small className="text-gray-500">{p.views} views</small></Link>
+                <Link href={`/posts/${p.slug}`}>{p.type}: {p.title} <small className="text-gray-500">{p.views} views</small></Link>
                 <p className="text-gray-600">{p.content}</p>
                 <div className="flex gap-2 items-center">
                     <Link
-                        href={`/posts/${p.id}/vote`}
+                        href={`/posts/${p.slug}/vote`}
                         method={p.user_vote === "UP" ? "delete" : "post"}
                         data={{
                             type: "UP"
@@ -29,7 +29,7 @@ export default function PostsIndex() {
                         {p.up_votes_count} up
                     </Link>
                     <Link
-                        href={`/posts/${p.id}/vote`}
+                        href={`/posts/${p.slug}/vote`}
                         method={p.user_vote === "DOWN" ? "delete" : "post"}
                         data={{
                             type: "DOWN"

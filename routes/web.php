@@ -23,14 +23,14 @@ Route::get('/questions', [PostController::class, 'index'])->name('questions.inde
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
 Route::post('/posts/{reportable}/reports', [PostController::class, 'report']);
 Route::delete('/posts/{reportable}/reports', [PostController::class, 'clearReports'])->can('delete', [Report::class]);
 
 Route::post('/posts/{votable}/vote', [PostController::class, 'vote']);
 Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote']);
 
-Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::post('/comments/{reportable}/reports', [CommentController::class, 'report']);
 Route::delete('/comments/{reportable}/reports', [CommentController::class, 'clearReports'])->can('delete', [Report::class]);
 Route::put('/comments/{comment}/mark', [CommentController::class, 'mark']);

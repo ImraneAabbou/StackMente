@@ -43,7 +43,7 @@ export const PostVoteReceived = ({ notification: n }) => {
         created_at={n.created_at}
         read_at={n.read_at}
         className="flex flex-col"
-        url={`/posts/${n.post.id}`}
+        url={`/posts/${n.post.slug}`}
         title={
             t("notifications.post_vote_received", {
                 voter_fullname:
@@ -73,7 +73,7 @@ export const CommentVoteReceived = ({ notification: n }) => {
         src={"/images/users/" + n.user.avatar}
         created_at={n.created_at} read_at={n.read_at}
         id={n.id}
-        url={`/posts/${n.post.id}#comment-${n.comment.id}`}
+        url={`/posts/${n.post.slug}#comment-${n.comment.id}`}
         title={
             t("notifications.comment_vote_received", {
                 voter_fullname:
@@ -101,7 +101,7 @@ export const CommentReceived = ({ notification: n }) => {
         src={"/images/users/" + n.user.avatar}
         created_at={n.created_at} read_at={n.read_at}
         id={n.id}
-        url={`/posts/${n.post.id}#comment-${n.comment.id}`}
+        url={`/posts/${n.post.slug}#comment-${n.comment.id}`}
         title={
             t("notifications.comment_received", {
                 commenter_fullname:
@@ -130,7 +130,7 @@ export const ReplyReceived = ({ notification: n }) => {
     return <Base
         src={"/images/users/" + n.user.avatar} created_at={n.created_at} read_at={n.read_at}
         id={n.id}
-        url={`/posts/${n.post.id}#reply-${n.reply.id}`}
+        url={`/posts/${n.post.slug}#reply-${n.reply.id}`}
         title={
             t("notifications.reply_received", {
                 replier_fullname:
@@ -188,7 +188,7 @@ export const CommentMarked = ({ notification: n }) => {
         created_at={n.created_at}
         read_at={n.read_at}
         id={n.id}
-        url={`/posts/${n.post.id}#comment-${n.comment.id}`}
+        url={`/posts/${n.post.slug}#comment-${n.comment.id}`}
         title={
             t("notifications.comment_marked", {
                 author_fullname:

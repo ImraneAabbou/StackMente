@@ -42,7 +42,7 @@ class RouteServiceProvider extends ServiceProvider
             }
 
             if (request()->is('posts/*')) {
-                return Post::findOrFail($value);
+                return Post::where("slug", $value)->firstOrFail();
             }
 
             if (request()->is('replies/*')) {
@@ -50,7 +50,7 @@ class RouteServiceProvider extends ServiceProvider
             }
 
             if (request()->is('profile/*')) {
-                return User::findOrFail($value);
+                return User::where("username", $value)->firstOrFail();
             }
 
             abort(404);
