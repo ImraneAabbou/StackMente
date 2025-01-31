@@ -1,7 +1,11 @@
-import { PostType } from "@/types/post"
 import useFixedDateFormat from "@/Utils/hooks/useFixedDateFormat"
 import useRelativeDateFormat from "@/Utils/hooks/useRelativeDateFormat"
 import { Link, usePage } from "@inertiajs/react"
+import {
+    QUESTION,
+    ARTICLE,
+    SUBJECT,
+} from "@/Enums/PostType"
 
 export default function ProfileMe() {
     const { auth: { user }, missions } = usePage().props
@@ -14,9 +18,9 @@ export default function ProfileMe() {
         (user.stats.xp.next_level_total - user.stats.xp.curr_level_total)
     ) * 100
 
-    const questions = user.posts.filter(p => p.type === PostType.QUESTION)
-    const articles = user.posts.filter(p => p.type === PostType.ARTICLE)
-    const subjects = user.posts.filter(p => p.type === PostType.SUBJECT)
+    const questions = user.posts.filter(p => p.type === QUESTION)
+    const articles = user.posts.filter(p => p.type === ARTICLE)
+    const subjects = user.posts.filter(p => p.type === SUBJECT)
 
     console.log(user)
 

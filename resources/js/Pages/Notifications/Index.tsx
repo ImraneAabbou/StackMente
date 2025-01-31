@@ -1,7 +1,21 @@
 import { useState } from "react"
 import { Link, usePage, usePoll } from "@inertiajs/react";
-import { NotificationType } from "@/types/notification";
-import { CommentReceived, CommentVoteReceived, PostVoteReceived, ReplyReceived, MissionAccomplished, CommentMarked } from "@/Components/NotificationItems";
+import {
+    CommentReceived,
+    CommentVoteReceived,
+    PostVoteReceived,
+    ReplyReceived,
+    MissionAccomplished,
+    CommentMarked
+} from "@/Components/NotificationItems";
+import {
+    POST_VOTE_RECEIVED,
+    COMMENT_MARKED,
+    COMMENT_RECEIVED,
+    COMMENT_VOTE_RECEIVED,
+    MISSION_ACCOMPLISHED,
+    REPLY_RECEIVED
+} from "@/Enums/NotificationType"
 
 export default function NotificationsIndex() {
     const { auth } = usePage().props;
@@ -26,42 +40,42 @@ export default function NotificationsIndex() {
                     n => {
 
                         switch (n.type) {
-                            case NotificationType.POST_VOTE_RECEIVED:
+                            case POST_VOTE_RECEIVED:
                                 return <li
                                     key={n.id}
                                 >
                                     <PostVoteReceived notification={n} />
                                 </li>
 
-                            case NotificationType.COMMENT_VOTE_RECEIVED:
+                            case COMMENT_VOTE_RECEIVED:
                                 return <li
                                     key={n.id}
                                 >
                                     <CommentVoteReceived notification={n} />
                                 </li>
 
-                            case NotificationType.COMMENT_RECEIVED:
+                            case COMMENT_RECEIVED:
                                 return <li
                                     key={n.id}
                                 >
                                     <CommentReceived notification={n} />
                                 </li>
 
-                            case NotificationType.REPLY_RECEIVED:
+                            case REPLY_RECEIVED:
                                 return <li
                                     key={n.id}
                                 >
                                     <ReplyReceived notification={n} />
                                 </li>
 
-                            case NotificationType.MISSION_ACCOMPLISHED:
+                            case MISSION_ACCOMPLISHED:
                                 return <li
                                     key={n.id}
                                 >
                                     <MissionAccomplished notification={n} />
                                 </li>
 
-                            case NotificationType.COMMENT_MARKED:
+                            case COMMENT_MARKED:
                                 return <li
                                     key={n.id}
                                 >

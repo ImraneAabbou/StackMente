@@ -1,11 +1,13 @@
-import { PostType } from "@/types/post"
 import { useForm } from "@inertiajs/react"
 import { FormEvent } from "react"
+import {
+    ARTICLE,
+} from "@/Enums/PostType"
 
 export default function PostsCreate() {
     const { errors, data, setData, post } = useForm("CreateArticle", {
         title: "",
-        type: PostType.ARTICLE,
+        type: ARTICLE,
         content: "",
     })
 

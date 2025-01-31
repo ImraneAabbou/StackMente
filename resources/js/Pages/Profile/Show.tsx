@@ -1,9 +1,13 @@
 import ReportForm from "@/Components/ReportForm"
-import { PostType } from "@/types/post"
 import useFixedDateFormat from "@/Utils/hooks/useFixedDateFormat"
 import useRelativeDateFormat from "@/Utils/hooks/useRelativeDateFormat"
 import { Link, usePage } from "@inertiajs/react"
 import { useState } from "react"
+import {
+    QUESTION,
+    ARTICLE,
+    SUBJECT,
+} from "@/Enums/PostType"
 
 export default function ProfileShow() {
     const [showReportForm, setShowReportForm] = useState(false)
@@ -11,9 +15,9 @@ export default function ProfileShow() {
     const joinedAt = useRelativeDateFormat(user.created_at)
     const joinningDate = useFixedDateFormat(user.created_at)
 
-    const questions = user.posts.filter(p => p.type === PostType.QUESTION)
-    const articles = user.posts.filter(p => p.type === PostType.ARTICLE)
-    const subjects = user.posts.filter(p => p.type === PostType.SUBJECT)
+    const questions = user.posts.filter(p => p.type === QUESTION)
+    const articles = user.posts.filter(p => p.type === ARTICLE)
+    const subjects = user.posts.filter(p => p.type === SUBJECT)
 
     console.log(user)
 
@@ -49,10 +53,10 @@ export default function ProfileShow() {
         </div>
 
 
-            {
+        {
 
-                showReportForm && <ReportForm action={`/profile/${user.id}/reports`} onSuccess={() => setShowReportForm(false)} />
-            }
+            showReportForm && <ReportForm action={`/profile/${user.id}/reports`} onSuccess={() => setShowReportForm(false)} />
+        }
 
         <div>
             <h2 className="font-bold text-2xl mb-2.5">Missions</h2>
