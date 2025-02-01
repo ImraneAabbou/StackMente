@@ -12,7 +12,9 @@ class ReplyObserver
      */
     public function created(Reply $reply): void
     {
-        event(new Replied($reply));
+        if ($reply->user_id !== $reply->comment->user_id) {
+            event(new Replied($reply));
+        }
     }
 
     /**

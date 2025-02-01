@@ -15,12 +15,14 @@ class CommentObserver
      */
     public function created(Comment $comment): void
     {
-        event(new Commented($comment));
+        if ($comment->post->user_id !== $comment->user_id) {
+            event(new Commented($comment));
 
-        (new StatsService($comment->post->user))
-            ->incrementXPBy(
-                config('rewards.receive_comment')
-            );
+            (new StatsService($comment->post->user))
+                ->incrementXPBy(
+                    config('rewards.receive_comment')
+                );
+        }
 
         SyncEverything::execute();
     }
@@ -44,7 +46,7 @@ class CommentObserver
         )->update(['is_marked' => false]);
 
         // notify and reward if not the author
-        if (!($comment->post->user_id === $comment->user_id)) {
+        if ($comment->post->user_id !== $comment->user_id) {
             event(new CommentMarked($comment));
 
             (new StatsService($comment->user))
