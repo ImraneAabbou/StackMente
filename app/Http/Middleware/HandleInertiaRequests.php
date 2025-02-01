@@ -41,8 +41,8 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $this->getAuthUser($request),
-                'hasPassword' => !!(auth()->user()?->password)
             ],
+            'notifications' => Inertia::lazy(fn() => $this->getAuthUserNotifications($request)),
             'status' => Inertia::always(fn() => $request->session()->get('status')),
         ];
     }
@@ -60,20 +60,24 @@ class HandleInertiaRequests extends Middleware
 
         $userService = new StatsService($user);
 
-        $user['stats->xp->curr_level_total'] = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'] - 1);
-        $user['stats->xp->next_level_total'] = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level']);
-        $user['stats->rank'] = [
-            'total' => $userService->getRank('total'),
-            'daily' => $userService->getRank('daily'),
-            'weekly' => $userService->getRank('weekly'),
-            'monthly' => $userService->getRank('monthly'),
-            'yearly' => $userService->getRank('yearly'),
+        $userDetails = [
+            'hasPassword' => !!$user?->password,
+            'stats' => [
+                'xp' => [
+                    'curr_level_total' => StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'] - 1),
+                    'next_level_total' => StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'])
+                ],
+                'rank' => [
+                    'total' => $userService->getRank('total'),
+                    'daily' => $userService->getRank('daily'),
+                    'weekly' => $userService->getRank('weekly'),
+                    'monthly' => $userService->getRank('monthly'),
+                    'yearly' => $userService->getRank('yearly'),
+                ]
+            ]
         ];
 
-        return [
-            ...$user->load(['missions', 'posts'])->toArray(),
-            'notifications' => $this->getAuthUserNotifications($request)
-        ];
+        return array_merge_recursive($user->load(['missions', 'posts'])->toArray(), $userDetails);
     }
 
     /**
@@ -87,51 +91,49 @@ class HandleInertiaRequests extends Middleware
         if (!$user)
             return null;
 
-        return $user
-            ->notifications
-            ->map(fn($n) => array_filter(
-                [
-                    'id' => $n->id,
-                    'created_at' => $n->created_at,
-                    'read_at' => $n->read_at,
-                    'type' => $n->type,
-                    'post' => $n->data['post_id'] ?? null
-                        ? Post::select(['id', 'slug', 'title', 'type'])
-                            ->where('id', $n->data['post_id'])
-                            ->first()
-                        : null,
-                    'comment' => $n->data['comment_id'] ?? null
-                        ? [
-                            ...(
-                                $c = Comment::select(['id', 'content'])
-                                    ->where('id', $n->data['comment_id'])
-                                    ->first()
-                            )->toArray(),
-                            'content' => Str::limit($c->content)
-                        ]
-                        : null,
-                    'reply' => $n->data['reply_id'] ?? null
-                        ? [
-                            ...(
-                                $r = Reply::select(['id', 'content'])
-                                    ->where('id', $n->data['reply_id'])
-                                    ->first()
-                            )->toArray(),
-                            'content' => Str::limit($r->content)
-                        ]
-                        : null,
-                    'user' => $n->data['user_id'] ?? null
-                        ? User::select(['id', 'fullname', 'username', 'avatar'])
-                            ->where('id', $n->data['user_id'])
-                            ->first()
-                        : null,
-                    'mission' => $n->data['mission_id'] ?? null
-                        ? Mission::select(['id', 'title', 'xp_reward', 'image'])
-                            ->where('id', $n->data['mission_id'])
-                            ->first()
-                        : null
-                ]
-            ))
-            ->toArray();
+        $notifications = $user->notifications;
+
+        $postIds = $notifications->pluck('data.post_id')->filter()->unique();
+        $commentIds = $notifications->pluck('data.comment_id')->filter()->unique();
+        $replyIds = $notifications->pluck('data.reply_id')->filter()->unique();
+        $userIds = $notifications->pluck('data.user_id')->filter()->unique();
+        $missionIds = $notifications->pluck('data.mission_id')->filter()->unique();
+
+        $posts = Post::whereIn('id', $postIds)->select(['id', 'slug', 'title', 'type'])->get()->keyBy('id');
+        $comments = Comment::whereIn('id', $commentIds)
+            ->select(['id', 'content'])
+            ->get()
+            ->keyBy('id')
+            ->map(fn($comment) => $comment->setAttribute('content', Str::limit($comment->content, 100)));
+        $replies = Reply::whereIn('id', $replyIds)
+            ->select(['id', 'content'])
+            ->get()
+            ->keyBy('id')
+            ->map(fn($reply) => $reply->setAttribute('content', Str::limit($reply->content, 100)));
+        $users = User::whereIn('id', $userIds)->select(['id', 'fullname', 'username', 'avatar'])->get()->keyBy('id');
+        $missions = Mission::whereIn('id', $missionIds)->select(['id', 'title', 'xp_reward', 'image'])->get()->keyBy('id');
+
+        return $notifications->map(fn($n) => array_filter([
+            'id' => $n->id,
+            'created_at' => $n->created_at,
+            'read_at' => $n->read_at,
+            'type' => $n->type,
+            'post' => isset($n->data['post_id']) && $n->data['post_id']
+                ? $posts->get($n->data['post_id'])
+                : null,
+            'comment' => isset($n->data['comment_id']) && $n->data['comment_id']
+                ? $comments->get($n->data['comment_id'])
+                : null,
+            'reply' => isset($n->data['reply_id']) && $n->data['reply_id']
+                ? $replies->get($n->data['reply_id'])
+                : null,
+            'user' => isset($n->data['user_id']) && $n->data['user_id']
+                ? $users->get($n->data['user_id'])
+                : null,
+            'mission' => isset($n->data['mission_id']) && $n->data['mission_id']
+                ? $missions->get($n->data['mission_id'])
+                : null
+        ]))->toArray();
+
     }
 }

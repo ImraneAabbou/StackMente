@@ -1,6 +1,6 @@
 import useFixedDateFormat from "@/Utils/hooks/useFixedDateFormat"
 import useRelativeDateFormat from "@/Utils/hooks/useRelativeDateFormat"
-import { Link, router, useForm, usePage } from "@inertiajs/react"
+import { Link, useForm, usePage } from "@inertiajs/react"
 import {
     QUESTION,
     ARTICLE,
@@ -9,7 +9,7 @@ import {
 import { FormEvent } from "react"
 
 export default function ProfileMe() {
-    const { auth: { user, hasPassword }, missions } = usePage().props
+    const { auth: { user }, missions } = usePage().props
     const joinedAt = useRelativeDateFormat(user.created_at)
     const joinningDate = useFixedDateFormat(user.created_at)
     const accomplishedMissionsIds = user.missions.map(m => m.id)
@@ -138,7 +138,7 @@ export default function ProfileMe() {
             }
         </div>
 
-            <DeleteAccountForm withPass={hasPassword} />
+            <DeleteAccountForm withPass={user.hasPassword} />
 
     </div>
 }

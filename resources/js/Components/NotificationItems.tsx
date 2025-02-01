@@ -165,7 +165,7 @@ export const MissionAccomplished = ({ notification: n }) => {
         created_at={n.created_at}
         read_at={n.read_at}
         id={n.id}
-        url={`/profile#missions`}
+        url={`/profile/me#missions`}
         title={
             t("notifications.mission_accomplished", {
                 mission_title:

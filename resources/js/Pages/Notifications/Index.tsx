@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, usePage, usePoll } from "@inertiajs/react";
+import { Link, usePage, usePoll, WhenVisible } from "@inertiajs/react";
 import {
     CommentReceived,
     CommentVoteReceived,
@@ -17,9 +17,14 @@ import {
     REPLY_RECEIVED
 } from "@/Enums/NotificationType"
 
-export default function NotificationsIndex() {
-    const { auth } = usePage().props;
-    const { notifications } = auth.user
+export default function() {
+    return <WhenVisible data="notifications" fallback={<div>loading...</div>}>
+        <NotificationsIndex />
+    </WhenVisible>
+}
+
+export function NotificationsIndex() {
+    const { notifications } = usePage().props;
     const [notificationsCount, setNotificationsCount] = useState(notifications.length)
 
     if (notifications.length > notificationsCount) {

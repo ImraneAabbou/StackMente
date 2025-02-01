@@ -50,7 +50,7 @@ Route::put('/notifications/{id}', [NotificationController::class, 'update']);
 Route::delete('/notifications', [NotificationController::class, 'destroy']);
 Route::inertia('/notifications', 'Notifications/Index');
 
-Route::inertia('/profile/me', 'Profile/Me', ['missions' => Mission::all()])->name('profile.me');
+Route::inertia('/profile/me', 'Profile/Me', ['missions' => fn () => Mission::all()])->name('profile.me');
 Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
 Route::post('/profile/{user:username}/ban', [ProfileController::class, 'ban']);
 Route::delete('/profile', [ProfileController::class, 'destroy']);
