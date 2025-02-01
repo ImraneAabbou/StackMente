@@ -79,6 +79,7 @@ export default function PostsIndex() {
 }
 
 const CommentingForm = ({ action }: { action: string }) => {
+    const { auth: { user } } = usePage().props
     const { errors, post, data, setData } = useForm(action, {
         content: "",
     });
@@ -87,7 +88,10 @@ const CommentingForm = ({ action }: { action: string }) => {
 
         post(action, {
             only: ["comments", "is_commented", "status"],
-            preserveScroll: "errors",
+            onSuccess: page => {
+                router.visit(page.url + "#comment-" + page.props.comments.find(c => c.user_id === user.id)?.id)
+            },
+            preserveScroll: true,
             preserveState: "errors"
         })
     }
@@ -108,8 +112,7 @@ const ReplyingForm = ({ action }: { action: string }) => {
 
         post(action, {
             only: ["comments", "status"],
-            preserveScroll: "errors",
-            preserveState: "errors"
+            preserveScroll: true,
         })
     }
 
@@ -171,6 +174,7 @@ const UpdatableComment = ({ comment, action }) => {
                 href={`/comments/${comment.id}`}
                 method="delete"
                 preserveState={false}
+                preserveScroll
                 className="text-red-400"
             >
                 delete
