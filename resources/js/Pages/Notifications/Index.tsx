@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, usePage, usePoll, WhenVisible } from "@inertiajs/react";
+import { Link, usePage, usePoll } from "@inertiajs/react";
 import {
     CommentReceived,
     CommentVoteReceived,
@@ -16,24 +16,21 @@ import {
     MISSION_ACCOMPLISHED,
     REPLY_RECEIVED
 } from "@/Enums/NotificationType"
+import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
 
-export default function() {
-    return <WhenVisible data="notifications" fallback={<div>loading...</div>}>
-        <NotificationsIndex />
-    </WhenVisible>
-}
+export default function NotificationsIndex() {
+    const { notifications: { items: notifications, next_page_url } } = usePage().props;
+    const [lastNotificationTime, setLastNotificationTime] = useState(notifications[0]?.created_at)
 
-export function NotificationsIndex() {
-    const { notifications } = usePage().props;
-    const [notificationsCount, setNotificationsCount] = useState(notifications.length)
-
-    if (notifications.length > notificationsCount) {
-        setNotificationsCount(notifications.length)
-        alert(`length changed ${notifications.length} --- ${notificationsCount}`)
+    if (
+        (!!notifications[0]) && (notifications[0].created_at != lastNotificationTime)
+    ) {
+        setLastNotificationTime(notifications[0].created_at)
+        alert(`length changed`)
     }
 
     usePoll(2500, {
-        only: ["auth"],
+        only: ["notifications"],
     })
 
     return <div>
@@ -93,5 +90,9 @@ export function NotificationsIndex() {
                 )
             }
         </ul>
+        {
+
+            next_page_url && <InfiniteScrollLoader url={next_page_url}>loading...</InfiniteScrollLoader>
+        }
     </div>
 }

@@ -42,7 +42,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $this->getAuthUser($request),
             ],
-            'notifications' => Inertia::lazy(fn() => $this->getAuthUserNotifications($request)),
+            'notifications' => fn() => $this->getAuthUserNotifications($request),
             'status' => Inertia::always(fn() => $request->session()->get('status')),
         ];
     }
@@ -91,7 +91,12 @@ class HandleInertiaRequests extends Middleware
         if (!$user)
             return null;
 
-        $notifications = $user->notifications;
+        $notifications = collect();
+
+        for ($i = 1; $i <= ($request->query('notifications_page') ?? 1); $i++) {
+            $notificationsPaginate = $user->notifications()->simplePaginate(10, ['*'], 'notifications_page', $i);
+            $notifications = $notifications->merge($notificationsPaginate->items());
+        }
 
         $postIds = $notifications->pluck('data.post_id')->filter()->unique();
         $commentIds = $notifications->pluck('data.comment_id')->filter()->unique();
@@ -113,27 +118,29 @@ class HandleInertiaRequests extends Middleware
         $users = User::whereIn('id', $userIds)->select(['id', 'fullname', 'username', 'avatar'])->get()->keyBy('id');
         $missions = Mission::whereIn('id', $missionIds)->select(['id', 'title', 'xp_reward', 'image'])->get()->keyBy('id');
 
-        return $notifications->map(fn($n) => array_filter([
-            'id' => $n->id,
-            'created_at' => $n->created_at,
-            'read_at' => $n->read_at,
-            'type' => $n->type,
-            'post' => isset($n->data['post_id']) && $n->data['post_id']
-                ? $posts->get($n->data['post_id'])
-                : null,
-            'comment' => isset($n->data['comment_id']) && $n->data['comment_id']
-                ? $comments->get($n->data['comment_id'])
-                : null,
-            'reply' => isset($n->data['reply_id']) && $n->data['reply_id']
-                ? $replies->get($n->data['reply_id'])
-                : null,
-            'user' => isset($n->data['user_id']) && $n->data['user_id']
-                ? $users->get($n->data['user_id'])
-                : null,
-            'mission' => isset($n->data['mission_id']) && $n->data['mission_id']
-                ? $missions->get($n->data['mission_id'])
-                : null
-        ]))->toArray();
-
+        return [
+            'items' => $notifications->map(fn($n) => array_filter([
+                'id' => $n->id,
+                'created_at' => $n->created_at,
+                'read_at' => $n->read_at,
+                'type' => $n->type,
+                'post' => isset($n->data['post_id']) && $n->data['post_id']
+                    ? $posts->get($n->data['post_id'])
+                    : null,
+                'comment' => isset($n->data['comment_id']) && $n->data['comment_id']
+                    ? $comments->get($n->data['comment_id'])
+                    : null,
+                'reply' => isset($n->data['reply_id']) && $n->data['reply_id']
+                    ? $replies->get($n->data['reply_id'])
+                    : null,
+                'user' => isset($n->data['user_id']) && $n->data['user_id']
+                    ? $users->get($n->data['user_id'])
+                    : null,
+                'mission' => isset($n->data['mission_id']) && $n->data['mission_id']
+                    ? $missions->get($n->data['mission_id'])
+                    : null
+            ]))->toArray(),
+            'next_page_url' => $notificationsPaginate->nextPageUrl()
+        ];
     }
 }
