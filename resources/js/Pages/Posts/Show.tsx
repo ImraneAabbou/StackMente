@@ -3,6 +3,7 @@ import { FormEvent, useState } from "react";
 import { Link } from "@inertiajs/react"
 import { useLaravelReactI18n } from "laravel-react-i18n";
 import ReportForm from "@/Components/ReportForm";
+import { span } from "framer-motion/client";
 
 export default function PostsIndex() {
     const { post, comments, is_commented, auth, status } = usePage().props;
@@ -143,7 +144,7 @@ const UpdatableComment = ({ comment, action }) => {
 
     return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
         <div className="flex gap-2 items-center">
-            <img src={"/images/users/" + comment.user.avatar} className="size-12 rounded-full" />
+            <img src={"/images/users/" + comment.user?.avatar} className="size-12 rounded-full" />
 
             {
                 isPostOwned
@@ -158,7 +159,7 @@ const UpdatableComment = ({ comment, action }) => {
                     && <div className="bg-green-600 size-8 inline-flex" />
             }
 
-            <Link href={`/profile/${comment.user.username}`} className="font-bold">
+            <Link href={`/profile/${comment.user?.username}`} className="font-bold">
                 {t("common.you")}
             </Link>
             <small>{comment.replies_count} replies</small>
@@ -246,7 +247,7 @@ const Comment = ({ comment }) => {
 
     return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
         <div className="flex gap-2 items-center">
-            <img src={"/images/users/" + comment.user.avatar} className="size-12 rounded-full" />
+            <img src={"/images/users/" + comment.user?.avatar} className="size-12 rounded-full" />
             {
                 isPostOwned
                     ? <Link href={`/comments/${comment.id}/mark`} method="put" only={["post", "comments"]}>
@@ -259,9 +260,13 @@ const Comment = ({ comment }) => {
                     : !!comment.is_marked
                     && <div className="bg-green-600 size-8 inline-flex" />
             }
-            <Link href={`/profile/${comment.user.username}`} className="font-bold">
-                {comment.user_id === auth.user?.id ? t("common.you") : comment.user.fullname}
-            </Link>
+            {
+                !!comment.user
+                    ? <Link href={`/profile/${comment.user.username}`} className="font-bold">
+                        {comment.user_id === auth.user?.id ? t("common.you") : comment.user.fullname}
+                    </Link>
+                    : <span className="font-bold">Someone</span>
+            }
             <small>{comment.replies_count} replies</small>
         </div>
         <p className="ms-14">{comment.content}</p>
@@ -320,7 +325,7 @@ const Comment = ({ comment }) => {
 
 const UpdatableReply = ({ reply, action }) => {
     const [editable, setEditable] = useState(false)
-    const {t} = useLaravelReactI18n()
+    const { t } = useLaravelReactI18n()
     const { errors, data, setData, put, isDirty } = useForm(action, {
         content: reply.content
     })
@@ -341,10 +346,14 @@ const UpdatableReply = ({ reply, action }) => {
 
     return <li className="border-b-black target:border-2" id={`reply-${reply.id}`}>
         <div className="flex gap-2 items-center">
-            <img src={"/images/users/" + reply.user.avatar} className="size-6 rounded-full" />
-            <Link href={`/profile/${reply.user.username}`} className="font-bold">
-                {t('common.you')}
-            </Link>
+            <img src={"/images/users/" + reply.user?.avatar} className="size-6 rounded-full" />
+            {
+                !!reply.user
+                    ? <Link href={`/profile/${reply.user.username}`} className="font-bold">
+                        {t('common.you')}
+                    </Link>
+                    : <span className="font-bold">Someone</span>
+            }
             {
                 !editable
                 && <button onClick={() => setEditable(true)}>edit</button>
@@ -381,10 +390,14 @@ const Reply = ({ reply }) => {
 
     return <li className="border-b-black target:border-2" id={`reply-${reply.id}`}>
         <div className="flex gap-2 items-center">
-            <img src={"/images/users/" + reply.user.avatar} className="size-6 rounded-full" />
-            <Link href={`/profile/${reply.user.username}`} className="font-bold">
-                {reply.user.fullname}
-            </Link>
+            <img src={"/images/users/" + reply.user?.avatar} className="size-6 rounded-full" />
+            {
+                !!reply.user
+                    ? <Link href={`/profile/${reply.user.username}`} className="font-bold">
+                        {reply.user.fullname}
+                    </Link>
+                    : <span className="font-bold">Someone</span>
+            }
         </div>
         <p className="text-gray-600 text-sm ms-8">
             {reply.content}

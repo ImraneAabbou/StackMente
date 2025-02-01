@@ -52,6 +52,9 @@ Route::inertia('/notifications', 'Notifications/Index');
 
 Route::inertia('/profile/me', 'Profile/Me', ['missions' => Mission::all()])->name('profile.me');
 Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
+Route::post('/profile/{user:username}/ban', [ProfileController::class, 'ban']);
+Route::delete('/profile', [ProfileController::class, 'destroy']);
+Route::delete('/profile/{user:username}/ban', [ProfileController::class, 'unban']);
 Route::post('/profile/{reportable}/reports', [ProfileController::class, 'report']);
 Route::delete('/profile/{reportable}/reports', [ProfileController::class, 'clearReports'])->can('delete', [Report::class]);
 

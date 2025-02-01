@@ -8,7 +8,6 @@ use App\Models\Post;
 use App\Models\Reply;
 use App\Models\User;
 use App\Services\StatsService;
-use App\Services\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Middleware;
@@ -42,6 +41,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $this->getAuthUser($request),
+                'hasPassword' => !!(auth()->user()?->password)
             ],
             'status' => Inertia::always(fn() => $request->session()->get('status')),
         ];
@@ -60,14 +60,14 @@ class HandleInertiaRequests extends Middleware
 
         $userService = new StatsService($user);
 
-        $user["stats->xp->curr_level_total"] = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'] - 1);
-        $user["stats->xp->next_level_total"] = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level']);
-        $user["stats->rank"] = [
-            "total" => $userService->getRank("total"),
-            "daily" => $userService->getRank("daily"),
-            "weekly" => $userService->getRank("weekly"),
-            "monthly" => $userService->getRank("monthly"),
-            "yearly" => $userService->getRank("yearly"),
+        $user['stats->xp->curr_level_total'] = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'] - 1);
+        $user['stats->xp->next_level_total'] = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level']);
+        $user['stats->rank'] = [
+            'total' => $userService->getRank('total'),
+            'daily' => $userService->getRank('daily'),
+            'weekly' => $userService->getRank('weekly'),
+            'monthly' => $userService->getRank('monthly'),
+            'yearly' => $userService->getRank('yearly'),
         ];
 
         return [
@@ -84,7 +84,8 @@ class HandleInertiaRequests extends Middleware
     {
         $user = $request->user();
 
-        if (!$user) return null;
+        if (!$user)
+            return null;
 
         return $user
             ->notifications
@@ -130,6 +131,7 @@ class HandleInertiaRequests extends Middleware
                             ->first()
                         : null
                 ]
-            ))->toArray();
+            ))
+            ->toArray();
     }
 }

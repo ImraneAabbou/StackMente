@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\RegisterationRequest;
 use App\Http\Requests\Profile\DeleteAccountRequest;
 use App\Http\Requests\Profile\ProfileUpdateRequest;
 use App\Models\User;
+use App\Services\StatsService;
 use App\Services\UserService;
 use App\Traits\ReportableCtrl;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -14,10 +15,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Str;
 
 class ProfileController extends Controller
 {
     use ReportableCtrl;
+
     /**
      * Display the registration view.
      */
@@ -91,6 +94,14 @@ class ProfileController extends Controller
     public function destroy(DeleteAccountRequest $request): RedirectResponse
     {
         $user = $request->user();
+        $user->username = "deleted-" . Str::uuid();
+        $user->fullname = $user->username;
+        $user->email = $user->username . "@stackmente.com";
+        $user->password = null;
+        $user->email_verified_at = null;
+        $user->avatar = "";
+        $user->providers = [];
+        (new StatsService($user))->resetStats();
 
         Auth::logout();
 
@@ -102,13 +113,26 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
+    public function ban(User $user): RedirectResponse {
+        $user->delete();
+        return back()->with("banned");
+    }
+
+    public function unban(User $user): RedirectResponse {
+        $user->restore();
+        return back()->with("unbanned");
+    }
+
     /**
      * Show the user's profile.
      */
     public function show(User $user): Response|RedirectResponse
     {
         return $user->id === auth()->user()?->id
-            ? to_route("profile.me")
-            : Inertia::render('Profile/Show', ['user' => $user->load(['missions', 'posts'])]);
+            ? to_route('profile.me')
+            : Inertia::render('Profile/Show', [
+                'user' => $user->load(['missions', 'posts']),
+                'can_ban' => auth()->user()?->can('delete', $user)
+            ]);
     }
 }

@@ -1,14 +1,15 @@
 import useFixedDateFormat from "@/Utils/hooks/useFixedDateFormat"
 import useRelativeDateFormat from "@/Utils/hooks/useRelativeDateFormat"
-import { Link, usePage } from "@inertiajs/react"
+import { Link, router, useForm, usePage } from "@inertiajs/react"
 import {
     QUESTION,
     ARTICLE,
     SUBJECT,
 } from "@/Enums/PostType"
+import { FormEvent } from "react"
 
 export default function ProfileMe() {
-    const { auth: { user }, missions } = usePage().props
+    const { auth: { user, hasPassword }, missions } = usePage().props
     const joinedAt = useRelativeDateFormat(user.created_at)
     const joinningDate = useFixedDateFormat(user.created_at)
     const accomplishedMissionsIds = user.missions.map(m => m.id)
@@ -22,7 +23,6 @@ export default function ProfileMe() {
     const articles = user.posts.filter(p => p.type === ARTICLE)
     const subjects = user.posts.filter(p => p.type === SUBJECT)
 
-    console.log(user)
 
     return <div className="p-4 container">
         <div className="flex gap-4 mb-5">
@@ -138,5 +138,36 @@ export default function ProfileMe() {
             }
         </div>
 
+            <DeleteAccountForm withPass={hasPassword} />
+
     </div>
+}
+
+
+const DeleteAccountForm = ({ withPass }: { withPass: boolean }) => {
+    const { errors, delete: destroy, data, setData } = useForm({
+        password: ""
+    });
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault()
+        destroy("/profile")
+    }
+
+    return <form onSubmit={handleSubmit}>
+        {
+
+            withPass
+            && <div>
+                CurrentPassword: <input type="password" value={data.password} onChange={e => setData("password", e.target.value)} />
+                {
+                    errors.password &&
+                    <span className="text-red-400">{errors.password}</span>
+                }
+            </div>
+        }
+        <div>
+            <button className="bg-red-500 text-white" type="submit">Remove Account</button>
+        </div>
+    </form>
 }

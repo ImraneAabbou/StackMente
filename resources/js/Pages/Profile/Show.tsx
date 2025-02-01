@@ -11,7 +11,7 @@ import {
 
 export default function ProfileShow() {
     const [showReportForm, setShowReportForm] = useState(false)
-    const { user } = usePage().props
+    const { user, can_ban } = usePage().props
     const joinedAt = useRelativeDateFormat(user.created_at)
     const joinningDate = useFixedDateFormat(user.created_at)
 
@@ -42,6 +42,21 @@ export default function ProfileShow() {
                 <div>
                     <button onClick={() => setShowReportForm(!showReportForm)} className="text-red-400">report</button>
                 </div>
+                {
+                    can_ban &&
+                    !user.deleted_at
+                    && <div>
+                        <Link href={`/profile/${user.username}/ban`} method="post" className="text-red-400">Ban</Link>
+                    </div>
+                }
+                {
+                    can_ban &&
+                    user.deleted_at
+                    &&
+                    <div>
+                        <Link href={`/profile/${user.username}/ban`} method="delete" className="text-red-400">Unban</Link>
+                    </div>
+                }
             </div>
 
             <div className="flex flex-col ms-auto">

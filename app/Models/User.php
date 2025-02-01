@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -77,4 +78,12 @@ class User extends Authenticatable implements IMustVerifyEmail
     {
         return $this->hasMany(Reply::class);
     }
+
+    public function resolveRouteBinding($value, $field = null): Model
+    {
+        return $this->withTrashed(
+            collect([Role::ADMIN, Role::SUPER_ADMIN])->contains(auth()->user()?->role)
+        )->where($field ?? 'id', $value)->firstOrFail();
+    }
+
 }
