@@ -194,25 +194,23 @@ class StatsService
      */
     public function resetStats(): void
     {
-        $this->user->stats =
-            json_encode([
-                'xp' => [
-                    'total' => 0,
-                    'daily' => 0,
-                    'weekly' => 0,
-                    'monthly' => 0,
-                    'yearly' => 0,
-                ],
-                'login' => [
-                    'streak' => 0,
-                    'max_streak' => 0,
-                    'streak_started_at' => now(),
-                ],
-                'level' => 1,
-                'timespent' => 0,
-                'last_interaction' => now(),
-            ]);
-
+        $stats = [
+            'xp' => [
+                'total' => 0,
+                'daily' => 0,
+                'weekly' => 0,
+                'monthly' => 0,
+                'yearly' => 0,
+            ],
+            'login' => [
+                'streak' => 0,
+                'max_streak' => 0,
+                'streak_started_at' => now(),
+            ],
+            'last_interaction' => now(),
+            'level' => 1,
+        ];
+        $this->user->stats = $stats;
         $this->user->save();
     }
 }
