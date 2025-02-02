@@ -1,4 +1,5 @@
 import defaultTheme from "tailwindcss/defaultTheme";
+import forms from "@tailwindcss/forms";
 import colors from "tailwindcss/colors";
 
 /** @type {import('tailwindcss').Config} */
@@ -20,16 +21,16 @@ export default {
         },
         colors: {
             blue: {
-                DEFAULT: "#158BEA",
                 ...colors.blue,
+                DEFAULT: "#158BEA",
             },
             green: {
-                DEFAULT: "#54BF59",
                 ...colors.green,
+                DEFAULT: "#54BF59",
             },
             gray: {
-                DEFAULT: "#9B9B9B",
                 ...colors.gray,
+                DEFAULT: "#9B9B9B",
             },
             text: {
                 light: "#f4f4f4",
@@ -49,5 +50,9 @@ export default {
                 display: ["Playfair Display", ...defaultTheme.fontFamily.serif]
             },
         },
+
     },
+    plugins: [
+        forms,
+    ]
 };

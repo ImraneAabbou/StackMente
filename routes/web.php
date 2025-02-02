@@ -21,7 +21,7 @@ Route::get('/subjects', [PostController::class, 'index'])->name('subjects.index'
 Route::inertia('/questions/create', 'Posts/CreateQuestion')->name('questions.create');
 Route::get('/questions', [PostController::class, 'index'])->name('questions.index');
 
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/posts', [PostController::class, 'index'])->name("feed");
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
 Route::post('/posts/{reportable}/reports', [PostController::class, 'report']);
