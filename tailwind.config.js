@@ -37,7 +37,10 @@ export default {
                 dark: "#000000",
             },
             warn: "#ccc500",
-            success: "#54BF59",
+            success: {
+                light: "#54BF59",
+                dark: "#54BF59"
+            },
             error: {
                 light: "#f31616",
                 dark: "#ff5b5b",

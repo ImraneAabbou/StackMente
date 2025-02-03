@@ -4,9 +4,10 @@ import { useLaravelReactI18n } from "laravel-react-i18n"
 import AuthProviders from "./_Common/AuthProviders"
 import Input from "@/Components/ui/Input"
 import Error from "@/Components/ui/Error"
+import Status from "@/Components/ui/Status"
 
 
-export default function Example() {
+export default function Login() {
     const { t } = useLaravelReactI18n()
     const { post, errors, data, setData } = useForm(`LoginForm`, {
         login: "",
@@ -32,10 +33,13 @@ export default function Example() {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-                <div className="px-6 py-12 sm:rounded-lg sm:px-12">
+                <div className="px-6">
+
+                    <Status className="text-success-light dark:text-success-dark mb-8 w-full font-bold text-center block" />
+
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6">
+                            <label htmlFor="login" className="block text-sm font-medium leading-6">
                                 {t("content.email_username")}
                             </label>
                             <div className="mt-2">
@@ -109,7 +113,7 @@ export default function Example() {
                                 <span className="bg-background-light dark:bg-background-dark px-2">{t("content.or")}</span>
                             </div>
                         </div>
-                            <AuthProviders />
+                        <AuthProviders />
                     </div>
                 </div>
                 <p className="mt-10 text-center text-sm">
