@@ -88,7 +88,7 @@ export default function Login() {
                             </div>
 
                             <div className="text-sm text-gray hover:text-gray/90 leading-6">
-                                <Link href={"#"} className="font-semibold">
+                                <Link href={route("password.request")} className="font-semibold">
                                     {t('content.forgot_password')}
                                 </Link>
                             </div>
