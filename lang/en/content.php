@@ -18,4 +18,6 @@ return [
     'forgot_password' => 'Forgot password ?',
     'or' => 'or',
     'forget_password_text' => 'We will send you a link to the provided email that will let you reset your password to a new one.',
+    'new_password' => "New Password",
+    'new_password_confirmation' => "New Password Confirmation",
 ];

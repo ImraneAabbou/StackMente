@@ -71,9 +71,9 @@ class PasswordResetController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $request->validate([
-            'token' => 'required',
             'email' => 'required|email',
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'token' => 'required',
+            'password' => ['required', 'confirmed', 'max:255'],
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
