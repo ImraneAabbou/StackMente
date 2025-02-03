@@ -63,7 +63,7 @@ export default function ForgotPassword() {
                                 {t("common.send")}
                             </button>
                         </div>
-                        <p className="text-gray">We will send you a link to the provided email that will let you reset your password to a new one.</p>
+                        <p className="text-gray">{t("content.forget_password_text")}</p>
                     </form>
                 </div>
             </div>
