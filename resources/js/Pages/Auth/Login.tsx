@@ -1,4 +1,4 @@
-import { Link, useForm } from "@inertiajs/react"
+import { Link, useForm, usePage } from "@inertiajs/react"
 import { FormEvent } from "react"
 import { useLaravelReactI18n } from "laravel-react-i18n"
 import AuthProviders from "./_Common/AuthProviders"
@@ -8,6 +8,7 @@ import Status from "@/Components/ui/Status"
 
 
 export default function Login() {
+    const { status } = usePage().props
     const { t } = useLaravelReactI18n()
     const { post, errors, data, setData } = useForm(`LoginForm`, {
         login: "",
@@ -35,7 +36,11 @@ export default function Login() {
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
                 <div className="px-6">
 
-                    <Status className="text-success-light dark:text-success-dark mb-8 w-full font-bold text-center block" />
+                    <Status
+                        className="text-success-light dark:text-success-dark mb-8 w-full font-bold text-center block"
+                    >
+                        {status}
+                    </Status>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>

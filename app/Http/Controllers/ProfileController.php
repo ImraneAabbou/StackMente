@@ -44,7 +44,7 @@ class ProfileController extends Controller
             'username' => $generatedUsername
         ]);
 
-        return to_route('login')->with('status', 'account-created');
+        return to_route('login')->with('status', __('status.account-created'));
     }
 
     /**
