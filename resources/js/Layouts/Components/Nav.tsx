@@ -59,77 +59,96 @@ export default function Nav() {
                             />
                         </form>
                     </div>
-                    <div className="inset-y-0 right-0 flex gap-4 items-center">
-                        <Menu as="div" className="relative">
-                            <MenuButton className="relative flex rounded-full text-sm">
-                                <button
-                                    type="button"
-                                    className="relative rounded-full p-1 text-gray"
-                                >
-                                    <span className="absolute -inset-1.5" />
-                                    <span className="sr-only">View notifications</span>
-                                    <Notifications size={24} />
-                                </button>
-                            </MenuButton>
-                            <NotificationsItems />
-                        </Menu>
-                        <Menu as="div" className="relative">
-                            <div>
-                                <MenuButton className="relative flex rounded-full text-sm">
-                                    <ProgressCircle size={50} value={user.stats.xp.percent_to_next_level}>
-                                        <span className="absolute -inset-1.5" />
-                                        <span className="sr-only">Open user menu</span>
-                                        <img
-                                            alt=""
-                                            src={avatar(user.avatar)}
-                                            className="rounded-full"
-                                        />
-                                    </ProgressCircle>
-                                </MenuButton>
-                            </div>
-                            <MenuItems
-                                className="absolute bg-input-light dark:bg-input-dark right-0 z-10 mt-2 w-64 origin-top-right rounded-md bg-white py-1 shadow-lg data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-                            >
-                                <MenuItem>
-                                    <div
-                                        className="flex px-4 py-2 text-sm gap-4"
-                                    >
-                                        <ProgressCircle size={50} value={user.stats.xp.percent_to_next_level}>
-                                            <span className="absolute -inset-1.5" />
-                                            <span className="sr-only">Open user menu</span>
-                                            <img
-                                                alt=""
-                                                src={avatar(user.avatar)}
-                                                className="rounded-full"
-                                            />
-                                        </ProgressCircle>
+                    <div className="inset-y-0 flex gap-4 items-center">
+                        {
+                            !!user
+                                ? <>
+                                    <Menu as="div" className="relative">
+                                        <MenuButton className="relative flex rounded-full text-sm">
+                                            <button
+                                                type="button"
+                                                className="relative rounded-full p-1 text-gray"
+                                            >
+                                                <span className="absolute -inset-1.5" />
+                                                <span className="sr-only">View notifications</span>
+                                                <Notifications size={24} />
+                                            </button>
+                                        </MenuButton>
+                                        <NotificationsItems />
+                                    </Menu>
+                                    <Menu as="div" className="relative">
                                         <div>
-                                            <div className='flex flex-col'>
-                                                <span className='font-bold'>{user.stats.xp.curr_level_total}</span>
-
-                                                <span className='text-xs text-gray ms-4'>/ {user.stats.xp.curr_level_total}</span>
-                                            </div>
+                                            <MenuButton className="relative flex rounded-full text-sm">
+                                                <ProgressCircle size={48} value={user.stats.xp.percent_to_next_level}>
+                                                    <span className="absolute -inset-1.5" />
+                                                    <span className="sr-only">Open user menu</span>
+                                                    <img
+                                                        alt=""
+                                                        src={avatar(user.avatar)}
+                                                        className="rounded-full"
+                                                    />
+                                                </ProgressCircle>
+                                            </MenuButton>
                                         </div>
-                                    </div>
-                                </MenuItem>
-                                <MenuItem>
-                                    <a
-                                        href="#2"
-                                        className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm"
+                                        <MenuItems
+                                            className="absolute bg-input-light dark:bg-input-dark right-0 z-10 mt-2 w-64 origin-top-right rounded-md bg-white py-1 shadow-lg data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                                        >
+                                            <MenuItem>
+                                                <div
+                                                    className="flex px-4 py-2 text-sm gap-4"
+                                                >
+                                                    <ProgressCircle size={50} value={user.stats.xp.percent_to_next_level}>
+                                                        <span className="absolute -inset-1.5" />
+                                                        <span className="sr-only">Open user menu</span>
+                                                        <img
+                                                            alt=""
+                                                            src={avatar(user.avatar)}
+                                                            className="rounded-full"
+                                                        />
+                                                    </ProgressCircle>
+                                                    <div>
+                                                        <div className='flex flex-col'>
+                                                            <span className='font-bold'>{user.stats.xp.curr_level_total}</span>
+
+                                                            <span className='text-xs text-gray ms-4'>/ {user.stats.xp.curr_level_total}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </MenuItem>
+                                            <MenuItem>
+                                                <a
+                                                    href="#2"
+                                                    className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm"
+                                                >
+                                                    Settings
+                                                </a>
+                                            </MenuItem>
+                                            <MenuItem>
+                                                <a
+                                                    href="#3"
+                                                    className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm"
+                                                >
+                                                    Sign out
+                                                </a>
+                                            </MenuItem>
+                                        </MenuItems>
+                                    </Menu>
+                                </>
+                                : <>
+                                    <Link
+                                        href={route("login")}
+                                        className="rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     >
-                                        Settings
-                                    </a>
-                                </MenuItem>
-                                <MenuItem>
-                                    <a
-                                        href="#3"
-                                        className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm"
+                                        {t("content.login")}
+                                    </Link>
+                                    <Link
+                                        href={route("register")}
+                                        className="rounded-md px-3.5 py-2.5 bg-gray/25 hover:bg-gray/50 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     >
-                                        Sign out
-                                    </a>
-                                </MenuItem>
-                            </MenuItems>
-                        </Menu>
+                                        {t("content.register")}
+                                    </Link>
+                                </>
+                        }
                     </div>
                 </div>
             </div>
