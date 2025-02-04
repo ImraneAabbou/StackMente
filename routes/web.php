@@ -46,9 +46,8 @@ Route::delete('/replies/{reportable}/reports', [ReplyController::class, 'clearRe
 Route::put('/replies/{reply}', [ReplyController::class, 'update']);
 Route::delete('/replies/{reply}', [ReplyController::class, 'destroy']);
 
-Route::put('/notifications/{id}', [NotificationController::class, 'update']);
-Route::delete('/notifications', [NotificationController::class, 'destroy']);
-Route::inertia('/notifications', 'Notifications/Index');
+Route::put('/notifications/{id}', [NotificationController::class, 'update'])->name("notifications.update");
+Route::delete('/notifications', [NotificationController::class, 'destroy'])->name("notifications.destroy");
 
 Route::inertia('/profile/me', 'Profile/Me', ['missions' => fn () => Mission::all()])->name('profile.me');
 Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');

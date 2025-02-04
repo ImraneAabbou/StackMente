@@ -4,8 +4,8 @@ import { useInView } from "framer-motion"
 import { router } from "@inertiajs/react"
 
 export default function InfiniteScrollLoader(
-    { children, url, onSuccess }
-        : { children: ReactNode, url: string, onSuccess: (posts: any) => void }
+    { children, url, onSuccess, className }
+        : { children: ReactNode, url: string, className?: string, onSuccess?: (page: any) => any }
 ) {
     const ref = useRef<HTMLDivElement>(null)
     const [shouldFetch, setShouldFetch] = useState(true)
@@ -17,7 +17,7 @@ export default function InfiniteScrollLoader(
                 setShouldFetch(false)
             },
             onFinish() {
-                setTimeout(() => setShouldFetch(true), 1500)
+                setTimeout(() => setShouldFetch(true), 500)
             },
             onSuccess,
             preserveState: true,
@@ -26,5 +26,5 @@ export default function InfiniteScrollLoader(
             //preserveUrl: true,
         })
 
-    return <div ref={ref} className="bg-red-400">{children}</div>
+    return <div ref={ref} className={className}>{children}</div>
 }

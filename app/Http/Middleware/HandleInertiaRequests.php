@@ -60,12 +60,17 @@ class HandleInertiaRequests extends Middleware
 
         $userService = new StatsService($user);
 
+        $userXP = $user["stats->xp->total"];
+        $currLevelTotal = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'] - 1);
+        $nextLevelTotal = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level']);
+
         $userDetails = [
             'hasPassword' => !!$user?->password,
             'stats' => [
                 'xp' => [
-                    'curr_level_total' => StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'] - 1),
-                    'next_level_total' => StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'])
+                    'curr_level_total' => $currLevelTotal,
+                    'next_level_total' => $nextLevelTotal,
+                    'percent_to_next_level' => ($currLevelTotal - $userXP) / ($nextLevelTotal - $userXP)
                 ],
                 'rank' => [
                     'total' => $userService->getRank('total'),

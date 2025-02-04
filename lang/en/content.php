@@ -20,4 +20,8 @@ return [
     'forget_password_text' => 'We will send you a link to the provided email that will let you reset your password to a new one.',
     'new_password' => "New Password",
     'new_password_confirmation' => "New Password Confirmation",
+    "looking_for" => "Lookin for...",
+    "loading_more" => "Loading more...",
+    "mark_all_read" => "Mark all read",
+    "notifications" => "Notifications",
 ];

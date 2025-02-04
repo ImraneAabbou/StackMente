@@ -2,6 +2,7 @@ import { usePage } from "@inertiajs/react";
 import { useState } from "react";
 import { Link } from "@inertiajs/react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
+import AuthLayout from "@/Layouts/AuthLayout";
 
 export default function PostsIndex() {
     const { posts: initialPosts, next_page_url } = usePage().props;
@@ -9,7 +10,7 @@ export default function PostsIndex() {
 
     console.log(initialPosts)
 
-    return <div>
+    return <AuthLayout>
         {
             posts.map(p => <div className="p-4 mb-8" key={p.id}>
                 <Link href={`/posts/${p.slug}`}>{p.type}: {p.title} <small className="text-gray-500">{p.views} views</small></Link>
@@ -55,5 +56,5 @@ export default function PostsIndex() {
             >
                 fetching more...
             </InfiniteScrollLoader>}
-    </div>
+    </AuthLayout>
 }
