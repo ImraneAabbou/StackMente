@@ -41,7 +41,7 @@ export default function Nav() {
     return (
         <nav className="sticky bg-background-light/50 dark:bg-background-dark/50 backdrop-blur top-0">
             <div className="container">
-                <div className="relative flex gap-4 h-16 items-center justify-between">
+                <div className="flex gap-4 h-16 items-center justify-between">
                     <div className="flex flex-1 gap-4 items-center">
                         <Link href="#" className="flex shrink-0 items-center">
                             <img
@@ -64,10 +64,10 @@ export default function Nav() {
                             !!user
                                 ? <>
                                     <Menu as="div" className="relative">
-                                        <MenuButton className="relative flex rounded-full text-sm">
+                                        <MenuButton className="flex rounded-full text-sm">
                                             <button
                                                 type="button"
-                                                className="relative rounded-full p-1 text-gray"
+                                                className="rounded-full p-1 text-gray"
                                             >
                                                 <span className="absolute -inset-1.5" />
                                                 <span className="sr-only">View notifications</span>
@@ -91,7 +91,7 @@ export default function Nav() {
                                             </MenuButton>
                                         </div>
                                         <MenuItems
-                                            className="absolute bg-input-light dark:bg-input-dark right-0 z-10 mt-2 w-64 origin-top-right rounded-md bg-white py-1 shadow-lg data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                                            className="absolute bg-input-light dark:bg-input-dark right-0 z-10 mt-2 w-64 origin-top-right rounded-md py-1 shadow-lg"
                                         >
                                             <MenuItem>
                                                 <div
@@ -171,13 +171,17 @@ const NotificationsItems = () => {
         alert(`new notification came`)
     }
 
-
     usePoll(5000, {
         only: ["notifications"],
     })
 
     return <MenuItems
-        className="flex flex-col gap-1 absolute max-h-80 overflow-y-scroll bg-input-light dark:bg-input-dark right-0 z-10 mt-2 w-screen max-w-xs origin-top-right rounded-md bg-white shadow-lg data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+        className="
+                flex flex-col gap-1 w-screen mt-4
+                fixed right-0 z-10 h-[calc(100vh-100%)] sm:max-h-96
+                overflow-y-auto bg-input-light dark:bg-input-dark
+                sm:absolute sm:max-w-xs sm:mt-4 sm:rounded-md sm:shadow-lg
+            "
     >
         <MenuItem>
             <div className='text-xs flex justify-between px-2 items-center sticky inset-0 bg-input-light dark:bg-input-dark p-1'>
