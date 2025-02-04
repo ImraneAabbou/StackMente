@@ -3,22 +3,27 @@ import { Link, router } from "@inertiajs/react"
 import { avatar } from "@/Utils/helpers/path"
 import useRelativeDateFormat from "@/Utils/hooks/useRelativeDateFormat"
 import { ReactNode } from "react";
+import type {
+    CommentMarkedNotification,
+    CommentReceivedNotification,
+    CommentVoteReceivedNotification,
+    MissionAccomplishedNotification,
+    NotificationBase,
+    PostVoteReceivedNotification,
+    ReplyReceivedNotification
+} from "@/types/notification";
 
-import type { Notification } from "@/types";
 
-interface BaseProps {
-    id: string;
+interface BaseNotificationProps extends NotificationBase {
     title: string;
     children?: ReactNode;
     src: string;
     alt?: string;
     className?: string;
-    created_at: string;
-    read_at?: string;
     url: string;
 }
 
-export const Base = ({ id, title, children, src, alt, className, created_at, read_at, url }: BaseProps) => {
+export const BaseNotification = ({ id, title, children, src, alt, className, created_at, read_at, url }: BaseNotificationProps) => {
     const formatDate = useRelativeDateFormat()
 
     return <Link
@@ -52,10 +57,10 @@ export const Base = ({ id, title, children, src, alt, className, created_at, rea
     </Link>
 }
 
-export const PostVoteReceived = ({ notification: n }: {notification: Notification }) => {
+export const PostVoteReceived = ({ notification: n }: { notification: PostVoteReceivedNotification }) => {
     const { t } = useLaravelReactI18n()
 
-    return <Base
+    return <BaseNotification
         id={n.id}
         src={"/images/users/" + n.user.avatar}
         created_at={n.created_at}
@@ -83,11 +88,10 @@ export const PostVoteReceived = ({ notification: n }: {notification: Notificatio
     />
 }
 
-
-export const CommentVoteReceived = ({ notification: n }: {notification: Notification}) => {
+export const CommentVoteReceived = ({ notification: n }: { notification: CommentVoteReceivedNotification }) => {
     const { t } = useLaravelReactI18n()
 
-    return <Base
+    return <BaseNotification
         src={avatar(n.user.avatar)}
         created_at={n.created_at} read_at={n.read_at}
         id={n.id}
@@ -112,10 +116,10 @@ export const CommentVoteReceived = ({ notification: n }: {notification: Notifica
     />
 }
 
-export const CommentReceived = ({ notification: n }: {notification: Notification}) => {
+export const CommentReceived = ({ notification: n }: { notification: CommentReceivedNotification }) => {
     const { t } = useLaravelReactI18n()
 
-    return <Base
+    return <BaseNotification
         src={"/images/users/" + n.user.avatar}
         created_at={n.created_at} read_at={n.read_at}
         id={n.id}
@@ -139,13 +143,13 @@ export const CommentReceived = ({ notification: n }: {notification: Notification
         }
     >
         <span className={`text-xs ${!n.read_at ? "font-bold" : "italic"}`}>"{n.comment.content}"</span>
-    </Base>
+    </BaseNotification>
 }
 
-export const ReplyReceived = ({ notification: n }: {notification: Notification}) => {
+export const ReplyReceived = ({ notification: n }: { notification: ReplyReceivedNotification }) => {
     const { t } = useLaravelReactI18n()
 
-    return <Base
+    return <BaseNotification
         src={"/images/users/" + n.user.avatar} created_at={n.created_at} read_at={n.read_at}
         id={n.id}
         url={`/posts/${n.post.slug}#reply-${n.reply.id}`}
@@ -172,13 +176,13 @@ export const ReplyReceived = ({ notification: n }: {notification: Notification})
         >
             "{n.reply.content}"
         </span>
-    </Base>
+    </BaseNotification>
 }
 
-export const MissionAccomplished = ({ notification: n }: {notification: Notification}) => {
+export const MissionAccomplished = ({ notification: n }: { notification: MissionAccomplishedNotification }) => {
     const { t } = useLaravelReactI18n()
 
-    return <Base
+    return <BaseNotification
         src={"/images/missions/" + n.mission.image}
         created_at={n.created_at}
         read_at={n.read_at}
@@ -198,10 +202,10 @@ export const MissionAccomplished = ({ notification: n }: {notification: Notifica
     />
 }
 
-export const CommentMarked = ({ notification: n }: {notification: Notification}) => {
+export const CommentMarked = ({ notification: n }: { notification: CommentMarkedNotification }) => {
     const { t } = useLaravelReactI18n()
 
-    return <Base
+    return <BaseNotification
         src={"/images/users/" + n.user.avatar}
         created_at={n.created_at}
         read_at={n.read_at}
@@ -230,5 +234,5 @@ export const CommentMarked = ({ notification: n }: {notification: Notification})
         >
             "{n.comment.content}"
         </span>
-    </Base>
+    </BaseNotification>
 }

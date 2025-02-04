@@ -7,14 +7,7 @@ import { Link, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
 import { FormEvent } from 'react'
 import { useState } from "react"
-import {
-    CommentReceived,
-    CommentVoteReceived,
-    PostVoteReceived,
-    ReplyReceived,
-    MissionAccomplished,
-    CommentMarked
-} from "@/Components/NotificationItems";
+import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
 import {
     POST_VOTE_RECEIVED,
     COMMENT_MARKED,
@@ -23,8 +16,15 @@ import {
     MISSION_ACCOMPLISHED,
     REPLY_RECEIVED
 } from "@/Enums/NotificationType"
-import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
-import { Notification } from '@/types'
+import {
+    CommentReceived,
+    CommentVoteReceived,
+    PostVoteReceived,
+    ReplyReceived,
+    MissionAccomplished,
+    CommentMarked
+} from "@/Components/NotificationItems";
+import type { Notification } from '@/types/notification'
 
 export default function Nav() {
     const { t } = useLaravelReactI18n()
