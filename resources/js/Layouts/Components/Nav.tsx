@@ -137,13 +137,13 @@ export default function Nav() {
                                 : <>
                                     <Link
                                         href={route("login")}
-                                        className="rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
+                                        className="rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
                                     >
                                         {t("content.login")}
                                     </Link>
                                     <Link
                                         href={route("register")}
-                                        className="rounded-md px-3.5 py-2.5 bg-gray/25 hover:bg-gray/50 text-sm font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
+                                        className="rounded-md px-3.5 py-2.5 bg-gray/25 hover:bg-gray/50 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
                                     >
                                         {t("content.register")}
                                     </Link>

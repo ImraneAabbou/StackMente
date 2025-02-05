@@ -2,10 +2,11 @@ import { useState, useRef } from "react"
 import type { ReactNode } from "react"
 import { useInView } from "framer-motion"
 import { router } from "@inertiajs/react"
+import { PageProps } from "@/types"
 
 export default function InfiniteScrollLoader(
     { children, url, onSuccess, className }
-        : { children: ReactNode, url: string, className?: string, onSuccess?: (page: any) => any }
+        : { children: ReactNode, url: string, className?: string, onSuccess?: (page: PageProps) => any }
 ) {
     const ref = useRef<HTMLDivElement>(null)
     const [shouldFetch, setShouldFetch] = useState(true)
@@ -19,7 +20,10 @@ export default function InfiniteScrollLoader(
             onFinish() {
                 setTimeout(() => setShouldFetch(true), 500)
             },
-            onSuccess,
+            onSuccess: (page) => {
+                if (!onSuccess) return
+                onSuccess(page.props)
+            },
             preserveState: true,
             preserveScroll: true,
             replace: true,

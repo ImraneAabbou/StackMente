@@ -57,9 +57,14 @@ export default {
         },
         extend: {
             fontFamily: {
+                ...defaultTheme.fontFamily,
                 sans: ["Inter", ...defaultTheme.fontFamily.sans],
-                display: ["Playfair Display", ...defaultTheme.fontFamily.serif],
+                display: ["Inter", ...defaultTheme.fontFamily.sans],
             },
+            fontSize: {
+                ...defaultTheme.fontSize,
+                "2xs": "0.65rem",
+            }
         },
     },
     plugins: [forms],
