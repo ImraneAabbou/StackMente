@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <Nav />
         <div className="h-full flex gap-4 container">
             <Sidebar />
-            <div>
+            <div className="grow">
                 {children}
             </div>
         </div>
