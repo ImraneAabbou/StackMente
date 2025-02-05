@@ -20,6 +20,7 @@ export default {
             },
         },
         colors: {
+            ...colors,
             blue: {
                 ...colors.blue,
                 DEFAULT: "#158BEA",
@@ -39,7 +40,7 @@ export default {
             warn: "#ccc500",
             success: {
                 light: "#54BF59",
-                dark: "#54BF59"
+                dark: "#54BF59",
             },
             error: {
                 light: "#f31616",
@@ -57,12 +58,9 @@ export default {
         extend: {
             fontFamily: {
                 sans: ["Inter", ...defaultTheme.fontFamily.sans],
-                display: ["Playfair Display", ...defaultTheme.fontFamily.serif]
+                display: ["Playfair Display", ...defaultTheme.fontFamily.serif],
             },
         },
-
     },
-    plugins: [
-        forms,
-    ]
+    plugins: [forms],
 };
