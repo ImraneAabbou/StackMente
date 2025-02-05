@@ -110,7 +110,7 @@ export default function Nav() {
                                                         <div className='flex flex-col'>
                                                             <span className='font-bold'>{user.stats.xp.curr_level_total}</span>
 
-                                                            <span className='text-xs text-gray ms-4'>/ {user.stats.xp.curr_level_total}</span>
+                                                            <span className='text-xs text-gray ms-4'>/ {user.stats.xp.next_level_total}</span>
                                                         </div>
                                                     </div>
                                                 </div>
