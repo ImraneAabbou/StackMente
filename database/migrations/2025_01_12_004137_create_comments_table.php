@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Post::class)->constrained()->cascadeOnDelete();
-            $table->text('content');
+            $table->text('content')->collation("utf8mb4_general_ci");
             $table->boolean('is_marked')->default(false);
             $table->timestamps();
             $table->unique(["user_id", "post_id"]);

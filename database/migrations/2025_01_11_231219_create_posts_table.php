@@ -16,9 +16,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->enum('type', array_column(PostType::cases(), 'value'));
-            $table->string('title')->unique();
+            $table->string('title')->collation("utf8mb4_general_ci")->unique();
             $table->string('slug')->unique();
-            $table->text('content');
+            $table->text('content')->collation("utf8mb4_general_ci");
             $table->unsignedInteger('views')->default(0);
             $table->timestamps();
         });
