@@ -58,7 +58,7 @@ const navigations: NavLinkProps[] = [
     {
         href: route("tags.index"),
         icon: <Tags />,
-        isActive: () => false,
+        isActive: () => route().current("tags.index"),
     },
     {
         href: route("rank"),

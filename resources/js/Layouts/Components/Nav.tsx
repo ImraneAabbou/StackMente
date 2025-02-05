@@ -137,13 +137,13 @@ export default function Nav() {
                                 : <>
                                     <Link
                                         href={route("login")}
-                                        className="rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        className="rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
                                     >
                                         {t("content.login")}
                                     </Link>
                                     <Link
                                         href={route("register")}
-                                        className="rounded-md px-3.5 py-2.5 bg-gray/25 hover:bg-gray/50 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        className="rounded-md px-3.5 py-2.5 bg-gray/25 hover:bg-gray/50 text-sm font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
                                     >
                                         {t("content.register")}
                                     </Link>
@@ -177,7 +177,7 @@ const NotificationsItems = () => {
 
     return <MenuItems
         className="
-                flex flex-col gap-1 w-screen mt-4
+                flex flex-col gap-1 w-screen mt-4 left-0 sm:left-auto
                 fixed right-0 z-10 h-[calc(100vh-100%)] sm:max-h-96
                 overflow-y-auto bg-input-light dark:bg-input-dark
                 sm:absolute sm:max-w-xs sm:mt-4 sm:rounded-md sm:shadow-lg
