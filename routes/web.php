@@ -6,6 +6,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UsersRankingController;
 use App\Models\Mission;
@@ -62,6 +63,8 @@ Route::delete('/profile/{reportable}/reports', [ProfileController::class, 'clear
 Route::get('/rank', UsersRankingController::class)->name('rank');
 
 Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
+
+Route::get('/search', SearchController::class);
 
 Route::get('/sync', fn() => SyncEverything::execute());
 

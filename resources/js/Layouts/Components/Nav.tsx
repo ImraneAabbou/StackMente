@@ -3,9 +3,9 @@ import Input from '@/Components/ui/Input'
 import { ProgressCircle } from '@/Components/ui/ProgressCircle'
 import { avatar } from '@/Utils/helpers/path'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Link, usePage, usePoll } from '@inertiajs/react'
+import { Link, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
-import { FormEvent } from 'react'
+import { ChangeEvent, FormEvent } from 'react'
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
 import {
@@ -25,17 +25,28 @@ import {
     CommentMarked
 } from "@/Components/NotificationItems";
 import type { Notification } from '@/types/notification'
+import { RouteName } from '../../../../vendor/tightenco/ziggy/src/js'
+
+const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.index", "articles.index", "subjects.index"]
 
 export default function Nav() {
     const { t } = useLaravelReactI18n()
     const { auth: { user } } = usePage().props
+    const {data, setData, get} = useForm(`SearchBar`, {
+        q: ""
+    })
+    const searchAction = SEARCHABLE_ROUTE_NAMES.includes(route().current() as string)
+        ? route(route().current() as string)
+        : route("search")
 
     const handleSearchSubmit = (e: FormEvent) => {
         e.preventDefault()
+        get(searchAction)
     }
 
-    const handleSearchChange = (e: FormEvent) => {
+    const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
+        setData("q", e.target.value)
     }
 
     return (
@@ -53,6 +64,7 @@ export default function Nav() {
                         <form onSubmit={handleSearchSubmit} className='w-full max-w-sm'>
                             <Input
                                 onChange={handleSearchChange}
+                                value={data.q}
                                 className='w-full'
                                 type="search"
                                 placeholder={t("content.looking_for") as string}
