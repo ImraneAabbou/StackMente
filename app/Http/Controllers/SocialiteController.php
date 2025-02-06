@@ -31,7 +31,7 @@ class SocialiteController extends Controller
                 UserService::findOrCreateUserFromProvidedUser($provider, $providedUser)
             );
 
-            return to_route('dashboard');
+            return to_route('feed');
         }
 
         // linking action
