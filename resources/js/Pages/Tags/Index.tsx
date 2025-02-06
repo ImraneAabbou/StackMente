@@ -19,20 +19,22 @@ export default function TagsIndex() {
 
     return <Layout>
         <div className="flex flex-col gap-8 mb-12">
-            <div className="flex justify-between items-end">
-                <h1 className="text-2xl font-display mt-4">{t("content.tags")}</h1>
-                <span className="text-secondary">{count} {t("content.tags")}</span>
-            </div>
-            <p className="">
-                {t("tags.tag_definition")}
-            </p>
-            {
-                !!q && <p className="text-secondary">
-                    {t("content.results_of_query", {
-                        q: <span className="">"{q}":</span>
-                    })}
+            <div className="mt-2">
+                <div className="flex justify-between items-center">
+                    <h1 className="text-2xl font-display leading-loose tracking-wider">{t("content.tags")}</h1>
+                    <span className="text-secondary">{count} {t("content.tags")}</span>
+                </div>
+                <p className="text-secondary">
+                    {t("tags.tag_definition")}
                 </p>
-            }
+                {
+                    !!q && <p className="text-secondary mt-4">
+                        {t("content.results_of_query", {
+                            q: <span className="">"{q}":</span>
+                        })}
+                    </p>
+                }
+            </div>
             {
                 !tags.length
                     ? <NoTagFound />
