@@ -24,7 +24,7 @@ export default function TagsIndex() {
                     <h1 className="text-2xl font-display leading-loose tracking-wider">{t("content.tags")}</h1>
                     <span className="text-secondary">{count} {t("content.tags")}</span>
                 </div>
-                <p className="text-secondary">
+                <p className="text-secondary text-sm">
                     {t("tags.tag_definition")}
                 </p>
                 {

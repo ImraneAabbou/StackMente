@@ -31,6 +31,10 @@ return [
     'subject' => 'Subject',
     'articles' => 'Articles',
     'article' => 'Article',
+    'posts' => 'Posts',
+    'post' => 'Post',
     'results_of_query' => 'Results of :q',
-
+    'comments' => 'Comments',
+    'views' => 'Views',
+    'answered' => "Answered",
 ];

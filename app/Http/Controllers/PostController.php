@@ -36,7 +36,8 @@ class PostController extends Controller
         $posts->when(!is_null($querySearch), fn() => $posts->whereLike('title', "%$querySearch%"));
 
         $postsQuery = $posts
-            ->with('tags')
+            ->with(['tags', 'user'])
+            ->withExists('answer')
             ->withCount(['comments', 'upVotes', 'downVotes']);
 
         $items = collect();

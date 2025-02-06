@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
             }
 
             if (request()->is('posts/*')) {
-                return Post::findOrFail($value);
+                return Post::where("slug", $value)->firstOrFail();
             }
 
             abort(404);
