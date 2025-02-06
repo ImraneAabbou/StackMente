@@ -24,6 +24,7 @@ class PostController extends Controller
     public function index(Request $request): Response
     {
         $type = $request->uri()->path();
+        $querySearch = $request->query('q');
 
         $posts = match ($type) {
             'articles' => Post::articles(),
@@ -32,20 +33,38 @@ class PostController extends Controller
             default => Post::query()
         };
 
-        $posts_pagination = $posts
-            ->with('tags')
-            ->withCount(['comments', 'upVotes', 'downVotes'])
-            ->cursorPaginate(15);
+        $posts->when(!is_null($querySearch), fn() => $posts->whereLike('title', "%$querySearch%"));
 
-        return Inertia::render('Posts/Index', [
-            'next_page_url' => $posts_pagination->nextPageUrl(),
-            'posts' => collect($posts_pagination->items())
-                ->map(fn($p) => [
+        $postsQuery = $posts
+            ->with('tags')
+            ->withCount(['comments', 'upVotes', 'downVotes']);
+
+        $items = collect();
+
+        for ($i = 1; $i <= $request->query('page', 1); $i++) {
+            $items = $items->merge(
+                collect(
+                    (
+                        $posts_pagination = $postsQuery
+                            ->paginate(15, ['*'], 'page', $i)
+                    )
+                        ->items()
+                )->map(fn($p) => [
                     ...$p->toArray(),
+                    'content' => Str::limit($p->content, 255),
                     'user_vote' => auth()->user()
                         ? $p->getUserVote(auth()->user())
                         : null
                 ])
+            );
+        }
+
+        return Inertia::render('Posts/Index', [
+            'posts' => [
+                'items' => $items,
+                'next_page_url' => $posts_pagination->nextPageUrl(),
+                'count' => $querySearch ? $posts->count() : Post::count(),
+            ]
         ]);
     }
 
@@ -62,8 +81,8 @@ class PostController extends Controller
             'user_id' => auth()->user()->id
         ]);
 
-        return to_route("posts.show", ["post" => $p->id])
-            ->withFragment("hfaisdfk")
+        return to_route('posts.show', ['post' => $p->id])
+            ->withFragment('hfaisdfk')
             ->with('status', 'posted-successfuly');
     }
 
