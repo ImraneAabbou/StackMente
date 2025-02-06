@@ -28,7 +28,7 @@ export default function AuthProviders() {
             providers.map(p =>
                 <a
                     href={route("socialite.redirect", { provider: p.name.toLowerCase() })}
-                    className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray/25 focus-visible:ring-transparent"
+                    className="flex w-full items-center justify-center gap-3 rounded-md bg-surface-light dark:bg-surface-dark px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-secondary/25 hover:bg-secondary/25 focus-visible:ring-transparent"
                 >
                     {p.icon}
                     <span className="text-sm font-semibold leading-6">{p.name}</span>

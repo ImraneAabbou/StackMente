@@ -92,7 +92,7 @@ export default function Login() {
                                 </label>
                             </div>
 
-                            <div className="text-sm text-gray hover:text-gray/90 leading-6">
+                            <div className="text-sm text-secondary leading-6">
                                 <Link href={route("password.request")} className="font-semibold">
                                     {t('content.forgot_password')}
                                 </Link>
@@ -102,7 +102,7 @@ export default function Login() {
                         <div>
                             <button
                                 type="submit"
-                                className="flex w-full justify-center rounded-md bg-blue text-text-light px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                                className="flex w-full justify-center rounded-md bg-primary text-onPrimary px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm hover:bg-primary/90"
                             >
                                 {t("content.login")}
                             </button>
@@ -112,7 +112,7 @@ export default function Login() {
                     <div>
                         <div className="relative mt-10">
                             <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                                <div className="w-full border-t border-gray/25" />
+                                <div className="w-full border-t border-secondary/25" />
                             </div>
                             <div className="relative flex justify-center text-sm font-medium leading-6">
                                 <span className="bg-background-light dark:bg-background-dark px-2">{t("content.or")}</span>

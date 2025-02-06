@@ -21,23 +21,9 @@ export default {
         },
         colors: {
             ...colors,
-            blue: {
-                ...colors.blue,
-                DEFAULT: "#158BEA",
-            },
-            green: {
-                ...colors.green,
-                DEFAULT: "#54BF59",
-            },
-            gray: {
-                ...colors.gray,
-                DEFAULT: "#9B9B9B",
-            },
-            text: {
-                light: "#f4f4f4",
-                dark: "#000000",
-            },
-            warn: "#ccc500",
+            primary: "#158BEA",
+            onPrimary: "#ffffff",
+            secondary: "#9B9B9B",
             success: {
                 light: "#54BF59",
                 dark: "#54BF59",
@@ -46,13 +32,21 @@ export default {
                 light: "#f31616",
                 dark: "#ff5b5b",
             },
-            input: {
+            surface: {
                 light: "#ffffff",
                 dark: "#2e2e3b",
+            },
+            onSurface: {
+                light: "#f4f4f4",
+                dark: "#000000",
             },
             background: {
                 light: "#f3f3f5",
                 dark: "#21212C",
+            },
+            onBackground: {
+                light: "#f4f4f4",
+                dark: "#000000",
             },
         },
         extend: {
@@ -64,7 +58,7 @@ export default {
             fontSize: {
                 ...defaultTheme.fontSize,
                 "2xs": "0.65rem",
-            }
+            },
         },
     },
     plugins: [forms],

@@ -10,7 +10,7 @@ import Rank from "@/Components/icons/Rank";
 
 export default function NavLinks() {
     return <div className="sm:shrink-0 sm:sticky sm:h-screen sm:top-0 sm:flex items-center justify-center sm:w-16 fixed bottom-0 left-0 w-full">
-        <div className="flex sm:flex-col gap-2 sm:-my-16 items-center justify-around bg-input-light dark:bg-input-dark sm:bg-transparent sm:dark:bg-transparent">
+        <div className="flex sm:flex-col gap-2 sm:-my-16 items-center justify-around bg-surface-light dark:bg-surface-dark sm:bg-transparent sm:dark:bg-transparent">
             {
                 navigations.map(n => <SidebarLink {...n} />)
             }
@@ -28,7 +28,7 @@ interface NavLinkProps {
 const SidebarLink = ({ href, className, icon, isActive }: NavLinkProps) => {
     return <Link
         href={href}
-        className={clsx("flex items-center justify-center w-12 h-12 rounded", isActive() ? "" : "text-gray hover:text-current", className)}
+        className={clsx("flex items-center justify-center w-12 h-12 rounded", isActive() ? "" : "text-secondary hover:text-current", className)}
     >
         {icon}
     </Link>

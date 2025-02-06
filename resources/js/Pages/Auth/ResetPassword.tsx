@@ -80,7 +80,7 @@ export default function ForgotPassword({ token, email }: { token: string, email:
                         <div>
                             <button
                                 type="submit"
-                                className="flex w-full justify-center rounded-md bg-blue text-text-light px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                                className="flex w-full justify-center rounded-md bg-primary text-onPrimary px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm hover:bg-primary"
                             >
                                 {t("common.reset")}
                             </button>

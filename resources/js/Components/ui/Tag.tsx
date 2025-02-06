@@ -6,7 +6,7 @@ interface TagProps {
 }
 
 export default function Tag({ children, className = "" }: TagProps) {
-    return <span className={clsx("text-xs font-semibold bg-gray/25 px-2 py-1 rounded", className)}>
+    return <span className={clsx("text-xs font-semibold bg-secondary/25 px-2 py-1 rounded", className)}>
         {children}
     </span>
 }

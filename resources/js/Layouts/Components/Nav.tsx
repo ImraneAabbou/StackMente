@@ -79,7 +79,7 @@ export default function Nav() {
                                         <MenuButton className="flex rounded-full text-sm">
                                             <button
                                                 type="button"
-                                                className="rounded-full p-1 text-gray"
+                                                className="rounded-full p-1 text-secondary"
                                             >
                                                 <span className="absolute -inset-1.5" />
                                                 <span className="sr-only">View notifications</span>
@@ -103,7 +103,7 @@ export default function Nav() {
                                             </MenuButton>
                                         </div>
                                         <MenuItems
-                                            className="absolute bg-input-light dark:bg-input-dark right-0 z-10 mt-2 w-64 origin-top-right rounded-md py-1 shadow-lg"
+                                            className="absolute bg-surface-light dark:bg-surface-dark right-0 z-10 mt-2 w-64 origin-top-right rounded-md py-1 shadow-lg"
                                         >
                                             <MenuItem>
                                                 <div
@@ -122,7 +122,7 @@ export default function Nav() {
                                                         <div className='flex flex-col'>
                                                             <span className='font-bold'>{user.stats.xp.curr_level_total}</span>
 
-                                                            <span className='text-xs text-gray ms-4'>/ {user.stats.xp.next_level_total}</span>
+                                                            <span className='text-xs text-secondary ms-4'>/ {user.stats.xp.next_level_total}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -155,7 +155,7 @@ export default function Nav() {
                                     </Link>
                                     <Link
                                         href={route("register")}
-                                        className="rounded-md px-3.5 py-2.5 bg-gray/25 hover:bg-gray/50 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
+                                        className="rounded-md px-3.5 py-2.5 bg-secondary/25 hover:bg-secondary/50 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
                                     >
                                         {t("content.register")}
                                     </Link>
@@ -191,19 +191,19 @@ const NotificationsItems = () => {
         className="
                 flex flex-col gap-1 w-screen mt-4 left-0 sm:left-auto
                 fixed right-0 z-10 h-[calc(100vh-100%)] sm:max-h-96
-                overflow-y-auto bg-input-light dark:bg-input-dark
+                overflow-y-auto bg-surface-light dark:bg-surface-dark
                 sm:absolute sm:max-w-xs sm:mt-4 sm:rounded-md sm:shadow-lg
             "
     >
         <MenuItem>
-            <div className='text-xs flex justify-between px-2 items-center sticky inset-0 bg-input-light dark:bg-input-dark p-1'>
-                <span className="text-gray">
+            <div className='text-xs flex justify-between px-2 items-center sticky inset-0 bg-surface-light dark:bg-surface-dark p-1'>
+                <span className="text-secondary">
                     {t("content.notifications")}
                 </span>
                 <Link
                     href={route("notifications.destroy")}
                     method="delete"
-                    className="text-gray p-0.5 px-1 rounded"
+                    className="text-secondary p-0.5 px-1 rounded"
                 >
                     {t("content.mark_all_read")}
                 </Link>
@@ -261,7 +261,7 @@ const NotificationsItems = () => {
         }
         {
             next_page_url &&
-            <InfiniteScrollLoader url={next_page_url} className='text-xs text-gray text-center select-none p-1'>
+            <InfiniteScrollLoader url={next_page_url} className='text-xs text-secondary text-center select-none p-1'>
                 {
                     t("content.loading_more")
                 }

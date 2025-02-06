@@ -50,7 +50,7 @@ export const BaseNotification = ({ id, title, children, src, alt, className, cre
                     </div>
                 }
             </div>
-            <time className={`text-end text-xs text-gray-500`}>
+            <time className={`text-end text-xs text-secondary`}>
                 {formatDate(created_at)}
             </time>
         </div>

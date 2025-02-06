@@ -21,13 +21,13 @@ export default function TagsIndex() {
         <div className="flex flex-col gap-8 mb-12">
             <div className="flex justify-between items-end">
                 <h1 className="text-2xl font-display mt-4">{t("content.tags")}</h1>
-                <span className="text-gray">{count} {t("content.tags")}</span>
+                <span className="text-secondary">{count} {t("content.tags")}</span>
             </div>
             <p className="">
                 {t("tags.tag_definition")}
             </p>
             {
-                !!q && <p className="text-gray">
+                !!q && <p className="text-secondary">
                     {t("content.results_of_query", {
                         q: <span className="">"{q}":</span>
                     })}
@@ -45,7 +45,7 @@ export default function TagsIndex() {
                         {
                             next_link_url
                             && <InfiniteScrollLoader
-                                className="text-gray text-center"
+                                className="text-secondary text-center"
                                 url={next_link_url}
                                 onSuccess={props => setTags(tags => [...tags, ...props.tags.items])}
                             >
@@ -62,7 +62,7 @@ export default function TagsIndex() {
 export const TagItem = ({ name, posts_count, articles_count, subjects_count, questions_count }: TagWithCounts) => {
     const { t, tChoice } = useLaravelReactI18n()
 
-    return <div className="group py-4 px-2.5 border border-gray/25 hover:border-gray/75 rounded max-w-sm flex flex-col gap-8 w-full max-w-xs">
+    return <div className="group py-4 px-2.5 border border-secondary/25 hover:border-secondary/75 rounded flex flex-col gap-8 w-full max-w-xs">
         <div className="text-xs flex gap-2 items-center justify-between">
             <Link
                 href={route("feed", {
@@ -78,7 +78,7 @@ export const TagItem = ({ name, posts_count, articles_count, subjects_count, que
                 </Tag>
             </Link>
 
-            <span className="text-gray group-hover:text-current">
+            <span className="text-secondary group-hover:text-current">
                 {
                     tChoice("tags.usage", posts_count, {
                         count: <FormattedNumber value={posts_count} style="decimal" notation="compact" />
@@ -98,7 +98,7 @@ export const TagItem = ({ name, posts_count, articles_count, subjects_count, que
                     }
                     )
                 }
-                className="flex flex-col gap-2 items-center border-r border-gray/25 px-1 py-1 hover:text-gray">
+                className="flex flex-col gap-2 items-center border-r border-secondary/25 px-1 py-1 hover:text-secondary">
                 <div className="flex flex-col gap-0.5 items-center ">
                     <Questions />
                     <span className="text-2xs">
@@ -118,7 +118,7 @@ export const TagItem = ({ name, posts_count, articles_count, subjects_count, que
                     }
                     )
                 }
-                className="flex flex-col gap-2 items-center border-r border-gray/25 px-1 py-1 hover:text-gray"
+                className="flex flex-col gap-2 items-center border-r border-secondary/25 px-1 py-1 hover:text-secondary"
             >
                 <div className="flex flex-col gap-0.5 items-center">
                     <Subjects />
@@ -139,7 +139,7 @@ export const TagItem = ({ name, posts_count, articles_count, subjects_count, que
                     }
                     )
                 }
-                className="flex flex-col gap-2 items-center px-1 py-1 hover:text-gray">
+                className="flex flex-col gap-2 items-center px-1 py-1 hover:text-secondary">
                 <div className="flex flex-col gap-0.5 items-center">
                     <Articles />
                     <span className="text-2xs">
@@ -157,7 +157,7 @@ export const TagItem = ({ name, posts_count, articles_count, subjects_count, que
 export const NoTagFound = () => {
     const { t } = useLaravelReactI18n()
 
-    return <div className="h-96 flex text-gray flex justify-center items-center flex-col gap-4 text-2xl">
+    return <div className="h-96 flex text-secondary justify-center items-center flex-col gap-4 text-2xl">
         <Tags size={48} />
         {t("tags.not_tag_found")}
     </div>

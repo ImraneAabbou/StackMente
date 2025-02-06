@@ -11,7 +11,7 @@ export function ProgressCircle({ value, size = 24, strokeWidth = 4, children }: 
     const strokeDashoffset = circumference + value * circumference;
 
     return (
-        <div className="relative flex items-center justify-center stroke-green" style={{ width: size, height: size }}>
+        <div className="relative flex items-center justify-center stroke-success-light dark:stroke-success-dark" style={{ width: size, height: size }}>
             <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
                 <circle
                     cx={size / 2}

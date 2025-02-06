@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>"
-    class="bg-background-light text-text-dark dark:text-text-light dark:bg-background-dark">
+    class="bg-background-light text-onBackground-dark dark:text-onBackground-light dark:bg-background-dark">
 
 <head>
     <meta charset="utf-8">
