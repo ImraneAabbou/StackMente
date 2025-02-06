@@ -32,8 +32,9 @@ const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.in
 export default function Nav() {
     const { t } = useLaravelReactI18n()
     const { auth: { user } } = usePage().props
-    const {data, setData, get} = useForm(`SearchBar`, {
-        q: ""
+    const { q } = route().params
+    const { data, setData, get } = useForm({
+        q
     })
     const searchAction = SEARCHABLE_ROUTE_NAMES.includes(route().current() as string)
         ? route(route().current() as string)
