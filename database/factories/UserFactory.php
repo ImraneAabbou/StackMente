@@ -54,7 +54,7 @@ class UserFactory extends Factory
         $timespent = (int) (($streak + $max_streak) * (60 ** 2) * fake()->randomFloat(0.5, 2.5));
         $last_interaction = now()->subHours(fake()->numberBetween(-23, 0));
         $userImages = collect(File::files(public_path('images/users/')))->map(fn($f) => $f->getFilename());
-        $totalXP = fake()->numberBetween(0, 1000000);
+        $totalXP = fake()->numberBetween(500000, 5500000);
         $level = $this->getLevelFromXp($totalXP);
 
         return [
@@ -69,9 +69,9 @@ class UserFactory extends Factory
                 'xp' => [
                     'total' => $totalXP,
                     'daily' => fake()->numberBetween(0, 500),
-                    'weekly' => fake()->numberBetween(0, 2500),
-                    'monthly' => fake()->numberBetween(0, 50000),
-                    'yearly' => fake()->numberBetween(0, 100000),
+                    'weekly' => fake()->numberBetween(1000, 5000),
+                    'monthly' => fake()->numberBetween(10000, 25000),
+                    'yearly' => fake()->numberBetween(50000, 250000),
                 ],
                 'login' => [
                     'streak' => $streak,

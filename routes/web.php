@@ -30,8 +30,8 @@ Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.s
 Route::post('/posts/{reportable}/reports', [PostController::class, 'report']);
 Route::delete('/posts/{reportable}/reports', [PostController::class, 'clearReports'])->can('delete', [Report::class]);
 
-Route::post('/posts/{votable}/vote', [PostController::class, 'vote'])->name("posts.vote");
-Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote'])->name("posts.unvote");
+Route::post('/posts/{votable}/vote', [PostController::class, 'vote'])->name('posts.vote');
+Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote'])->name('posts.unvote');
 
 Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::post('/comments/{reportable}/reports', [CommentController::class, 'report']);
@@ -64,7 +64,7 @@ Route::get('/rank', UsersRankingController::class)->name('rank');
 
 Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
 
-Route::get('/search', SearchController::class);
+Route::get('/search', SearchController::class)->name("search");
 
 Route::get('/sync', fn() => SyncEverything::execute());
 

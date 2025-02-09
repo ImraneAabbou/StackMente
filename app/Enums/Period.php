@@ -8,4 +8,5 @@ enum Period: string
     case WEEKLY = "WEEKLY";
     case DAILY = "DAILY";
     case YEARLY = "YEARLY";
+    case TOTAL = "TOTAL";
 }

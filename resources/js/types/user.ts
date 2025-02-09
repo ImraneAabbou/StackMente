@@ -21,6 +21,10 @@ export interface User {
     missions: AccomplishedMission[];
 }
 
+export interface RankedUser extends User {
+    rank: number
+}
+
 interface Stats {
     level: number;
     timespent: number;

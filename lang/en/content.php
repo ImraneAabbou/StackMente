@@ -37,4 +37,7 @@ return [
     'comments' => 'Comments',
     'views' => 'Views',
     'answered' => "Answered",
+    'ranking' => "Ranking",
+    'user' => "User",
+    'rank' => "Rank",
 ];

@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User, RankedUser } from "./user";
 import type { Notification } from "./notification";
 import { TagWithCounts } from "./tag";
 import { Post } from "./post";
@@ -23,5 +23,8 @@ export type PageProps<
         items: TagWithCounts[];
         count: number;
         next_link_url?: string;
+    };
+    rankings: {
+        users: RankedUser[];
     };
 };
