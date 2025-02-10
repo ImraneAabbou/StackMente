@@ -33,9 +33,12 @@ class PostController extends Controller
             default => Post::query()
         };
 
+        /* dd($type); */
+
         $posts->when(!is_null($querySearch), fn() => $posts->whereLike('title', "%$querySearch%"));
 
         $postsQuery = $posts
+            ->clone()
             ->with(['tags', 'user'])
             ->withExists('answer')
             ->withCount(['comments', 'upVotes', 'downVotes']);
@@ -59,6 +62,8 @@ class PostController extends Controller
                 ])
             );
         }
+
+        $posts_pagination->appends('q', $querySearch);
 
         return Inertia::render('Posts/Index', [
             'posts' => [
