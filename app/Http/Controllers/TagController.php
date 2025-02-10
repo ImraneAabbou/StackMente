@@ -20,12 +20,13 @@ class TagController extends Controller
             );
 
         $tagsPagination = $tagsQuery
+            ->clone()
             ->withCount(['posts', 'articles', 'subjects', 'questions'])
             ->orderBy('posts_count', 'desc')
             ->cursorPaginate(25);
 
         $items = $tagsPagination->items();
-        $nextLinkUrl = $tagsPagination->nextPageUrl();
+        $nextLinkUrl = $tagsPagination->appends('q', $querySearch)->nextPageUrl();
 
         return Inertia::render('Tags/Index', [
             'tags' => [
