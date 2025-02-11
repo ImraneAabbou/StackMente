@@ -55,7 +55,7 @@ export default function Nav() {
     }
 
     return (
-        <nav className="sticky bg-background-light/50 dark:bg-background-dark/50 backdrop-blur top-0">
+        <nav className="sticky z-50 bg-background-light/50 dark:bg-background-dark/50 backdrop-blur top-0">
             <div className="container">
                 <div className="flex gap-4 h-16 items-center justify-between">
                     <div className="flex flex-1 gap-4 items-center">
