@@ -15,6 +15,9 @@ import { FormattedNumber } from "react-intl";
 import { avatar } from "@/Utils/helpers/path"
 import Check from "@/Components/icons/Check";
 import Filter from "@/Layouts/Components/Filter";
+import FilterIcon from "@/Components/icons/Filter"
+import { useState } from "react";
+import { useMediaQuery } from "@react-hook/media-query";
 
 export default function PostsIndex() {
     const { t, tChoice } = useLaravelReactI18n()
@@ -34,7 +37,8 @@ export default function PostsIndex() {
             : route().current("subjects.*")
                 ? t("posts.subjects_subheading")
                 : t("posts.posts_subheading")
-
+    const [showFilter, setShowFilter] = useState(false)
+    const shouldShowFilter = useMediaQuery("(min-width: 1024px)") || showFilter
 
     return <Layout>
         <div className="flex flex-col gap-8 mb-12">
@@ -73,7 +77,17 @@ export default function PostsIndex() {
                         </InfiniteScrollLoader>
                     }
                 </div>
-                <Filter />
+                {
+                    shouldShowFilter && <Filter />
+                }
+                <div className="flex justify-end lg:hidden">
+                    <button
+                        className="flex items-center font-bold text-sm gap-2.5 text-secondary hover:text-current"
+                        onClick={() => setShowFilter(!showFilter)}
+                    >
+                        {t("content.filter")} <FilterIcon />
+                    </button>
+                </div>
             </div>
         </div>
     </Layout>
