@@ -7,6 +7,7 @@ use App\Enums\Sorts;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Post;
+use App\Models\Tag;
 use App\Services\PostService;
 use App\Traits\ReportableCtrl;
 use App\Traits\VotableCtrl;
@@ -129,9 +130,15 @@ class PostController extends Controller
             'user_id' => auth()->user()->id
         ]);
 
-        return to_route('posts.show', ['post' => $p->id])
-            ->withFragment('hfaisdfk')
-            ->with('status', 'posted-successfuly');
+        foreach ($postData['tags'] as $tagName) {
+            $tag = Tag::firstOrCreate(['name' => $tagName]);
+
+            if (!$p->tags->contains($tag->id)) {
+                $p->tags()->attach($tag->id);
+            }
+        }
+
+        return to_route(Str::lower($postData["type"]) . "s.show", ['post' =>$p->slug ]);
     }
 
     /**

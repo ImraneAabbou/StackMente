@@ -48,4 +48,6 @@ return [
     'ask_paragraph' => "Ask what's on your mind and get insightful answers.",
     'write_paragraph' => 'Share your thoughts and let your words inspire others.',
     'discuss_paragraph' => "Engage in meaningful discussions, exchange ideas and explore others' thoughts.",
+    'title' => 'Title',
+    'content' => "Content",
 ];

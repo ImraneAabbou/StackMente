@@ -17,16 +17,19 @@ Route::inertia('/', 'Index');
 
 Route::inertia('/articles/create', 'Posts/CreateArticle')->name('articles.create');
 Route::get('/articles', [PostController::class, 'index'])->name('articles.index');
+Route::get('/articles/{post:slug}', [PostController::class, 'show'])->name('articles.show');
 
 Route::inertia('/subjects/create', 'Posts/CreateSubject')->name('subjects.create');
 Route::get('/subjects', [PostController::class, 'index'])->name('subjects.index');
+Route::get('/subjects/{post:slug}', [PostController::class, 'show'])->name('subjects.show');
 
 Route::inertia('/questions/create', 'Posts/CreateQuestion')->name('questions.create');
 Route::get('/questions', [PostController::class, 'index'])->name('questions.index');
+Route::get('/questions/{post:slug}', [PostController::class, 'show'])->name('questions.show');
 
 Route::get('/posts', [PostController::class, 'index'])->name('feed');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
+
 Route::post('/posts/{reportable}/reports', [PostController::class, 'report']);
 Route::delete('/posts/{reportable}/reports', [PostController::class, 'clearReports'])->can('delete', [Report::class]);
 
@@ -64,7 +67,7 @@ Route::get('/rank', UsersRankingController::class)->name('rank');
 
 Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
 
-Route::get('/search', SearchController::class)->name("search");
+Route::get('/search', SearchController::class)->name('search');
 
 Route::get('/sync', fn() => SyncEverything::execute());
 

@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->enum('type', array_column(PostType::cases(), 'value'));
             $table->string('title')->collation("utf8mb4_general_ci")->unique();
             $table->string('slug')->unique();
-            $table->text('content')->collation("utf8mb4_general_ci");
+            $table->longText('content')->collation("utf8mb4_general_ci");
             $table->unsignedInteger('views')->default(0);
             $table->timestamps();
         });

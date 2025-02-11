@@ -99,7 +99,7 @@ const PostItem = (p: Post) => {
     const formatDate = useRelativeDateFormat()
     const { user } = usePage().props.auth
 
-    return <div id={`post-${p.id}`} className="max-w-4xl flex flex-col-reverse sm:flex-row gap-8 border border-secondary/25 hover:border-secondary/75 rounded p-4 mx-auto" key={p.id}>
+    return <div id={`post-${p.id}`} className="max-w-4xl w-full flex flex-col-reverse sm:flex-row gap-8 border border-secondary/25 hover:border-secondary/75 rounded p-4 mx-auto" key={p.id}>
         <div className="sm:basis-24 justify-between items-center shrink-0 flex sm:flex-col sm:justify-center sm:items-end gap-2">
             <div className="flex sm:flex-col gap-2 sm:mb-4">
                 <Link
@@ -184,7 +184,7 @@ const PostItem = (p: Post) => {
             >
                 {p.title}
             </Link>
-            <p className="text-sm line-clamp-4 sm:line-clamp-3">{p.content}</p>
+            <p className="text-sm line-clamp-4 sm:line-clamp-3 font-normal" dangerouslySetInnerHTML={{ __html: p.content }} />
             <div className="flex flex-col gap-2">
                 <div className="flex gap-2 text-xs items-center justify-end">
                     <Link

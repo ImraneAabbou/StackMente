@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+strong {
+    @apply font-normal;
+}
+
+.quill-container,
+.ql-container,
+.ql-toolbar,
+.ql-editor {
+    @apply font-sans text-base;
+}
+
+.ql-editor img {
+    @apply rounded max-h-[720px] inline-block;
+}
+
+.ql-blank::before {
+    @apply !text-secondary !text-2xl !not-italic;
+}
+
+#editor-resizer * {
+    @apply !bg-surface-light dark:!bg-background-dark !text-onBackground-dark dark:!text-onBackground-light !border-secondary/0;
+}
+
+#editor-resizer .tooltip {
+    @apply !z-10;
+}

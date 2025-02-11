@@ -31,7 +31,9 @@ class StorePostRequest extends FormRequest
                 'max:200',
                 new UniquePost
             ],
-            'content' => ['required', 'string', 'max:65000'],
+            'tags' => ['required', 'array', 'min:3', 'max:6', 'distinct'],
+            'tags.*' => ['string', 'max:50'],
+            'content' => ['required', 'string', 'max:10000000', 'min:100'],
             'type' => ['required', Rule::enum(PostType::class)],
         ];
     }
