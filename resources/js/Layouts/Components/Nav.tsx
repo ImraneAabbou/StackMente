@@ -5,7 +5,7 @@ import { avatar } from '@/Utils/helpers/path'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Link, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
-import { ChangeEvent, FormEvent } from 'react'
+import { ChangeEvent, FormEvent, ReactNode } from 'react'
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
 import {
@@ -26,6 +26,10 @@ import {
 } from "@/Components/NotificationItems";
 import type { Notification } from '@/types/notification'
 import { RouteName } from '../../../../vendor/tightenco/ziggy/src/js'
+import Plus from '@/Components/icons/Plus'
+import QuestionMark from '@/Components/icons/QuestionMark'
+import Pencil from '@/Components/icons/Pencil'
+import Discuss from '@/Components/icons/Discuss'
 
 const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.index", "articles.index", "subjects.index"]
 
@@ -80,7 +84,20 @@ export default function Nav() {
                                         <MenuButton className="flex rounded-full text-sm">
                                             <button
                                                 type="button"
-                                                className="rounded-full p-1 text-secondary"
+                                                className="rounded-full text-secondary hover:text-current"
+                                            >
+                                                <span className="absolute -inset-1.5" />
+                                                <span className="sr-only">Create new Post</span>
+                                                <Plus />
+                                            </button>
+                                        </MenuButton>
+                                        <CreatePostItems />
+                                    </Menu>
+                                    <Menu as="div" className="relative">
+                                        <MenuButton className="flex rounded-full text-sm">
+                                            <button
+                                                type="button"
+                                                className="rounded-full text-secondary hover:text-current"
                                             >
                                                 <span className="absolute -inset-1.5" />
                                                 <span className="sr-only">View notifications</span>
@@ -167,6 +184,64 @@ export default function Nav() {
             </div>
         </nav>
     )
+}
+
+
+type CreatePostLink = {
+    header: string
+    paragraph: string
+    icon: ReactNode
+    href: string
+}
+
+const CreatePostItems = () => {
+    const { t } = useLaravelReactI18n()
+    const createPostsLinks: CreatePostLink[] = [
+        {
+            header: t("content.ask") as string,
+            href: route("questions.create"),
+            paragraph: t("content.ask_paragraph") as string,
+            icon: <QuestionMark />
+        },
+        {
+            header: t("content.write") as string,
+            href: route("articles.create"),
+            paragraph: t("content.write_paragraph") as string,
+            icon: <Pencil />
+        },
+        {
+            header: t("content.discuss") as string,
+            href: route("subjects.create"),
+            paragraph: t("content.discuss_paragraph") as string,
+            icon: <Discuss />
+        },
+    ]
+
+    return <MenuItems
+        className="
+                flex flex-col gap-1 p-1 mt-4 z-10 bg-surface-light dark:bg-surface-dark
+                sm:absolute w-screen left-0 sm:left-auto fixed right-0 sm:max-w-xs sm:mt-4 rounded-md shadow-lg
+            "
+    >
+        {
+            createPostsLinks.map(
+                l => <MenuItem key={l.href}>
+                    <Link
+                        href={l.href}
+                        className="grow p-2 hover:bg-background-light dark:hover:bg-background-dark rounded flex items-center gap-2 text-start"
+                    >
+                        <div className="basis-16 shrink-0 flex justify-center items-center">
+                            {l.icon}
+                        </div>
+                        <div>
+                            <h3 className="font-semibold leading-loose">{l.header}</h3>
+                            <p className="text-secondary text-xs tracking-tight leading-tight">{l.paragraph}</p>
+                        </div>
+                    </Link>
+                </MenuItem>
+            )
+        }
+    </MenuItems>
 }
 
 

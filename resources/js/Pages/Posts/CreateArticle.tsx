@@ -3,6 +3,7 @@ import { FormEvent } from "react"
 import {
     ARTICLE,
 } from "@/Enums/PostType"
+import Editor from "quill/core/editor"
 
 export default function PostsCreate() {
     const { errors, data, setData, post } = useForm("CreateArticle", {
@@ -26,7 +27,7 @@ export default function PostsCreate() {
         </div>
         <div>
             Content:
-            <textarea onChange={(e) => setData("content", e.target.value)} value={data.content} />
+            <Editor />
             {
                 errors.content && <p className="text-red-400">{errors.content}</p>
             }
