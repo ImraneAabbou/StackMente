@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Filters;
+use App\Enums\Sorts;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Post;
@@ -25,6 +27,10 @@ class PostController extends Controller
     {
         $type = $request->uri()->path();
         $querySearch = $request->query('q');
+        $queryFilter = Str::upper($request->query('filter'));
+        $querySort = Str::upper($request->query('sort', Sorts::NEW_TO_OLD->value));
+        $includedTagsQuery = $request->query('included_tags', []);
+        $excludedTagsQuery = $request->query('excluded_tags', []);
 
         $posts = match ($type) {
             'articles' => Post::articles(),
@@ -33,9 +39,40 @@ class PostController extends Controller
             default => Post::query()
         };
 
-        /* dd($type); */
-
+        // filtering options
         $posts->when(!is_null($querySearch), fn() => $posts->whereLike('title', "%$querySearch%"));
+        $posts->when($queryFilter === Filters::HAS_MARKED_ANSWER->value, fn() => $posts->has('answer'));
+        $posts->when($queryFilter === Filters::NO_MARKED_ANSWER->value, fn() => $posts->has('answer', 0));
+
+        // sorting options
+        $posts->when($querySort === Sorts::NEW_TO_OLD->value, fn() => $posts->orderByDesc('created_at'));
+        $posts->when($querySort === Sorts::OLD_TO_NEW->value, fn() => $posts->orderBy('created_at'));
+        $posts->when($querySort === Sorts::LESS_TO_MORE_VIEWS->value, fn() => $posts->orderBy('views'));
+        $posts->when($querySort === Sorts::MORE_TO_LESS_VIEWS->value, fn() => $posts->orderByDesc('views'));
+        $posts->when(
+            $querySort === Sorts::MORE_TO_LESS_ACTIVITY->value,
+            fn() => $posts
+                ->orderByDesc('up_votes_count')
+                ->orderByDesc('comments_count')
+                ->orderByDesc('views')
+        );
+        $posts->when(
+            $querySort === Sorts::MORE_TO_LESS_ACTIVITY->value,
+            fn() => $posts
+                ->orderBy('up_votes_count')
+                ->orderBy('comments_count')
+                ->orderBy('views')
+        );
+
+        // tags options
+        $posts->when(
+            $includedTagsQuery,
+            fn() => $posts->whereHas('tags', fn($q) => $q->whereIn('name', $includedTagsQuery))
+        );
+        $posts->when(
+            $excludedTagsQuery,
+            fn() => $posts->whereDoesntHave('tags', fn($q) => $q->whereIn('name', $excludedTagsQuery))
+        );
 
         $postsQuery = $posts
             ->clone()
@@ -63,13 +100,18 @@ class PostController extends Controller
             );
         }
 
-        $posts_pagination->appends('q', $querySearch);
+        $posts_pagination
+            ->appends('q', $querySearch)
+            ->appends('filter', $queryFilter)
+            ->appends('included_tags', $includedTagsQuery)
+            ->appends('excluded_tags', $excludedTagsQuery)
+            ->appends('sort', $querySort);
 
         return Inertia::render('Posts/Index', [
             'posts' => [
                 'items' => $items,
                 'next_page_url' => $posts_pagination->nextPageUrl(),
-                'count' => $querySearch ? $posts->count() : Post::count(),
+                'count' => $request->query() ? $posts->count() : Post::count(),
             ]
         ]);
     }

@@ -14,6 +14,7 @@ import Views from "@/Components/icons/Views";
 import { FormattedNumber } from "react-intl";
 import { avatar } from "@/Utils/helpers/path"
 import Check from "@/Components/icons/Check";
+import Filter from "@/Layouts/Components/Filter";
 
 export default function PostsIndex() {
     const { t, tChoice } = useLaravelReactI18n()
@@ -55,18 +56,25 @@ export default function PostsIndex() {
                     </p>
                 }
             </div>
-            <div className="flex flex-col gap-4">
-                {
-                    posts.map(p => <PostItem key={p.id} {...p} />)
-                }
+            <div className="flex flex-col-reverse lg:flex-row gap-8">
+                <div>
+                    <div className="flex flex-col gap-4">
+                        {
+                            posts.map(p => <PostItem key={p.id} {...p} />)
+                        }
+                    </div>
+                    {
+                        next_page_url &&
+                        <InfiniteScrollLoader
+                            url={next_page_url}
+                            className="text-secondary text-center"
+                        >
+                            {t("content.loading_more")}
+                        </InfiniteScrollLoader>
+                    }
+                </div>
+                <Filter />
             </div>
-            {next_page_url &&
-                <InfiniteScrollLoader
-                    url={next_page_url}
-                    className="text-secondary text-center"
-                >
-                    {t("content.loading_more")}
-                </InfiniteScrollLoader>}
         </div>
     </Layout>
 }
@@ -77,7 +85,7 @@ const PostItem = (p: Post) => {
     const formatDate = useRelativeDateFormat()
     const { user } = usePage().props.auth
 
-    return <div id={`post-${p.id}`} className="flex flex-col-reverse sm:flex-row gap-8 border border-secondary/25 hover:border-secondary/75 rounded p-4 max-w-4xl mx-auto" key={p.id}>
+    return <div id={`post-${p.id}`} className="max-w-4xl flex flex-col-reverse sm:flex-row gap-8 border border-secondary/25 hover:border-secondary/75 rounded p-4 mx-auto" key={p.id}>
         <div className="sm:basis-24 justify-between items-center shrink-0 flex sm:flex-col sm:justify-center sm:items-end gap-2">
             <div className="flex sm:flex-col gap-2 sm:mb-4">
                 <Link

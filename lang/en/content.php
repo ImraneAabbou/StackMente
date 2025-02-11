@@ -40,4 +40,6 @@ return [
     'ranking' => "Ranking",
     'user' => "User",
     'rank' => "Rank",
+    'filter' => "Filter",
+    'sort' => "Sort",
 ];
