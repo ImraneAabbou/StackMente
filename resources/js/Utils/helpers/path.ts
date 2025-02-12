@@ -1,3 +1,5 @@
 export function avatar(file?: string) {
-    return `/images/users/${file ?? "DEFAULT.jpg"}`;
+    return file?.startsWith("http")
+        ? file
+        : `/images/users/${file ?? "DEFAULT.jpg"}`;
 }
