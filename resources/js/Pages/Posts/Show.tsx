@@ -1,16 +1,19 @@
 import { router, useForm, usePage } from "@inertiajs/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Link } from "@inertiajs/react"
 import { useLaravelReactI18n } from "laravel-react-i18n";
 import ReportForm from "@/Components/ReportForm";
-import { span } from "framer-motion/client";
+import { Reply as ReplyType } from "@/types/reply";
+import { Comment as CommentType } from "@/types/comment"
+import Layout from "@/Layouts/Layout";
+import ReportActionCtx from "@/Contexts/ReportActionCtx";
+import Tag from "@/Components/ui/Tag";
 
 export default function PostsIndex() {
-    const { post, comments, is_commented, auth, status } = usePage().props;
-    const [showReportForm, setShowReportForm] = useState(false)
+    const { post: { comments, is_commented, ...post }, auth: { user } } = usePage().props;
+    const { setReportAction } = useContext(ReportActionCtx)
 
-    return <div>
-        {status && <div className="p-4 text-center bg-green-400">{status}</div>}
+    return <Layout>
         <div className="p-4 mb-8">
             <h1>{post.type}: {post.title} <small className="text-gray-500">{post.views} views</small></h1>
             <p className="text-gray-600">{post.content}</p>
@@ -21,7 +24,6 @@ export default function PostsIndex() {
                     data={{
                         type: "UP"
                     }}
-                    only={["post"]}
                     preserveState={false}
                     preserveScroll
                     className={post.user_vote === "UP" ? "bg-gray-400 rounded-full p-2" : ""}
@@ -34,7 +36,6 @@ export default function PostsIndex() {
                     data={{
                         type: "DOWN"
                     }}
-                    only={["post"]}
                     preserveState={false}
                     preserveScroll
                     className={post.user_vote === "DOWN" ? "bg-gray-400 rounded-full p-2" : ""}
@@ -48,34 +49,39 @@ export default function PostsIndex() {
                     post.tags.map(
                         t => <Link
                             key={t.id}
-                            href={`/tags/${t.id}`}
-                            className="bg-gray-200 rounded p-1 py-0.5 text-xs"
+                            href={route(`feed`, { _query: { included_tags: [t] } })}
                         >
-                            {t.name}
+                            <Tag>
+                                {t.name}
+                            </Tag>
                         </Link>
                     )
                 }
             </div>
-            <button onClick={() => setShowReportForm(!showReportForm)} className="text-red-400">report</button>
+            <button
+                onClick={
+                    () => setReportAction(route("reports.store", { reportable: post.slug }))
+                }
+                className="text-red-400"
+            >
+                report
+            </button>
             <Link href={`/posts/${post.slug}/reports`} method="delete">clear reports</Link>
         </div>
-        {
-            showReportForm && <ReportForm action={`/posts/${post.slug}/reports`} />
-        }
         <h2 className="font-bold text-2xl">Comments</h2>
         <div className="flex gap-4 flex-col">
             {
                 comments
-                    .map(comment => auth.user?.id === comment.user_id
+                    .map(comment => user?.id === comment.user_id
                         ? <UpdatableComment key={comment.id} comment={comment} action={`/comments/${comment.id}`} />
-                        : <Comment comment={comment} />
+                        : <Comment key={comment.id} comment={comment} />
                     )
             }
         </div>
         {
             !is_commented && <CommentingForm action={`/posts/${post.slug}/comments`} />
         }
-    </div>
+    </Layout>
 }
 
 const CommentingForm = ({ action }: { action: string }) => {
@@ -87,9 +93,8 @@ const CommentingForm = ({ action }: { action: string }) => {
         e.preventDefault()
 
         post(action, {
-            only: ["comments", "is_commented", "status"],
             onSuccess: page => {
-                router.visit(page.url + "#comment-" + page.props.comments.find(c => c.user_id === user.id)?.id)
+                router.visit(page.url + "#comment-" + page.props.post.comments.find(c => c.user_id === user.id)?.id)
             },
             preserveScroll: true,
             preserveState: "errors"
@@ -111,7 +116,6 @@ const ReplyingForm = ({ action }: { action: string }) => {
         e.preventDefault()
 
         post(action, {
-            only: ["comments", "status"],
             preserveScroll: true,
         })
     }
@@ -122,9 +126,9 @@ const ReplyingForm = ({ action }: { action: string }) => {
         {errors.content && <p className="text-red-400">{errors.content}</p>}
     </form>
 }
-const UpdatableComment = ({ comment, action }) => {
-    const { auth, post } = usePage().props
-    const isPostOwned = auth.user?.id === post.user_id
+const UpdatableComment = ({ comment, action }: { comment: CommentType, action: string }) => {
+    const { auth: { user }, post } = usePage().props
+    const isPostOwned = user?.id === post.user_id
     const [editable, setEditable] = useState(false)
     const { errors, data, setData, put, isDirty } = useForm(action, {
         content: comment.content
@@ -151,7 +155,7 @@ const UpdatableComment = ({ comment, action }) => {
 
             {
                 isPostOwned
-                    ? <Link href={`/comments/${comment.id}/mark`} method="put" only={["post", "comments"]}>
+                    ? <Link href={`/comments/${comment.id}/mark`} method="put">
                         {
                             comment.is_marked
                                 ? <div className="bg-green-600 size-8 inline-flex" />
@@ -229,7 +233,7 @@ const UpdatableComment = ({ comment, action }) => {
                     <summary>{comment.replies_count} replies</summary>
                     <ul className="flex gap-2 flex-col ms-12">
                         {
-                            comment.replies.map(r => r.user_id === auth.user?.id
+                            comment.replies.map(r => r.user_id === user?.id
                                 ? <UpdatableReply reply={r} action={`/replies/${r.id}`} key={r.id} />
                                 : <Reply reply={r} key={r.id} />
                             )
@@ -244,17 +248,18 @@ const UpdatableComment = ({ comment, action }) => {
     </div>
 }
 
-const Comment = ({ comment }) => {
-    const { auth, post } = usePage().props
+const Comment = ({ comment }: { comment: CommentType }) => {
+    const { auth: { user }, post } = usePage().props
     const [showReportForm, setShowReportForm] = useState(false)
-    const isPostOwned = auth.user?.id === post.user_id
+    const isPostOwned = user?.id === post.user_id
+    const { t } = useLaravelReactI18n()
 
     return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
         <div className="flex gap-2 items-center">
             <img src={"/images/users/" + comment.user?.avatar} className="size-12 rounded-full" />
             {
                 isPostOwned
-                    ? <Link href={`/comments/${comment.id}/mark`} method="put" only={["post", "comments"]}>
+                    ? <Link href={`/comments/${comment.id}/mark`} method="put">
                         {
                             comment.is_marked
                                 ? <div className="bg-green-600 size-8 inline-flex" />
@@ -267,7 +272,7 @@ const Comment = ({ comment }) => {
             {
                 !!comment.user
                     ? <Link href={`/profile/${comment.user.username}`} className="font-bold">
-                        {comment.user_id === auth.user?.id ? t("common.you") : comment.user.fullname}
+                        {comment.user_id === user?.id ? t("common.you") : comment.user.fullname}
                     </Link>
                     : <span className="font-bold">Someone</span>
             }
@@ -312,7 +317,7 @@ const Comment = ({ comment }) => {
                     <summary>{comment.replies_count} replies</summary>
                     <ul className="flex gap-2 flex-col ms-12">
                         {
-                            comment.replies.map(r => r.user_id === auth.user?.id
+                            comment.replies.map(r => r.user_id === user?.id
                                 ? <UpdatableReply reply={r} action={`/replies/${r.id}`} key={r.id} />
                                 : <Reply reply={r} key={r.id} />
                             )
@@ -327,7 +332,7 @@ const Comment = ({ comment }) => {
     </div>
 }
 
-const UpdatableReply = ({ reply, action }) => {
+const UpdatableReply = ({ reply, action }: { reply: ReplyType, action: string }) => {
     const [editable, setEditable] = useState(false)
     const { t } = useLaravelReactI18n()
     const { errors, data, setData, put, isDirty } = useForm(action, {
@@ -389,7 +394,7 @@ const UpdatableReply = ({ reply, action }) => {
     </li>
 }
 
-const Reply = ({ reply }) => {
+const Reply = ({ reply }: { reply: ReplyType }) => {
     const [showReportForm, setShowReportForm] = useState(false)
 
     return <li className="border-b-black target:border-2" id={`reply-${reply.id}`}>

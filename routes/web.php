@@ -30,7 +30,7 @@ Route::get('/questions/{post:slug}', [PostController::class, 'show'])->name('que
 Route::get('/posts', [PostController::class, 'index'])->name('feed');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
-Route::post('/posts/{reportable}/reports', [PostController::class, 'report']);
+Route::post('/posts/{reportable}/reports', [PostController::class, 'report'])->name('reports.store');
 Route::delete('/posts/{reportable}/reports', [PostController::class, 'clearReports'])->can('delete', [Report::class]);
 
 Route::post('/posts/{votable}/vote', [PostController::class, 'vote'])->name('posts.vote');

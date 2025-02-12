@@ -33,6 +33,10 @@ export default {
                 light: "#f31616",
                 dark: "#ff5b5b",
             },
+            onError: {
+                light: "#ffffff",
+                dark: "#ffffff",
+            },
             surface: {
                 light: "#ffffff",
                 dark: "#2e2e3b",

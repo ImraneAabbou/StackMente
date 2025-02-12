@@ -1,12 +1,5 @@
 import { useForm } from "@inertiajs/react"
 import { FormEvent } from "react"
-import {
-    OFFENSIVE_LANGUAGE,
-    HARASSMENT,
-    INAPPROPRIATE,
-    SPAM_OR_CHEATING,
-    OTHER
-} from "@/Enums/ReportReason"
 
 export default function ReportForm({ action, onSuccess }: { action: string, onSuccess?: () => any }) {
     const { data, setData, post, errors, reset } = useForm(`ReportForm${action}`, {
@@ -29,11 +22,6 @@ export default function ReportForm({ action, onSuccess }: { action: string, onSu
         <div>
             reason: <select value={data.reason} onChange={e => setData("reason", e.target.value)} >
                 <option value=""></option>
-                <option value={OFFENSIVE_LANGUAGE}>Offensive Language</option>
-                <option value={HARASSMENT}>Harassement</option>
-                <option value={INAPPROPRIATE}>Inappropriate</option>
-                <option value={SPAM_OR_CHEATING}>Spam or Cheating</option>
-                <option value={OTHER}>Other</option>
             </select>
             {
                 !!errors.reason &&

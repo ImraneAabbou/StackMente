@@ -160,25 +160,25 @@ class PostController extends Controller
                     ->load(['tags', 'user'])
                     ->loadCount(['comments', 'upVotes', 'downVotes'])
                     ->toArray(),
-                'user_vote' => auth()->user() ? $post->getUserVote(auth()->user()) : null
+                'user_vote' => auth()->user() ? $post->getUserVote(auth()->user()) : null,
+                'comments' => $post
+                    ->comments()
+                    ->orderByDesc('is_marked')
+                    ->orderByDesc('up_votes_count')
+                    ->orderBy('down_votes_count')
+                    ->with(['user', 'replies.user'])
+                    ->withCount(['upVotes', 'downVotes', 'replies'])
+                    ->get()
+                    ->map(
+                        fn($c) => [
+                            ...$c->toArray(),
+                            'user_vote' => auth()->user()
+                                ? $c->getUserVote(auth()->user())
+                                : null
+                        ]
+                    ),
+                'is_commented' => auth()->user() ? $post->comments()->where('user_id', auth()->user()->id)->exists() : false
             ],
-            'comments' => $post
-                ->comments()
-                ->orderByDesc('is_marked')
-                ->orderByDesc('up_votes_count')
-                ->orderBy('down_votes_count')
-                ->with(['user', 'replies.user'])
-                ->withCount(['upVotes', 'downVotes', 'replies'])
-                ->get()
-                ->map(
-                    fn($c) => [
-                        ...$c->toArray(),
-                        'user_vote' => auth()->user()
-                            ? $c->getUserVote(auth()->user())
-                            : null
-                    ]
-                ),
-            'is_commented' => auth()->user() ? $post->comments()->where('user_id', auth()->user()->id)->exists() : false
         ]);
     }
 

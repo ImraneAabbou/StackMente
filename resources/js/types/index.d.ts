@@ -2,6 +2,7 @@ import { User, RankedUser } from "./user";
 import type { Notification } from "./notification";
 import { TagWithCounts } from "./tag";
 import { Post } from "./post";
+import { Comment } from "./comment";
 
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
@@ -26,5 +27,9 @@ export type PageProps<
     };
     rankings: {
         users: RankedUser[];
+    };
+    post: Post & {
+        comments: Comment[];
+        is_commented: boolean;
     };
 };

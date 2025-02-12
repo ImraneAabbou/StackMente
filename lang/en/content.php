@@ -50,4 +50,6 @@ return [
     'discuss_paragraph' => "Engage in meaningful discussions, exchange ideas and explore others' thoughts.",
     'title' => 'Title',
     'content' => "Content",
+    "cancel" => "Cancel",
+    "report" => "Report",
 ];
