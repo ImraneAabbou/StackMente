@@ -98,6 +98,7 @@ const PostItem = (p: Post) => {
     const { t } = useLaravelReactI18n()
     const formatDate = useRelativeDateFormat()
     const { user } = usePage().props.auth
+    const routeName = p.type.toLowerCase() + "s.show"
 
     return <div id={`post-${p.id}`} className="max-w-4xl w-full flex flex-col-reverse sm:flex-row gap-8 border border-secondary/25 hover:border-secondary/75 rounded p-4 mx-auto" key={p.id}>
         <div className="sm:basis-24 justify-between items-center shrink-0 flex sm:flex-col sm:justify-center sm:items-end gap-2">
@@ -128,7 +129,9 @@ const PostItem = (p: Post) => {
                     </span>
                 </Link>
                 <Link
-                    href={`/posts/${p.slug}/vote`}
+                    href={route("posts.vote", {
+                        votable: p.slug
+                    })}
                     method={p.user_vote === "DOWN" ? "delete" : "post"}
                     data={{
                         type: "DOWN"
@@ -179,7 +182,7 @@ const PostItem = (p: Post) => {
         </div>
         <div className="grow flex flex-col gap-2.5">
             <Link
-                href={`/posts/${p.slug}`}
+                href={route(routeName, { post: p.slug })}
                 className="font-semibold text-lg"
             >
                 {p.title}

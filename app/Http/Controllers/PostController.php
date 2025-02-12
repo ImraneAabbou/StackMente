@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Filters;
+use App\Enums\PostType;
 use App\Enums\Sorts;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
@@ -138,7 +139,7 @@ class PostController extends Controller
             }
         }
 
-        return to_route(Str::lower($postData["type"]) . "s.show", ['post' =>$p->slug ]);
+        return to_route(Str::lower($postData['type']) . 's.show', ['post' => $p->slug]);
     }
 
     /**
@@ -146,6 +147,10 @@ class PostController extends Controller
      */
     public function show(Post $post, Request $request): Response
     {
+        abort_if(request()->is('articles/*') && $post->type !== PostType::ARTICLE->value, 404);
+        abort_if(request()->is('subjects/*') && $post->type !== PostType::SUBJECT->value, 404);
+        abort_if(request()->is('questions/*') && $post->type !== PostType::QUESTION->value, 404);
+
         (new PostService($post))
             ->syncViews($request);
 
