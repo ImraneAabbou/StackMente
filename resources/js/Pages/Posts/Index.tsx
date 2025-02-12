@@ -184,7 +184,7 @@ const PostItem = (p: Post) => {
             >
                 {p.title}
             </Link>
-            <p className="text-sm line-clamp-4 sm:line-clamp-3 font-normal" dangerouslySetInnerHTML={{ __html: p.content }} />
+            <p className="text-sm line-clamp-4 sm:line-clamp-3 prose-p:inline break-all" dangerouslySetInnerHTML={{ __html: p.content }} />
             <div className="flex flex-col gap-2">
                 <div className="flex gap-2 text-xs items-center justify-end">
                     <Link
@@ -203,7 +203,7 @@ const PostItem = (p: Post) => {
                     </span>
                 </div>
                 <div className="flex gap-1 sm:justify-end flex-wrap">
-                    {p.tags.map(t => <Link href={route("feed", { _query: { tags: [t.name] } })}><Tag key={t.id} {...t} >{t.name}</Tag></Link>)}
+                    {p.tags.map(t => <Link href={route("feed", { _query: { included_tags: [t.name] } })}><Tag key={t.id} {...t} >{t.name}</Tag></Link>)}
                 </div>
             </div>
         </div>
