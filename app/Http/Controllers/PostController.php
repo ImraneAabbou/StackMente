@@ -159,6 +159,7 @@ class PostController extends Controller
                 ...$post
                     ->load(['tags', 'user'])
                     ->loadCount(['comments', 'upVotes', 'downVotes'])
+                    ->loadExists(['answer'])
                     ->toArray(),
                 'user_vote' => auth()->user() ? $post->getUserVote(auth()->user()) : null,
                 'comments' => $post

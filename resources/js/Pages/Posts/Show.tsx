@@ -8,66 +8,24 @@ import { Comment as CommentType } from "@/types/comment"
 import Layout from "@/Layouts/Layout";
 import ReportActionCtx from "@/Contexts/ReportActionCtx";
 import Tag from "@/Components/ui/Tag";
+import UpVote from "@/Components/icons/UpVote";
+import { FormattedNumber } from "react-intl";
+import clsx from "clsx";
+import DownVote from "@/Components/icons/DownVote";
+import Check from "@/Components/icons/Check";
+import Comments from "@/Components/icons/Comments";
+import Views from "@/Components/icons/Views";
+import { avatar } from "@/Utils/helpers/path";
+import useRelativeDateFormat from "@/Utils/hooks/useRelativeDateFormat";
+import { Post as PostType } from "@/types/post";
+import Editor from "@/Components/ui/Editor"
+import Flag from "@/Components/icons/Flag";
 
 export default function PostsIndex() {
     const { post: { comments, is_commented, ...post }, auth: { user } } = usePage().props;
-    const { setReportAction } = useContext(ReportActionCtx)
 
     return <Layout>
-        <div className="p-4 mb-8">
-            <h1>{post.type}: {post.title} <small className="text-gray-500">{post.views} views</small></h1>
-            <p className="text-gray-600">{post.content}</p>
-            <div className="flex gap-1 items-center">
-                <Link
-                    href={`/posts/${post.slug}/vote`}
-                    method={post.user_vote === "UP" ? "delete" : "post"}
-                    data={{
-                        type: "UP"
-                    }}
-                    preserveState={false}
-                    preserveScroll
-                    className={post.user_vote === "UP" ? "bg-gray-400 rounded-full p-2" : ""}
-                >
-                    {post.up_votes_count} up
-                </Link>
-                <Link
-                    href={`/posts/${post.slug}/vote`}
-                    method={post.user_vote === "DOWN" ? "delete" : "post"}
-                    data={{
-                        type: "DOWN"
-                    }}
-                    preserveState={false}
-                    preserveScroll
-                    className={post.user_vote === "DOWN" ? "bg-gray-400 rounded-full p-2" : ""}
-                >
-                    {post.down_votes_count} down
-                </Link>
-                <small className="text-gray-800">{post.comments_count} comments </small>
-            </div>
-            <div className="flex gap-1 justify-end">
-                {
-                    post.tags.map(
-                        t => <Link
-                            key={t.id}
-                            href={route(`feed`, { _query: { included_tags: [t] } })}
-                        >
-                            <Tag>
-                                {t.name}
-                            </Tag>
-                        </Link>
-                    )
-                }
-            </div>
-            <button
-                onClick={
-                    () => setReportAction(route("reports.store", { reportable: post.slug }))
-                }
-                className="text-red-400"
-            >
-                report
-            </button>
-            <Link href={`/posts/${post.slug}/reports`} method="delete">clear reports</Link>
-        </div>
+        <Post p={post} />
         <h2 className="font-bold text-2xl">Comments</h2>
         <div className="flex gap-4 flex-col">
             {
@@ -149,7 +107,7 @@ const UpdatableComment = ({ comment, action }: { comment: CommentType, action: s
         })
     }
 
-    return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
+    return <div className="p-4 target:border-2" id={comment.is_marked ? "answer" : `comment-${comment.id}`}>
         <div className="flex gap-2 items-center">
             <img src={"/images/users/" + comment.user?.avatar} className="size-12 rounded-full" />
 
@@ -254,7 +212,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
     const isPostOwned = user?.id === post.user_id
     const { t } = useLaravelReactI18n()
 
-    return <div className="p-4 target:border-2" id={`comment-${comment.id}`}>
+    return <div className="p-4 target:border-2" id={comment.is_marked ? "answer" : `comment-${comment.id}`}>
         <div className="flex gap-2 items-center">
             <img src={"/images/users/" + comment.user?.avatar} className="size-12 rounded-full" />
             {
@@ -416,4 +374,142 @@ const Reply = ({ reply }: { reply: ReplyType }) => {
             showReportForm && <ReportForm action={`/replies/${reply.id}/reports`} />
         }
     </li>
+}
+
+const Post = ({ p }: { p: PostType }) => {
+    const { t } = useLaravelReactI18n()
+    const formatDate = useRelativeDateFormat()
+    const { user } = usePage().props.auth
+    const { setReportAction } = useContext(ReportActionCtx)
+
+    return <main className="max-w-4xl mx-auto my-8">
+        <div className="flex flex-col gap-2 border-b border-secondary/50 mb-4">
+            <h1 className="text-4xl font-bold">
+                {p.title}
+            </h1>
+            <div className="flex text-sm flex-wrap items-center gap-8 text-secondary p-4">
+                <div className="flex flex-wrap gap-4 italic">
+                    <div className="flex gap-1">
+                        <span>
+                            <FormattedNumber value={p.views} style="decimal" notation="compact" />
+                        </span>
+                        <span className="">{t("content.views")}</span>
+                    </div>
+                    <div className="flex gap-1">
+                        <span>
+                            <FormattedNumber value={p.comments_count} style="decimal" notation="compact" />
+                        </span>
+                        <span className="">{t("content.comments")}</span>
+                    </div>
+                    {
+                        p.answer_exists &&
+                        <Link
+                            href={"#answer"}
+                            className="font-semibold text-success-light dark:text-success-dark flex gap-1 items-center"
+                        >
+                            <Check size={16} />
+                            {t("content.answered")}
+                        </Link>
+                    }
+                </div>
+                <button
+                    className="flex gap-2 ms-auto font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
+                    onClick={
+                        () => setReportAction(route("reports.store", { reportable: p.slug }))
+                    }
+                >
+                    {t("content.report")}
+                    <Flag size={16} />
+                </button>
+            </div>
+        </div>
+
+        <Editor readOnly defaultValue={p.content} />
+
+        <div className="flex md:flex-row justify-between flex-col-reverse mt-4">
+            <div className="flex gap-2 sm:mb-4 items-center">
+                <Link
+                    href={route("posts.vote", {
+                        votable: p.slug
+                    })}
+                    method={p.user_vote === "UP" ? "delete" : "post"}
+                    data={{
+                        type: "UP"
+                    }}
+                    preserveScroll
+                    preserveState={false}
+                    className={
+                        clsx(
+                            "font-semibold rounded-full p-2.5 flex text-xs items-center gap-2",
+                            p.user_vote === "UP"
+                                ? "bg-success-light/25 dark:bg-success-dark/25 text-success-light dark:text-success-dark"
+                                : "bg-secondary/10 hover:bg-secondary/25"
+                        )
+                    }
+                >
+                    <UpVote size={16} />
+                    <span>
+                        <FormattedNumber value={p.up_votes_count} style="decimal" notation="compact" />
+                    </span>
+                </Link>
+                <Link
+                    href={route("posts.vote", {
+                        votable: p.slug
+                    })}
+                    method={p.user_vote === "DOWN" ? "delete" : "post"}
+                    data={{
+                        type: "DOWN"
+                    }}
+                    preserveScroll
+                    preserveState={false}
+                    className={
+                        clsx(
+                            "font-semibold rounded-full p-2.5 flex items-center text-xs gap-2",
+                            p.user_vote === "DOWN"
+                                ? "bg-error-light/25 dark:bg-error-dark/25 text-error-light dark:text-error-dark"
+                                : "bg-secondary/10 hover:bg-secondary/25"
+                        )
+                    }
+                >
+                    <DownVote size={16} />
+                    <span>
+                        <FormattedNumber value={p.down_votes_count} style="decimal" notation="compact" />
+                    </span>
+                </Link>
+            </div>
+            <div>
+                <div className="flex gap-2 sm:gap-4 flex-wrap text-xs text-secondary justify-end mt-2">
+                    <div className="flex gap-1">
+                        <span className="">Published</span>
+                        <span>
+                            {formatDate(p.created_at)}
+                        </span>
+                    </div>
+                    {
+                        p.updated_at !== p.created_at
+                        && <div className="flex gap-1">
+                            <span className="">Modified</span>
+                            <span>
+                                {formatDate(p.updated_at)}
+                            </span>
+                        </div>
+                    }
+                    <Link
+                        href={route("profile.show", { user: p.user.username })}
+                        className="flex gap-1 items-center font-bold text-onBackground-dark dark:text-onBackground-light"
+                    >
+                        <img className="size-4 rounded-full" src={avatar(p.user.avatar)} alt={p.user.fullname} />
+                        {
+                            p.user_id === user?.id
+                                ? t("common.you")
+                                : p.user.username
+                        }
+                    </Link>
+                </div>
+                <div className="flex flex-row gap-1 items-end justify-end flex-wrap mt-2 mb-4">
+                    {p.tags.map(t => <Link href={route("feed", { _query: { included_tags: [t.name] } })}><Tag key={t.id} {...t} >{t.name}</Tag></Link>)}
+                </div>
+            </div>
+        </div>
+    </main>
 }

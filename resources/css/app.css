@@ -33,3 +33,7 @@ strong {
 #editor-resizer .tooltip {
     @apply !z-10;
 }
+
+* {
+    @apply scroll-mt-48;
+}
