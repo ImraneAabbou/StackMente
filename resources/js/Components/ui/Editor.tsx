@@ -79,12 +79,13 @@ const Editor = forwardRef<Quill | null, EditorProps>(
             const quill = new Quill(editorContainer, {
                 modules: {
                     toolbar,
-                    imageResize: {
+                    imageResize: readOnly ? undefined : {
                         displaySize: true,
                     },
                 },
                 placeholder,
                 theme,
+                readOnly
             });
 
             if (typeof ref === "object" && ref !== null) {
@@ -109,7 +110,7 @@ const Editor = forwardRef<Quill | null, EditorProps>(
             };
         }, [ref]);
 
-        return <div onClick={onClick} className={clsx(`prose max-w-none text-current prose-a:text-primary prose-blockquote:text-secondary`, className)} ref={containerRef}></div>;
+        return <div onClick={onClick} className={clsx(`break-all prose max-w-none text-current prose-a:text-primary prose-blockquote:text-secondary `, className)} ref={containerRef}></div>;
     }
 );
 
