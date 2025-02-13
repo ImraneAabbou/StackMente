@@ -27,7 +27,7 @@ export const BaseNotification = ({ id, title, children, src, alt, className, cre
     const formatDate = useRelativeDateFormat()
 
     return <Link
-        href={`/notifications/${id}`}
+        href={route("notifications.update", { id })}
         method="put"
         preserveScroll
         only={["auth"]}
@@ -59,14 +59,15 @@ export const BaseNotification = ({ id, title, children, src, alt, className, cre
 
 export const PostVoteReceived = ({ notification: n }: { notification: PostVoteReceivedNotification }) => {
     const { t } = useLaravelReactI18n()
+    const routeName = n.post.type.toLowerCase() + "s.show"
 
     return <BaseNotification
         id={n.id}
-        src={"/images/users/" + n.user.avatar}
+        src={avatar(n.user.avatar)}
         created_at={n.created_at}
         read_at={n.read_at}
         className="flex flex-col"
-        url={`/posts/${n.post.slug}`}
+        url={route(routeName, { post: n.post.slug })}
         title={
             t("notifications.post_vote_received", {
                 voter_fullname:
@@ -90,12 +91,13 @@ export const PostVoteReceived = ({ notification: n }: { notification: PostVoteRe
 
 export const CommentVoteReceived = ({ notification: n }: { notification: CommentVoteReceivedNotification }) => {
     const { t } = useLaravelReactI18n()
+    const routeName = n.post.type.toLowerCase() + "s.show"
 
     return <BaseNotification
         src={avatar(n.user.avatar)}
         created_at={n.created_at} read_at={n.read_at}
         id={n.id}
-        url={`/posts/${n.post.slug}#comment-${n.comment.id}`}
+        url={route(routeName, { post: n.post.slug }) + (n.comment.is_marked ? "#answer" : `#comment-${n.comment.id}`)}
         title={
             t("notifications.comment_vote_received", {
                 voter_fullname:
@@ -118,12 +120,13 @@ export const CommentVoteReceived = ({ notification: n }: { notification: Comment
 
 export const CommentReceived = ({ notification: n }: { notification: CommentReceivedNotification }) => {
     const { t } = useLaravelReactI18n()
+    const routeName = n.post.type.toLowerCase() + "s.show"
 
     return <BaseNotification
-        src={"/images/users/" + n.user.avatar}
+        src={avatar(n.user.avatar)}
         created_at={n.created_at} read_at={n.read_at}
         id={n.id}
-        url={`/posts/${n.post.slug}#comment-${n.comment.id}`}
+        url={route(routeName, { post: n.post.slug }) + (n.comment.is_marked ? "#answer" : `#comment-${n.comment.id}`)}
         title={
             t("notifications.comment_received", {
                 commenter_fullname:
@@ -148,11 +151,12 @@ export const CommentReceived = ({ notification: n }: { notification: CommentRece
 
 export const ReplyReceived = ({ notification: n }: { notification: ReplyReceivedNotification }) => {
     const { t } = useLaravelReactI18n()
+    const routeName = n.post.type.toLowerCase() + "s.show"
 
     return <BaseNotification
-        src={"/images/users/" + n.user.avatar} created_at={n.created_at} read_at={n.read_at}
+        src={avatar(n.user.avatar)} created_at={n.created_at} read_at={n.read_at}
         id={n.id}
-        url={`/posts/${n.post.slug}#reply-${n.reply.id}`}
+        url={route(routeName, { post: n.post.slug }) + `#reply-${n.reply.id}`}
         title={
             t("notifications.reply_received", {
                 replier_fullname:
@@ -187,7 +191,7 @@ export const MissionAccomplished = ({ notification: n }: { notification: Mission
         created_at={n.created_at}
         read_at={n.read_at}
         id={n.id}
-        url={`/profile/me#missions`}
+        url={route("profile.me") + `#missions`}
         title={
             t("notifications.mission_accomplished", {
                 mission_title:
@@ -204,13 +208,14 @@ export const MissionAccomplished = ({ notification: n }: { notification: Mission
 
 export const CommentMarked = ({ notification: n }: { notification: CommentMarkedNotification }) => {
     const { t } = useLaravelReactI18n()
+    const routeName = n.post.type.toLowerCase() + "s.show"
 
     return <BaseNotification
-        src={"/images/users/" + n.user.avatar}
+        src={avatar(n.user.avatar)}
         created_at={n.created_at}
         read_at={n.read_at}
         id={n.id}
-        url={`/posts/${n.post.slug}#comment-${n.comment.id}`}
+        url={route(routeName, { post: n.post.slug }) + (n.comment.is_marked ? "#answer" : `#comment-${n.comment.id}`)}
         title={
             t("notifications.comment_marked", {
                 author_fullname:
