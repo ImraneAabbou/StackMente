@@ -13,6 +13,11 @@ strong {
     @apply font-sans text-base;
 }
 
+.ql-editor {
+    @apply prose-a:text-primary prose-blockquote:text-secondary prose-strong:text-current prose-headings:text-current prose-headings:font-semibold prose-strong:font-bold prose-h1:prose-2xl prose-headings:leading-loose prose-h2:prose-xl prose-blockquote:!border-l-secondary prose-blockquote:italic prose-blockquote:leading-loose;
+    @apply text-current break-all;
+}
+
 .ql-editor img {
     @apply rounded max-h-[720px] inline-block;
 }
