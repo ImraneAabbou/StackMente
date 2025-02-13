@@ -33,7 +33,7 @@ class PostService
         return RateLimiter::attempt(
             $throttleKey,
             1,
-            fn() => $this->post->increment('views'),
+            fn() => $this->post->withoutTimestamps(fn() => $this->post->increment('views')),
             10 * 60
         );
     }
