@@ -9,7 +9,7 @@ import Tags from "@/Components/icons/Tags";
 import Rank from "@/Components/icons/Rank";
 
 export default function NavLinks() {
-    return <div className="sm:shrink-0 sm:sticky sm:h-screen sm:top-0 sm:flex items-center justify-center sm:w-16 fixed bottom-0 left-0 w-full">
+    return <div className="sm:shrink-0 sm:z-50 sm:sticky sm:h-screen sm:top-0 sm:flex items-center justify-center sm:w-16 fixed bottom-0 left-0 w-full">
         <div className="flex sm:flex-col gap-2 sm:-my-16 items-center justify-around bg-surface-light dark:bg-surface-dark sm:bg-transparent sm:dark:bg-transparent">
             {
                 navigations.map(n => <SidebarLink key={n.href} {...n} />)
