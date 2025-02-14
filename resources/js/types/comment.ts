@@ -7,7 +7,9 @@ export interface Comment {
     content: string;
     user_id: number;
     is_marked: boolean;
-    user: User;
+    user?: User;
+    created_at: string;
+    updated_at: string;
     replies_count: number;
     up_votes_count: number;
     down_votes_count: number;

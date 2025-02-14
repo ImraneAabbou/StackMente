@@ -30,24 +30,24 @@ Route::get('/questions/{post:slug}', [PostController::class, 'show'])->name('que
 Route::get('/posts', [PostController::class, 'index'])->name('feed');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
-Route::post('/posts/{reportable}/reports', [PostController::class, 'report'])->name('reports.store');
+Route::post('/posts/{reportable}/reports', [PostController::class, 'report'])->name('posts.report');
 Route::delete('/posts/{reportable}/reports', [PostController::class, 'clearReports'])->can('delete', [Report::class]);
 
 Route::post('/posts/{votable}/vote', [PostController::class, 'vote'])->name('posts.vote');
 Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote'])->name('posts.unvote');
 
 Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store');
-Route::post('/comments/{reportable}/reports', [CommentController::class, 'report']);
+Route::post('/comments/{reportable}/reports', [CommentController::class, 'report'])->name('comments.report');
 Route::delete('/comments/{reportable}/reports', [CommentController::class, 'clearReports'])->can('delete', [Report::class]);
-Route::put('/comments/{comment}/mark', [CommentController::class, 'mark']);
-Route::put('/comments/{comment}', [CommentController::class, 'update']);
+Route::put('/comments/{comment}/mark', [CommentController::class, 'mark'])->name("comments.mark");
+Route::put('/comments/{comment}', [CommentController::class, 'update'])->name("comments.update");
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
 
-Route::post('/comments/{votable}/vote', [CommentController::class, 'vote']);
-Route::delete('/comments/{votable}/vote', [CommentController::class, 'unvote']);
+Route::post('/comments/{votable}/vote', [CommentController::class, 'vote'])->name("comments.vote");
+Route::delete('/comments/{votable}/vote', [CommentController::class, 'unvote'])->name("comments.unvote");
 
-Route::post('/comments/{comment}/replies', [ReplyController::class, 'store'])->name('comments.store');
-Route::post('/replies/{reportable}/reports', [ReplyController::class, 'report']);
+Route::post('/comments/{comment}/replies', [ReplyController::class, 'store'])->name('replies.store');
+Route::post('/replies/{reportable}/reports', [ReplyController::class, 'report'])->name('replies.report');
 Route::delete('/replies/{reportable}/reports', [ReplyController::class, 'clearReports'])->can('delete', [Report::class]);
 Route::put('/replies/{reply}', [ReplyController::class, 'update']);
 Route::delete('/replies/{reply}', [ReplyController::class, 'destroy']);

@@ -52,4 +52,8 @@ return [
     'content' => "Content",
     "cancel" => "Cancel",
     "report" => "Report",
+    "send" => "Send",
+    'modified' => "Modified",
+    'edit' => "Edit",
+    'save' => "Save",
 ];
