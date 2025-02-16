@@ -2,7 +2,6 @@ import { router, useForm, usePage } from "@inertiajs/react";
 import { FormEvent, useContext, useRef, useState } from "react";
 import { Link } from "@inertiajs/react"
 import { useLaravelReactI18n } from "laravel-react-i18n";
-import ReportForm from "@/Components/ReportForm";
 import { Reply as ReplyType } from "@/types/reply";
 import { Comment as CommentType } from "@/types/comment"
 import Layout from "@/Layouts/Layout";
@@ -21,9 +20,12 @@ import Flag from "@/Components/icons/Flag";
 import Quill from "quill";
 import { ToolbarConfig } from "quill/modules/toolbar";
 import Error from "@/Components/ui/Error";
+import Input from "@/Components/ui/Input";
+import { FiSend } from "react-icons/fi";
+
 
 export default function PostsIndex() {
-    const { post: { comments, is_commented, ...post }, auth: { user } } = usePage().props;
+    const { post: { comments, is_commented, ...post } } = usePage().props;
 
     return <Layout>
         <div className="max-w-4xl mx-auto my-8">
@@ -93,7 +95,7 @@ const CommentingForm = ({ action }: { action: string }) => {
                 )
             }
             placeholder="..."
-            className="border rounded border-secondary/25 min-h-24 ms-12 p-4"
+            className="border rounded border-secondary/25 min-h-24 p-4"
         />
         <div className="flex gap-4 flex-wrap">
             <Error className="ms-14">{errors.content}</Error>
@@ -107,8 +109,9 @@ const CommentingForm = ({ action }: { action: string }) => {
     </form>
 }
 
-const ReplyingForm = ({ action }: { action: string }) => {
-    const { errors, post, data, setData } = useForm(action, {
+const ReplyingForm = ({ action, onSucess }: { action: string, onSucess?: () => void }) => {
+    const { t } = useLaravelReactI18n()
+    const { errors, post, data, setData, reset } = useForm(action, {
         content: "",
     });
     const handleSubmit = (e: FormEvent) => {
@@ -116,13 +119,24 @@ const ReplyingForm = ({ action }: { action: string }) => {
 
         post(action, {
             preserveScroll: true,
+            onSuccess: () => {
+                reset()
+                if (onSucess) onSucess()
+            }
         })
     }
 
-    return <form onSubmit={handleSubmit}>
-        <input onChange={e => setData("content", e.target.value)} value={data.content} />
-        <button type="submit">send</button>
-        {errors.content && <p className="text-red-400">{errors.content}</p>}
+    return <form onSubmit={handleSubmit} className="max-w-sm">
+        <div className="flex gap-2 items-center">
+            <Input
+                className="flex-1"
+                onChange={e => setData("content", e.target.value)}
+                value={data.content}
+                placeholder={t("replies.reply_input_placeholder") as string}
+            />
+            <button type="submit" className="text-secondary hover:text-current"><FiSend size={24} /></button>
+        </div>
+        <Error>{errors.content}</Error>
     </form>
 }
 
@@ -130,11 +144,12 @@ const Comment = ({ comment }: { comment: CommentType }) => {
     const { auth: { user }, post } = usePage().props
     const isPostOwned = user?.id === post.user_id
     const { t } = useLaravelReactI18n()
+    const [loadMore, setLoadMore] = useState(false)
     const { setReportAction } = useContext(ReportActionCtx)
     const formatDate = useRelativeDateFormat()
     const [editable, setEditable] = useState(false)
     const action = route("comments.update", { comment: comment.id })
-    const { errors, data, setData, put, isDirty } = useForm(action, {
+    const { errors, setData, put, isDirty } = useForm(action, {
         content: comment.content
     })
     const editorRef = useRef<Quill | null>(null)
@@ -184,7 +199,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                         && <span className="text-success-light dark:text-success-dark"><Check size={16} /></span>
                 }
             </div>
-            <div className="ms-auto text-xs ">
+            <div className="ms-auto text-xs">
                 {
                     comment.user_id !== user.id
                         ? <button
@@ -197,7 +212,6 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                             <Flag size={12} />
                         </button>
                         : <button
-                            form="comment-edit-form"
                             className={
                                 clsx(
                                     `flex gap-1 items-center`,
@@ -217,195 +231,218 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                 }
             </div>
         </div>
-        <Editor
-            ref={editorRef}
-            className="sm:ms-12 mt-4 sm:mt-0"
-            toolbar={COMMENT_EDITOR_TOOLBAR}
-            readOnly={!((comment.user_id === user.id) && editable)}
-            defaultValue={comment.content}
-            onChange={() =>
-                setData(
-                    "content",
-                    editorRef.current?.getSemanticHTML() as string
-                )
-            }
-        />
-        <Error>{errors.content}</Error>
-        <div className="flex flex-wrap-reverse gap-4 sm:ps-12 justify-between items-center mt-4">
-            <div className="flex gap-2 items-center">
-                <Link
-                    href={route("comments.vote", {
-                        votable: comment.id
-                    })}
-                    method={comment.user_vote === "UP" ? "delete" : "post"}
-                    data={{
-                        type: "UP"
-                    }}
-                    preserveScroll
-                    preserveState={false}
-                    onSuccess={() => router.visit(`#comment-${comment.id}`)}
-                    className={
-                        clsx(
-                            "font-semibold rounded-full p-2.5 flex text-xs items-center gap-2",
-                            comment.user_vote === "UP"
-                                ? "bg-success-light/25 dark:bg-success-dark/25 text-success-light dark:text-success-dark"
-                                : "bg-secondary/10 hover:bg-secondary/25"
-                        )
-                    }
-                >
-                    <UpVote size={16} />
-                    <span>
-                        <FormattedNumber value={comment.up_votes_count} style="decimal" notation="compact" />
-                    </span>
-                </Link>
-                <Link
-                    href={route("comments.vote", {
-                        votable: comment.id
-                    })}
-                    method={comment.user_vote === "DOWN" ? "delete" : "post"}
-                    data={{
-                        type: "DOWN"
-                    }}
-                    preserveScroll
-                    preserveState={false}
-                    onSuccess={() => router.visit(`#comment-${comment.id}`)}
-                    className={
-                        clsx(
-                            "font-semibold rounded-full p-2.5 flex items-center text-xs gap-2",
-                            comment.user_vote === "DOWN"
-                                ? "bg-error-light/25 dark:bg-error-dark/25 text-error-light dark:text-error-dark"
-                                : "bg-secondary/10 hover:bg-secondary/25"
-                        )
-                    }
-                >
-                    <DownVote size={16} />
-                    <span>
-                        <FormattedNumber value={comment.down_votes_count} style="decimal" notation="compact" />
-                    </span>
-                </Link>
-            </div>
-            <div className="flex gap-1 ms-auto flex-wrap text-xs text-secondary">
-                <span>
-                    {formatDate(comment.created_at)}
-                </span>
-                {
-                    comment.updated_at !== comment.created_at
-                    && <div className="flex gap-1">
-                        /
-                        <span className="">{t("content.modified")}</span>
-                        <span>
-                            {formatDate(comment.updated_at)}
-                        </span>
-                    </div>
+        <div className="sm:ms-12 flex flex-col gap-2">
+            <Editor
+                ref={editorRef}
+                className="mt-4 sm:mt-0"
+                toolbar={COMMENT_EDITOR_TOOLBAR}
+                readOnly={!((comment.user_id === user.id) && editable)}
+                defaultValue={comment.content}
+                onChange={() =>
+                    setData(
+                        "content",
+                        editorRef.current?.getSemanticHTML() as string
+                    )
                 }
-            </div>
-        </div>
-        {
-            comment.replies_count
-                ? <details>
-                    <summary>{comment.replies_count} replies</summary>
-                    <ul className="flex gap-2 flex-col ms-12">
-                        {
-                            comment.replies.map(r => r.user_id === user?.id
-                                ? <UpdatableReply reply={r} action={`/replies/${r.id}`} key={r.id} />
-                                : <Reply reply={r} key={r.id} />
+            />
+            <Error>{errors.content}</Error>
+            <div className="flex flex-wrap-reverse gap-4 justify-between items-center">
+                <div className="flex gap-2 items-center">
+                    <Link
+                        href={route("comments.vote", {
+                            votable: comment.id
+                        })}
+                        method={comment.user_vote === "UP" ? "delete" : "post"}
+                        data={{
+                            type: "UP"
+                        }}
+                        preserveScroll
+                        preserveState={false}
+                        onSuccess={() => router.visit(`#comment-${comment.id}`)}
+                        className={
+                            clsx(
+                                "font-semibold rounded-full p-2.5 flex text-xs items-center gap-2",
+                                comment.user_vote === "UP"
+                                    ? "bg-success-light/25 dark:bg-success-dark/25 text-success-light dark:text-success-dark"
+                                    : "bg-secondary/10 hover:bg-secondary/25"
                             )
                         }
-                        <li>
-                            <ReplyingForm action={`/comments/${comment.id}/replies`} />
-                        </li>
-                    </ul>
-                </details>
-                : <ReplyingForm action={`/comments/${comment.id}/replies`} />
-        }
-    </div >
+                    >
+                        <UpVote size={16} />
+                        <span>
+                            <FormattedNumber value={comment.up_votes_count} style="decimal" notation="compact" />
+                        </span>
+                    </Link>
+                    <Link
+                        href={route("comments.vote", {
+                            votable: comment.id
+                        })}
+                        method={comment.user_vote === "DOWN" ? "delete" : "post"}
+                        data={{
+                            type: "DOWN"
+                        }}
+                        preserveScroll
+                        preserveState={false}
+                        onSuccess={() => router.visit(`#comment-${comment.id}`)}
+                        className={
+                            clsx(
+                                "font-semibold rounded-full p-2.5 flex items-center text-xs gap-2",
+                                comment.user_vote === "DOWN"
+                                    ? "bg-error-light/25 dark:bg-error-dark/25 text-error-light dark:text-error-dark"
+                                    : "bg-secondary/10 hover:bg-secondary/25"
+                            )
+                        }
+                    >
+                        <DownVote size={16} />
+                        <span>
+                            <FormattedNumber value={comment.down_votes_count} style="decimal" notation="compact" />
+                        </span>
+                    </Link>
+                </div>
+                <div className="flex gap-1 ms-auto flex-wrap text-xs text-secondary">
+                    <span>
+                        {formatDate(comment.created_at)}
+                    </span>
+                    {
+                        comment.updated_at !== comment.created_at
+                        && <div className="flex gap-1">
+                            /
+                            <span className="">{t("content.modified")}</span>
+                            <span>
+                                {formatDate(comment.updated_at)}
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <ul className="flex gap-4 flex-col mt-4 sm:mx-12">
+                {
+                    comment.replies_count > 3
+                        ? <>
+                            {
+                                comment.replies.toSpliced(3)
+                                    .map(r => <li key={r.id}><Reply reply={r} /></li>)
+                            }
+
+                            {
+                                loadMore && comment.replies
+                                    .toSpliced(0, 3)
+                                    .map(r =>
+                                        <li key={r.id}>
+                                            <Reply reply={r} key={r.id} />
+                                        </li>
+                                    )
+                            }
+                        </>
+                        : comment.replies
+                            .map(r => <li key={r.id}><Reply reply={r} /></li>)
+                }
+                {
+                    !loadMore && comment.replies_count > 3 &&
+                    <button
+                        onClick={() => setLoadMore(true)}
+                        className="w-full group-open:hidden text-center text-sm cursor-pointer text-primary list-none"
+                    >
+                        {t('replies.load_more')}
+                    </button>
+                }
+                <ReplyingForm
+                    action={route('replies.store', { comment: comment.id })}
+                    onSucess={() => setLoadMore(true)}
+                />
+            </ul>
+        </div>
+    </div>
 }
 
-const UpdatableReply = ({ reply, action }: { reply: ReplyType, action: string }) => {
-    const [editable, setEditable] = useState(false)
+
+const Reply = ({ reply }: { reply: ReplyType }) => {
+    const { user } = usePage().props.auth
     const { t } = useLaravelReactI18n()
-    const { errors, data, setData, put, isDirty } = useForm(action, {
+    const { setReportAction } = useContext(ReportActionCtx)
+    const [editable, setEditable] = useState(false)
+    const { data, setData, put, errors, reset } = useForm(`UpdateReply-${reply.id}`, {
         content: reply.content
     })
-
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
 
-        if (!isDirty) return setEditable(false)
-
-        put(action, {
+        put(route("replies.update", { reply: reply.id }), {
             onSuccess: () => {
-                setEditable(false)
-                router.visit(`#reply-${reply.id}`)
-            }
-
+                reset()
+            },
+            preserveScroll: true,
+            preserveState: "errors"
         })
     }
 
-    return <li className="border-b-black target:border-2" id={`reply-${reply.id}`}>
-        <div className="flex gap-2 items-center">
-            <img src={"/images/users/" + reply.user?.avatar} className="size-6 rounded-full" />
-            {
-                !!reply.user
-                    ? <Link href={`/profile/${reply.user.username}`} className="font-bold">
-                        {t('common.you')}
-                    </Link>
-                    : <span className="font-bold">Someone</span>
-            }
-            {
-                !editable
-                && <button onClick={() => setEditable(true)}>edit</button>
-            }
+    return <div className="text-xs">
+
+        <div className="flex gap-4 justify-between flex-wrap">
             <Link
-                href={`/replies/${reply.id}`}
-                method="delete"
-                preserveState={false}
-                className="text-red-400"
+                href={reply.user ? route("profile.show", { user: reply.user?.username }) : "#"}
+                className="flex gap-2 items-center"
             >
-                delete
+                <img src={"/images/users/" + reply.user?.avatar} className="size-6 rounded-full" />
+                {
+                    reply.user
+                        ? <span className="font-semibold">
+                            {reply.user_id === user?.id ? t("common.you") : reply.user?.fullname}
+                        </span>
+                        : <span className="font-bold text-secondary">Someone</span>
+                }
             </Link>
+            {
+                reply.user_id !== user.id
+                    ? <button
+                        className="text-2xs flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
+                        onClick={
+                            () => setReportAction(route("comments.report", { reportable: comment.id }))
+                        }
+                    >
+                        {t("content.report")}
+                        <Flag size={10} />
+                    </button>
+                    : <button
+                        className={
+                            clsx(
+                                `flex gap-1 items-center`,
+                                !editable ? "text-secondary hover:text-current" : "px-2 py-1 rounded hover:bg-secondary/50 bg-secondary/25",
+                            )
+                        }
+                        type={editable ? "submit" : "button"}
+                        form="update-reply-form"
+                        onClick={
+                            () => {
+                                setEditable(!editable)
+                            }
+                        }
+                    >
+                        {editable ? t('content.save') : t('content.edit')}
+                    </button>
+            }
         </div>
         {
-            editable
-                ? <form onSubmit={handleSubmit}>
-                    <input
-                        onChange={e => setData("content", e.target.value)}
-                        value={data.content ?? reply.content}
-                        className="text-gray-600 text-sm ms-8"
-                    />
-                    <button type="submit">save</button>
-                </form>
-                : <p>
+            !editable
+                ? <p className="ms-8">
                     {reply.content}
                 </p>
+                : <form onSubmit={handleSubmit} className="max-w-sm ms-8" name="update-reply-form">
+                    <div className="flex gap-2 items-center">
+                        <Input
+                            className="flex-1"
+                            onChange={e => setData("content", e.target.value)}
+                            value={data.content}
+                            placeholder={t("replies.reply_input_placeholder") as string}
+                        />
+                        <button type="submit" className="text-secondary hover:text-current"><FiSend size={24} /></button>
+                    </div>
+                    <Error>{errors.content}</Error>
+                </form>
         }
-        {errors.content && <p className="text-red-400 text-sm">{errors.content}</p>}
-    </li>
+    </div>
 }
 
-const Reply = ({ reply }: { reply: ReplyType }) => {
-    const [showReportForm, setShowReportForm] = useState(false)
-
-    return <li className="border-b-black target:border-2" id={`reply-${reply.id}`}>
-        <div className="flex gap-2 items-center">
-            <img src={"/images/users/" + reply.user?.avatar} className="size-6 rounded-full" />
-            {
-                !!reply.user
-                    ? <Link href={`/profile/${reply.user.username}`} className="font-bold">
-                        {reply.user.fullname}
-                    </Link>
-                    : <span className="font-bold">Someone</span>
-            }
-        </div>
-        <p className="text-gray-600 text-sm ms-8">
-            {reply.content}
-        </p>
-        <button onClick={() => setShowReportForm(!showReportForm)} className="text-red-400">report</button>
-        {
-            showReportForm && <ReportForm action={`/replies/${reply.id}/reports`} />
-        }
-    </li>
-}
 
 const Post = ({ p }: { p: PostType }) => {
     const { t } = useLaravelReactI18n()

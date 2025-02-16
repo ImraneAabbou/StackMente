@@ -39,18 +39,18 @@ Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote'])->name(
 Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::post('/comments/{reportable}/reports', [CommentController::class, 'report'])->name('comments.report');
 Route::delete('/comments/{reportable}/reports', [CommentController::class, 'clearReports'])->can('delete', [Report::class]);
-Route::put('/comments/{comment}/mark', [CommentController::class, 'mark'])->name("comments.mark");
-Route::put('/comments/{comment}', [CommentController::class, 'update'])->name("comments.update");
+Route::put('/comments/{comment}/mark', [CommentController::class, 'mark'])->name('comments.mark');
+Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
 
-Route::post('/comments/{votable}/vote', [CommentController::class, 'vote'])->name("comments.vote");
-Route::delete('/comments/{votable}/vote', [CommentController::class, 'unvote'])->name("comments.unvote");
+Route::post('/comments/{votable}/vote', [CommentController::class, 'vote'])->name('comments.vote');
+Route::delete('/comments/{votable}/vote', [CommentController::class, 'unvote'])->name('comments.unvote');
 
 Route::post('/comments/{comment}/replies', [ReplyController::class, 'store'])->name('replies.store');
 Route::post('/replies/{reportable}/reports', [ReplyController::class, 'report'])->name('replies.report');
 Route::delete('/replies/{reportable}/reports', [ReplyController::class, 'clearReports'])->can('delete', [Report::class]);
-Route::put('/replies/{reply}', [ReplyController::class, 'update']);
-Route::delete('/replies/{reply}', [ReplyController::class, 'destroy']);
+Route::put('/replies/{reply}', [ReplyController::class, 'update'])->name('replies.update');
+Route::delete('/replies/{reply}', [ReplyController::class, 'destroy'])->name('replies.delete');
 
 Route::put('/notifications/{id}', [NotificationController::class, 'update'])->name('notifications.update');
 Route::delete('/notifications', [NotificationController::class, 'destroy'])->name('notifications.destroy');
