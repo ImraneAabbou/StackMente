@@ -24,6 +24,9 @@ class StorePostRequest extends FormRequest
      */
     public function rules(): array
     {
+        $maxContentLength = $this->input('type') === PostType::ARTICLE->value ? 10000000 : 65000;
+        $minContentLength = $this->input('type') === PostType::ARTICLE->value ? 5000 : 255;
+
         return [
             'title' => [
                 'required',
@@ -33,7 +36,7 @@ class StorePostRequest extends FormRequest
             ],
             'tags' => ['required', 'array', 'min:3', 'max:6', 'distinct'],
             'tags.*' => ['string', 'max:50'],
-            'content' => ['required', 'string', 'max:10000000', 'min:100'],
+            'content' => ['required', 'string', "max:$maxContentLength", "min:$minContentLength"],
             'type' => ['required', Rule::enum(PostType::class)],
         ];
     }

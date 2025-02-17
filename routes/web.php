@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Index');
 
+Route::put('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update');
+
 Route::inertia('/articles/create', 'Posts/CreateArticle')->name('articles.create');
 Route::get('/articles', [PostController::class, 'index'])->name('articles.index');
 Route::get('/articles/{post:slug}', [PostController::class, 'show'])->name('articles.show');

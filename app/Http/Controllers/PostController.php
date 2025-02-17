@@ -186,9 +186,11 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post): void
+    public function update(UpdatePostRequest $request, Post $post): RedirectResponse
     {
         $post->update($request->validated());
+
+        return back();
     }
 
     /**

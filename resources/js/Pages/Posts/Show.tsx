@@ -236,7 +236,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                 ref={editorRef}
                 className="mt-4 sm:mt-0"
                 toolbar={COMMENT_EDITOR_TOOLBAR}
-                readOnly={!((comment.user_id === user.id) && editable)}
+                readOnly={!((comment.user_id === user?.id) && editable)}
                 defaultValue={comment.content}
                 onChange={() =>
                     setData(
@@ -383,7 +383,7 @@ const Reply = ({ reply }: { reply: ReplyType }) => {
                 href={reply.user ? route("profile.show", { user: reply.user?.username }) : "#"}
                 className="flex gap-2 items-center"
             >
-                <img src={"/images/users/" + reply.user?.avatar} className="size-6 rounded-full" />
+                <img src={avatar(reply.user?.avatar)} className="size-6 rounded-full" />
                 {
                     reply.user
                         ? <span className="font-semibold">
@@ -393,7 +393,7 @@ const Reply = ({ reply }: { reply: ReplyType }) => {
                 }
             </Link>
             {
-                reply.user_id !== user.id
+                reply.user_id !== user?.id
                     ? <button
                         className="text-2xs flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
                         onClick={
@@ -449,12 +449,34 @@ const Post = ({ p }: { p: PostType }) => {
     const formatDate = useRelativeDateFormat()
     const { user } = usePage().props.auth
     const { setReportAction } = useContext(ReportActionCtx)
+    const [editable, setEditable] = useState(false)
+    const isPostOwned = user?.id === p.user_id
+    const editorRef = useRef<Quill | null>(null)
+    const { errors, setData, put, data } = useForm({
+        content: p.content,
+        type: p.type,
+        title: p.title,
+    })
+    const handleSubmit = () => {
+        put(route('posts.update', { post: p.slug }), {
+            onSuccess: () => {
+                setEditable(false)
+            }
+        })
+    }
+
 
     return <main>
         <div className="flex flex-col gap-2 border-b border-secondary/50 mb-4">
-            <h1 className="text-4xl font-bold">
-                {p.title}
-            </h1>
+            {
+                editable
+                    ? <Input onChange={e => setData("title", e.target.value)} value={data.title} />
+                    : <h1
+                        className="text-4xl font-bold"
+                    >
+                        {p.title}
+                    </h1>
+            }
             <div className="flex text-sm flex-wrap items-center gap-8 text-secondary p-4">
                 <div className="flex flex-wrap gap-4 italic">
                     <div className="flex gap-1">
@@ -480,19 +502,51 @@ const Post = ({ p }: { p: PostType }) => {
                         </Link>
                     }
                 </div>
-                <button
-                    className="flex gap-2 ms-auto font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
-                    onClick={
-                        () => setReportAction(route("posts.report", { reportable: p.slug }))
+                <div className="ms-auto flex gap-2.5 items-center">
+                    {
+
+                        isPostOwned
+                            ? <>
+                                <Error>{errors.content}</Error>
+                                <button
+                                    className="font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-secondary"
+                                    onClick={
+                                        () => {
+                                            if (editable) handleSubmit();
+                                            if (!editable) setEditable(!editable)
+                                        }
+                                    }
+                                >
+                                    {editable ? t('content.save') : t('content.edit')}
+                                </button>
+                            </>
+                            : <button
+                                className="flex gap-2 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
+                                onClick={
+                                    () => setReportAction(route("posts.report", { reportable: p.slug }))
+                                }
+                            >
+                                {t("content.report")}
+                                <Flag size={16} />
+                            </button>
                     }
-                >
-                    {t("content.report")}
-                    <Flag size={16} />
-                </button>
+                </div>
             </div>
         </div>
 
-        <Editor readOnly defaultValue={p.content} />
+        <form onSubmit={handleSubmit}>
+            <Editor
+                ref={editorRef}
+                readOnly={!editable}
+                onChange={() =>
+                    setData(
+                        "content",
+                        editorRef.current?.getSemanticHTML() as string
+                    )
+                }
+                defaultValue={p.content}
+            />
+        </form>
 
         <div className="flex md:flex-row justify-between flex-col-reverse mt-4">
             <div className="flex gap-2 sm:mb-4 items-center">
@@ -579,5 +633,5 @@ const Post = ({ p }: { p: PostType }) => {
                 </div>
             </div>
         </div>
-    </main>
+    </main >
 }

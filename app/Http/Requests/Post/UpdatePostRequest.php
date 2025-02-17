@@ -24,6 +24,9 @@ class UpdatePostRequest extends FormRequest
      */
     public function rules(): array
     {
+        $maxContentLength = $this->input('type') === PostType::ARTICLE->value ? 10000000 : 65000;
+        $minContentLength = $this->input('type') === PostType::ARTICLE->value ? 5000 : 255;
+
         return [
             'title' => [
                 'required',
@@ -31,7 +34,7 @@ class UpdatePostRequest extends FormRequest
                 'max:200',
                 new UniquePost($this->route('post')->id)
             ],
-            'content' => ['required', 'string', 'max:65000'],
+            'content' => ['required', 'string', "max:$maxContentLength", "min:$minContentLength"],
             'type' => ['required', Rule::enum(PostType::class)],
         ];
     }
