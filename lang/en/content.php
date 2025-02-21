@@ -5,6 +5,7 @@ return [
     'subheadline' => 'Ask, discuss, and share knowledge with a community built for learning and discovery.',
     'to_feed' => 'To The Feed',
     'login' => 'Log in',
+    'logout' => 'Log out',
     'register' => 'Register',
     'email_username' => 'Email / Username',
     'username' => 'Username',
@@ -60,4 +61,6 @@ return [
     'view_all' => "View all",
     'nothing_found' => "Nothing found",
     'users' => "Users",
+    "xp" => "XP",
+    "dark_mode" => "Dark mode",
 ];

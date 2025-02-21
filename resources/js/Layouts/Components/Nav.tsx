@@ -1,12 +1,13 @@
 import Notifications from '@/Components/icons/Notifications'
 import Input from '@/Components/ui/Input'
 import { ProgressCircle } from '@/Components/ui/ProgressCircle'
+import Switch from '@/Components/ui/Switch'
 import { avatar } from '@/Utils/helpers/path'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Link, router, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
-import { ChangeEvent, FormEvent, ReactNode, useCallback, useRef } from 'react'
-import { debounce, parseInt } from "lodash"
+import { ChangeEvent, FormEvent, ReactNode, useCallback, useLayoutEffect, useRef } from 'react'
+import { debounce } from "lodash"
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
 import {
@@ -37,7 +38,9 @@ import Questions from '@/Components/icons/Questions'
 import Tags from '@/Components/icons/Tags'
 import Articles from '@/Components/icons/Articles'
 import Subjects from '@/Components/icons/Subjects'
-import { FormattedNumber } from 'react-intl'
+import Logout from '@/Components/icons/Logout'
+import DarkMode from '@/Components/icons/DarkMode'
+import useLocalStorageState from 'use-local-storage-state'
 
 const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.index", "articles.index", "subjects.index"]
 
@@ -88,6 +91,14 @@ export default function Nav() {
         }
         setShouldShowSearchResult(false);
     };
+
+    const [isDarkTheme, setDarkTheme] = useLocalStorageState("darkTheme", { defaultValue: false })
+
+    console.log("dark: ", isDarkTheme)
+
+    useLayoutEffect(() => {
+        document.documentElement.classList.toggle("dark", isDarkTheme)
+    }, [isDarkTheme])
 
 
     return (
@@ -169,49 +180,41 @@ export default function Nav() {
                                         </div>
                                         <MenuItems
                                             className="
-                flex flex-col gap-1 p-1 mt-4 z-10 bg-surface-light dark:bg-surface-dark pb-2
-                sm:absolute w-screen left-0 sm:left-auto fixed right-0 sm:max-w-64 sm:mt-4 rounded-md shadow-lg
+                flex flex-col gap-1 p-1 py-2 mt-2 z-10 bg-surface-light dark:bg-surface-dark
+                sm:absolute w-screen left-0 sm:left-auto fixed right-0 sm:max-w-64 rounded-md shadow-lg
             "
                                         >
                                             <MenuItem>
-                                                <div
-                                                    className="flex px-4 py-2 text-sm gap-4"
+                                                <Link
+                                                    href={route("profile.me")}
+                                                    className="flex gap-4  px-4 py-2 text-sm rounded"
                                                 >
-                                                    <ProgressCircle size={50} value={user.stats.xp.percent_to_next_level}>
-                                                        <span className="absolute -inset-1.5" />
-                                                        <span className="sr-only">Open user menu</span>
-                                                        <span className="text-xs font-bold text-success-light dark:text-success-dark">{100 - parseInt(user.stats.xp.percent_to_next_level.toFixed())}%</span>
-                                                    </ProgressCircle>
-                                                    <div className='ms-auto'>
-                                                        <div className='flex flex-col'>
-                                                            <span className='font-bold'>
-                                                                <FormattedNumber value={user.stats.xp.curr_level_total} style="decimal" notation="standard" />
-                                                            </span>
-
-                                                            <span className='text-xs text-secondary ms-4'>
-                                                                / {" "}
-                                                                <FormattedNumber value={user.stats.xp.next_level_total} style="decimal" notation="standard" />
-
-                                                            </span>
-                                                        </div>
+                                                    <img src={avatar(user.avatar)} className="rounded-full size-12" />
+                                                    <div className=''>
+                                                        <div className='font-semibold'>{user.fullname}</div>
+                                                        <div className='text-secondary text-xs'>{user.username}</div>
                                                     </div>
-                                                </div>
+                                                </Link>
                                             </MenuItem>
                                             <MenuItem>
-                                                <a
-                                                    href="#2"
-                                                    className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
+                                                <button
+                                                    onClick={(e) => {e.preventDefault(); setDarkTheme(!isDarkTheme)}}
+                                                    className="flex gap-2 items-center text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
                                                 >
-                                                    Settings
-                                                </a>
+                                                    <DarkMode size={20} />
+                                                    {t("content.dark_mode")}
+                                                    <Switch checked={isDarkTheme} className='ms-auto bg-secondary pointer-events-none' />
+                                                </button>
                                             </MenuItem>
                                             <MenuItem>
-                                                <a
-                                                    href="#3"
-                                                    className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
+                                                <Link
+                                                    href={route("logout")}
+                                                    method='post'
+                                                    className="flex gap-2 items-center hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
                                                 >
-                                                    Sign out
-                                                </a>
+                                                    <Logout size={20} />
+                                                    {t("content.logout")}
+                                                </Link>
                                             </MenuItem>
                                         </MenuItems>
                                     </Menu>
