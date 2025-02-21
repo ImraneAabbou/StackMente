@@ -1,7 +1,7 @@
 import { User, RankedUser } from "./user";
 import type { Notification } from "./notification";
-import { TagWithCounts } from "./tag";
-import { Post } from "./post";
+import { Tag, TagWithCounts } from "./tag";
+import { Article, Post, Question, Subject } from "./post";
 import { Comment } from "./comment";
 
 export type PageProps<
@@ -32,4 +32,30 @@ export type PageProps<
         comments: Comment[];
         is_commented: boolean;
     };
+
+    results: Results;
 };
+
+export interface Results {
+    q: string,
+    articles: {
+        items: Article[];
+        count: number;
+    };
+    subjects: {
+        items: Subject[];
+        count: number;
+    };
+    questions: {
+        items: Question[];
+        count: number;
+    };
+    tags: {
+        items: Tag[];
+        count: number;
+    };
+    users: {
+        items: User[];
+        count: number;
+    };
+}

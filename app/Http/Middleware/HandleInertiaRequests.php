@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Models\Mission;
 use App\Models\Post;
 use App\Models\Reply;
+use App\Models\Tag;
 use App\Models\User;
 use App\Services\StatsService;
 use Illuminate\Http\Request;
@@ -44,6 +45,73 @@ class HandleInertiaRequests extends Middleware
             ],
             'notifications' => fn() => $this->getAuthUserNotifications($request),
             'status' => Inertia::always(fn() => $request->session()->get('status')),
+            'results' => fn() => $this->getSearchResults($request),
+        ];
+    }
+
+    /**
+     * Returns the results of the given search query
+     * Returns null if not provided
+     */
+    public function getSearchResults(Request $request)
+    {
+        $q = $request->query('q');
+
+        if (is_null($q))
+            return $q;
+
+        $articlesQuery = Post::articles()->inRandomOrder()->getQuery();
+        $subjectsQuery = Post::subjects()->inRandomOrder()->getQuery();
+        $questionsQuery = Post::questions()->inRandomOrder()->getQuery();
+        $tagsQuery = Tag::query();
+        $usersQuery = User::query();
+
+        $articlesQuery->whereLike('title', "%$q%");
+        $subjectsQuery->whereLike('title', "%$q%");
+        $questionsQuery->whereLike('title', "%$q%");
+        $tagsQuery->whereLike('name', "%$q%");
+        $usersQuery->whereLike('fullname', "%$q%")->orWhereLike('username', "%$q%");
+
+        return [
+            'q' => $q,
+            'articles' => [
+                'items' => $articlesQuery
+                ->limit(5)
+                    ->get()
+                    ->map(fn($p) => [
+                        ...((array) $p),
+                        'content' => Str::limit($p->content, 100),
+                    ]),
+                'count' => $articlesQuery->count(),
+            ],
+            'subjects' => [
+                'items' => $subjectsQuery
+                ->limit(5)
+                    ->get()
+                    ->map(fn($p) => [
+                        ...((array) $p),
+                        'content' => Str::limit($p->content, 100),
+                    ]),
+                'count' => $subjectsQuery->count(),
+            ],
+            'questions' => [
+                'items' => $questionsQuery
+                ->limit(5)
+                    ->get()
+                    ->map(fn($p) => [
+                        ...((array) $p),
+                        'content' => Str::limit($p->content, 100),
+                    ]),
+                'count' => $questionsQuery->count(),
+            ],
+            'tags' => [
+                'items' => $tagsQuery->limit(5)->get(),
+                'count' => $tagsQuery->count(),
+            ],
+            'users' => [
+                'items' => $usersQuery->limit(5)->get(),
+                'count' => $usersQuery->count(),
+            ],
         ];
     }
 
@@ -60,7 +128,7 @@ class HandleInertiaRequests extends Middleware
 
         $userService = new StatsService($user);
 
-        $userXP = $user["stats->xp->total"];
+        $userXP = $user['stats->xp->total'];
         $currLevelTotal = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'] - 1);
         $nextLevelTotal = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level']);
 

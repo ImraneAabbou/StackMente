@@ -56,4 +56,7 @@ return [
     'modified' => "Modified",
     'edit' => "Edit",
     'save' => "Save",
+    'results' => "Results",
+    'view_all' => "View all",
+    'nothing_found' => "Nothing found",
 ];

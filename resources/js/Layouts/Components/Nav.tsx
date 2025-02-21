@@ -3,9 +3,10 @@ import Input from '@/Components/ui/Input'
 import { ProgressCircle } from '@/Components/ui/ProgressCircle'
 import { avatar } from '@/Utils/helpers/path'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Link, useForm, usePage, usePoll } from '@inertiajs/react'
+import { Link, router, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
-import { ChangeEvent, FormEvent, ReactNode } from 'react'
+import { ChangeEvent, FormEvent, memo, ReactNode, useCallback, useMemo, useRef } from 'react'
+import { debounce } from "lodash"
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
 import {
@@ -30,6 +31,12 @@ import Plus from '@/Components/icons/Plus'
 import QuestionMark from '@/Components/icons/QuestionMark'
 import Pencil from '@/Components/icons/Pencil'
 import Discuss from '@/Components/icons/Discuss'
+import { Results } from '@/types'
+import Search from '@/Components/icons/Search'
+import Questions from '@/Components/icons/Questions'
+import Tags from '@/Components/icons/Tags'
+import Articles from '@/Components/icons/Articles'
+import Subjects from '@/Components/icons/Subjects'
 
 const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.index", "articles.index", "subjects.index"]
 
@@ -40,6 +47,9 @@ export default function Nav() {
     const { data, setData, get } = useForm({
         q
     })
+    const results = usePage().props.results
+    const searchInputRef = useRef<null | HTMLInputElement>(null)
+    const [shouldShowSearchResult, setShouldShowSearchResult] = useState(false)
     const searchAction = SEARCHABLE_ROUTE_NAMES.includes(route().current() as string)
         ? route(route().current() as string)
         : route("search")
@@ -52,7 +62,35 @@ export default function Nav() {
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         setData("q", e.target.value)
+        setShouldShowSearchResult(!!e.target.value.trim())
+        //  && e.target.value.length >= 3
+        x(e.target.value)
     }
+
+    const x = useCallback(
+        debounce((querySearchValue: string) => {
+            console.log("query:", querySearchValue,
+                route(
+                    route().current() as string,
+                    { _query: { ...route().params, q: querySearchValue } }
+                )
+            )
+            router.visit(
+                route(
+                    route().current() as string,
+                    { _query: { q: querySearchValue } }
+                ), {
+                only: ["results"],
+                preserveScroll: true,
+                preserveState: true,
+                replace: true,
+            })
+        }, 500), [])
+
+
+    console.log(results)
+
+
 
     return (
         <nav className="sticky z-50 bg-background-light/50 dark:bg-background-dark/50 backdrop-blur top-0">
@@ -66,14 +104,22 @@ export default function Nav() {
                                 className="h-8 w-auto"
                             />
                         </Link>
-                        <form onSubmit={handleSearchSubmit} className='w-full max-w-sm'>
+                        <form onSubmit={handleSearchSubmit} className='w-full max-w-sm relative'>
                             <Input
+                                onFocus={
+                                    () => setShouldShowSearchResult(!!data.q)
+                                }
+                                onBlur={() => setShouldShowSearchResult(false)}
+                                ref={searchInputRef}
                                 onChange={handleSearchChange}
                                 value={data.q}
                                 className='w-full'
                                 type="search"
                                 placeholder={t("content.looking_for") as string}
                             />
+                            {
+                                shouldShowSearchResult && <SearchResult q={data.q} results={results} />
+                            }
                         </form>
                     </div>
                     <div className="inset-y-0 flex gap-4 items-center">
@@ -242,6 +288,255 @@ const CreatePostItems = () => {
             )
         }
     </MenuItems>
+}
+
+
+
+const SearchResult = ({ results }: { results?: Results }) => {
+    const { t } = useLaravelReactI18n()
+
+    return !results
+        ? null
+        : <ul
+            className="
+                flex flex-col w-full gap-1 mt-4 left-0 sm:left-auto
+                fixed z-10 h-[calc(100vh-100%)] sm:max-h-96
+                overflow-y-auto bg-surface-light dark:bg-surface-dark
+                sm:absolute sm:mt-4 sm:rounded-md sm:shadow-lg
+            "
+        >
+            {
+                !!results.questions.count &&
+                <li>
+                    <div className='text-xs p-1 px-2 text-secondary flex justify-between items-center sticky inset-0 bg-surface-light dark:bg-surface-dark'>
+                        <span className="">
+                            {t("content.questions")}
+                        </span>
+                        {
+                            <Link
+                                href={route("questions.index", { _query: { q: results.q } })}
+                                className='text-xs text-primary'
+                            >
+                                {t("content.view_all")}
+                            </Link>
+                        }
+                    </div>
+                    <ul className="flex gap-1 flex-col px-2 mt-2">
+                        {
+                            results.questions.items.map(
+                                q => <li key={q.id}>
+                                    <ResultItem
+                                        href={route("questions.show", { post: q.slug })}
+                                        htmlTitle={
+                                            q.title
+                                                .replace(
+                                                    new RegExp(results.q, "gi"),
+                                                    `<span class="font-bold text-primary">${results.q}</span>`
+                                                )
+                                        }
+                                        htmlDesc={
+                                            q.content
+                                                .replace(
+                                                    new RegExp(results.q, "gi"),
+                                                    `<span class="font-bold">${results.q}</span>`
+                                                )
+                                        }
+                                        sideElement={
+                                            <div className="basis-24 mt-2">
+                                                <Questions />
+                                            </div>
+                                        } />
+
+                                </li>
+                            )
+                        }
+                    </ul>
+                </li>
+            }
+            {
+                !!results.subjects.count &&
+                <li>
+                    <div className='text-xs p-1 px-2 text-secondary flex justify-between items-center sticky inset-0 bg-surface-light dark:bg-surface-dark'>
+                        <span className="">
+                            {t("content.subjects")}
+                        </span>
+                        {
+                            <Link
+                                href={route("subjects.index", { _query: { q: results.q } })}
+                                className='text-xs text-primary'
+                            >
+                                {t("content.view_all")}
+                            </Link>
+                        }
+                    </div>
+                    <ul className="flex gap-1 flex-col px-2 mt-2">
+                        {
+                            results.subjects.items.map(
+                                q => <li key={q.id}>
+                                    <ResultItem
+                                        href={route("subjects.show", { post: q.slug })}
+                                        htmlTitle={
+                                            q.title
+                                                .replace(
+                                                    new RegExp(results.q, "gi"),
+                                                    `<span class="font-bold text-primary">${results.q}</span>`
+                                                )
+                                        }
+                                        htmlDesc={
+                                            q.content
+                                                .replace(
+                                                    new RegExp(results.q, "gi"),
+                                                    `<span class="font-bold">${results.q}</span>`
+                                                )
+                                        }
+                                        sideElement={
+                                            <div className="basis-24 mt-2">
+                                                <Subjects />
+                                            </div>
+                                        }
+                                    />
+                                </li>
+                            )
+                        }
+                    </ul>
+                </li>
+            }
+            {
+                !!results.articles.count &&
+                <li>
+                    <div className='text-xs p-1 px-2 text-secondary flex justify-between items-center sticky inset-0 bg-surface-light dark:bg-surface-dark'>
+                        <span className="">
+                            {t("content.articles")}
+                        </span>
+                        {
+                            <Link
+                                href={route("articles.index", { _query: { q: results.q } })}
+                                className='text-xs text-primary'
+                            >
+                                {t("content.view_all")}
+                            </Link>
+                        }
+                    </div>
+                    <ul className="flex gap-1 flex-col px-2 mt-2">
+                        {
+                            results.articles.items.map(
+                                q => <li key={q.id}>
+                                    <ResultItem
+                                        href={route("articles.show", { post: q.slug })}
+                                        htmlTitle={
+                                            q.title
+                                                .replace(
+                                                    new RegExp(results.q, "gi"),
+                                                    `<span class="font-bold text-primary">${results.q}</span>`
+                                                )
+                                        }
+                                        htmlDesc={
+                                            q.content
+                                                .replace(
+                                                    new RegExp(results.q, "gi"),
+                                                    `<span class="font-bold">${results.q}</span>`
+                                                )
+                                        }
+                                        sideElement={
+                                            <div className="basis-24 mt-2">
+                                                <Articles />
+                                            </div>
+                                        }
+                                    />
+                                </li>
+                            )
+                        }
+                    </ul>
+                </li>
+            }
+            {
+                !!results.tags.count &&
+                <li>
+                    <div className='text-xs p-1 px-2 text-secondary flex justify-between items-center sticky inset-0 bg-surface-light dark:bg-surface-dark'>
+                        <span className="">
+                            {t("content.tags")}
+                        </span>
+                        {
+                            <Link
+                                href={route("tags.index", { _query: { q: results.q } })}
+                                className='text-xs text-primary'
+                            >
+                                {t("content.view_all")}
+                            </Link>
+                        }
+                    </div>
+                    <ul className="flex gap-1 flex-col px-2 mt-2">
+                        {
+                            results.tags.items.map(
+                                t => <li key={t.id}>
+                                    <ResultItem
+                                        href={route("feed", { _query: { included_tags: [t.name] } })}
+                                        htmlTitle={
+                                            t.name
+                                                .replace(
+                                                    new RegExp(results.q, "gi"),
+                                                    `<span class="font-bold text-primary">${results.q}</span>`
+                                                )
+                                        }
+                                        sideElement={
+                                            <div className="basis-24">
+                                                <Tags />
+                                            </div>
+                                        } />
+
+                                </li>
+                            )
+                        }
+                    </ul>
+                </li>
+            }
+            {
+                !!(
+                    results.questions.count === 0
+                    && results.articles.count === 0
+                    && results.subjects.count === 0
+                    && results.tags.count === 0
+                ) && <li className='size-full flex justify-center items-center'><NothingFound /></li>
+            }
+        </ul>
+}
+
+interface ResultItemProps {
+    href: string;
+    sideElement: ReactNode;
+    htmlTitle: string;
+    htmlDesc?: string;
+}
+
+const ResultItem = ({ sideElement, href, htmlTitle, htmlDesc }: ResultItemProps) => {
+    return <div className='rounded p-1 px-2 hover:bg-background-light/75 dark:hover:bg-background-dark/75'>
+        <Link
+            className='bg-secondary flex gap-4'
+            href={href}
+        >
+            {sideElement}
+            <div className="flex flex-col">
+                <h3
+                    dangerouslySetInnerHTML={{ __html: htmlTitle }}
+                />
+                {
+                    htmlDesc &&
+                    <p className='text-secondary text-xs'
+                        dangerouslySetInnerHTML={{ __html: htmlDesc }}
+                    />
+                }
+
+            </div>
+        </Link>
+    </div>
+}
+
+const NothingFound = () => {
+    const { t } = useLaravelReactI18n()
+    return <div className="flex justify-center items-center flex-col gap-4 text-secondary">
+        <Search size={48} />
+        <h2>{t("content.nothing_found")}</h2>
+    </div>
 }
 
 
