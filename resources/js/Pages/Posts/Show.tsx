@@ -80,7 +80,7 @@ const CommentingForm = ({ action }: { action: string }) => {
 
     return <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <div className="flex gap-2 items-center">
-            <img src={avatar(user.avatar)} className="size-8 rounded-full" />
+            <img src={avatar(user?.avatar)} className="size-8 rounded-full" />
             <span className="font-bold">
                 {t("common.you")}
             </span>
@@ -201,7 +201,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
             </div>
             <div className="ms-auto text-xs">
                 {
-                    comment.user_id !== user.id
+                    comment.user_id !== user?.id
                         ? <button
                             className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
                             onClick={
@@ -617,14 +617,14 @@ const Post = ({ p }: { p: PostType }) => {
                         </div>
                     }
                     <Link
-                        href={route("profile.show", { user: p.user.username })}
+                        href={p.user ? route("profile.show", { user: p.user.username }) : "#"}
                         className="flex gap-1 items-center font-bold text-onBackground-dark dark:text-onBackground-light"
                     >
-                        <img className="size-4 rounded-full" src={avatar(p.user.avatar)} alt={p.user.fullname} />
+                        <img className="size-4 rounded-full" src={avatar(p.user?.avatar)} alt={p.user?.fullname} />
                         {
                             p.user_id === user?.id
                                 ? t("common.you")
-                                : p.user.username
+                                : p.user?.username
                         }
                     </Link>
                 </div>

@@ -6,7 +6,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Link, router, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
 import { ChangeEvent, FormEvent, ReactNode, useCallback, useRef } from 'react'
-import { debounce } from "lodash"
+import { debounce, parseInt } from "lodash"
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
 import {
@@ -37,6 +37,7 @@ import Questions from '@/Components/icons/Questions'
 import Tags from '@/Components/icons/Tags'
 import Articles from '@/Components/icons/Articles'
 import Subjects from '@/Components/icons/Subjects'
+import { FormattedNumber } from 'react-intl'
 
 const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.index", "articles.index", "subjects.index"]
 
@@ -167,7 +168,10 @@ export default function Nav() {
                                             </MenuButton>
                                         </div>
                                         <MenuItems
-                                            className="absolute bg-surface-light dark:bg-surface-dark right-0 z-10 mt-2 w-64 origin-top-right rounded-md py-1 shadow-lg"
+                                            className="
+                flex flex-col gap-1 p-1 mt-4 z-10 bg-surface-light dark:bg-surface-dark pb-2
+                sm:absolute w-screen left-0 sm:left-auto fixed right-0 sm:max-w-64 sm:mt-4 rounded-md shadow-lg
+            "
                                         >
                                             <MenuItem>
                                                 <div
@@ -176,17 +180,19 @@ export default function Nav() {
                                                     <ProgressCircle size={50} value={user.stats.xp.percent_to_next_level}>
                                                         <span className="absolute -inset-1.5" />
                                                         <span className="sr-only">Open user menu</span>
-                                                        <img
-                                                            alt=""
-                                                            src={avatar(user.avatar)}
-                                                            className="rounded-full"
-                                                        />
+                                                        <span className="text-xs font-bold text-success-light dark:text-success-dark">{100 - parseInt(user.stats.xp.percent_to_next_level.toFixed())}%</span>
                                                     </ProgressCircle>
-                                                    <div>
+                                                    <div className='ms-auto'>
                                                         <div className='flex flex-col'>
-                                                            <span className='font-bold'>{user.stats.xp.curr_level_total}</span>
+                                                            <span className='font-bold'>
+                                                                <FormattedNumber value={user.stats.xp.curr_level_total} style="decimal" notation="standard" />
+                                                            </span>
 
-                                                            <span className='text-xs text-secondary ms-4'>/ {user.stats.xp.next_level_total}</span>
+                                                            <span className='text-xs text-secondary ms-4'>
+                                                                / {" "}
+                                                                <FormattedNumber value={user.stats.xp.next_level_total} style="decimal" notation="standard" />
+
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -194,7 +200,7 @@ export default function Nav() {
                                             <MenuItem>
                                                 <a
                                                     href="#2"
-                                                    className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm"
+                                                    className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
                                                 >
                                                     Settings
                                                 </a>
@@ -202,7 +208,7 @@ export default function Nav() {
                                             <MenuItem>
                                                 <a
                                                     href="#3"
-                                                    className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm"
+                                                    className="block hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
                                                 >
                                                     Sign out
                                                 </a>
