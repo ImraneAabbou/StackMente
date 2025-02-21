@@ -59,4 +59,5 @@ return [
     'results' => "Results",
     'view_all' => "View all",
     'nothing_found' => "Nothing found",
+    'users' => "Users",
 ];

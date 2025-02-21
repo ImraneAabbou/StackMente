@@ -5,7 +5,7 @@ import { avatar } from '@/Utils/helpers/path'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Link, router, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
-import { ChangeEvent, FormEvent, memo, ReactNode, useCallback, useMemo, useRef } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, useCallback, useRef } from 'react'
 import { debounce } from "lodash"
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
@@ -48,37 +48,31 @@ export default function Nav() {
         q
     })
     const results = usePage().props.results
-    const searchInputRef = useRef<null | HTMLInputElement>(null)
     const [shouldShowSearchResult, setShouldShowSearchResult] = useState(false)
     const searchAction = SEARCHABLE_ROUTE_NAMES.includes(route().current() as string)
         ? route(route().current() as string)
-        : route("search")
+        : false
 
     const handleSearchSubmit = (e: FormEvent) => {
         e.preventDefault()
-        get(searchAction)
+        searchAction && get(searchAction)
     }
 
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         setData("q", e.target.value)
+        if (!(e.target.value.trim().length >= 3)) return;
         setShouldShowSearchResult(!!e.target.value.trim())
-        //  && e.target.value.length >= 3
         x(e.target.value)
     }
+    const searchFormRef = useRef<null | HTMLFormElement>(null)
 
     const x = useCallback(
         debounce((querySearchValue: string) => {
-            console.log("query:", querySearchValue,
-                route(
-                    route().current() as string,
-                    { _query: { ...route().params, q: querySearchValue } }
-                )
-            )
             router.visit(
                 route(
                     route().current() as string,
-                    { _query: { q: querySearchValue } }
+                    { ...route().params, _query: { ...route().queryParams, q: querySearchValue } }
                 ), {
                 only: ["results"],
                 preserveScroll: true,
@@ -87,9 +81,12 @@ export default function Nav() {
             })
         }, 500), [])
 
-
-    console.log(results)
-
+    const handleBlur = (e: React.FocusEvent<HTMLFormElement>) => {
+        if (searchFormRef.current && searchFormRef.current.contains(e.relatedTarget)) {
+            return;
+        }
+        setShouldShowSearchResult(false);
+    };
 
 
     return (
@@ -104,13 +101,16 @@ export default function Nav() {
                                 className="h-8 w-auto"
                             />
                         </Link>
-                        <form onSubmit={handleSearchSubmit} className='w-full max-w-sm relative'>
+                        <form
+                            onFocus={
+                                () => setShouldShowSearchResult(!!data.q)
+                            }
+                            ref={searchFormRef}
+                            onBlur={handleBlur}
+                            onSubmit={handleSearchSubmit}
+                            className='w-full max-w-sm relative'
+                        >
                             <Input
-                                onFocus={
-                                    () => setShouldShowSearchResult(!!data.q)
-                                }
-                                onBlur={() => setShouldShowSearchResult(false)}
-                                ref={searchInputRef}
                                 onChange={handleSearchChange}
                                 value={data.q}
                                 className='w-full'
@@ -118,7 +118,7 @@ export default function Nav() {
                                 placeholder={t("content.looking_for") as string}
                             />
                             {
-                                shouldShowSearchResult && <SearchResult q={data.q} results={results} />
+                                shouldShowSearchResult && <SearchResult results={results} />
                             }
                         </form>
                     </div>
@@ -294,15 +294,16 @@ const CreatePostItems = () => {
 
 const SearchResult = ({ results }: { results?: Results }) => {
     const { t } = useLaravelReactI18n()
+    const { user } = usePage().props.auth
 
     return !results
         ? null
         : <ul
             className="
-                flex flex-col w-full gap-1 mt-4 left-0 sm:left-auto
+                flex flex-col w-full gap-1 mt-3 pb-12 sm:pb-2 left-0 sm:left-auto
                 fixed z-10 h-[calc(100vh-100%)] sm:max-h-96
                 overflow-y-auto bg-surface-light dark:bg-surface-dark
-                sm:absolute sm:mt-4 sm:rounded-md sm:shadow-lg
+                sm:absolute sm:rounded-md sm:shadow-lg
             "
         >
             {
@@ -342,7 +343,7 @@ const SearchResult = ({ results }: { results?: Results }) => {
                                                 )
                                         }
                                         sideElement={
-                                            <div className="basis-24 mt-2">
+                                            <div className="basis-8 mt-2">
                                                 <Questions />
                                             </div>
                                         } />
@@ -390,7 +391,7 @@ const SearchResult = ({ results }: { results?: Results }) => {
                                                 )
                                         }
                                         sideElement={
-                                            <div className="basis-24 mt-2">
+                                            <div className="basis-8 mt-2">
                                                 <Subjects />
                                             </div>
                                         }
@@ -438,11 +439,51 @@ const SearchResult = ({ results }: { results?: Results }) => {
                                                 )
                                         }
                                         sideElement={
-                                            <div className="basis-24 mt-2">
+                                            <div className="basis-8 mt-2">
                                                 <Articles />
                                             </div>
                                         }
                                     />
+                                </li>
+                            )
+                        }
+                    </ul>
+                </li>
+            }
+            {
+                !!results.users.count &&
+                <li>
+                    <div className='text-xs p-1 px-2 text-secondary flex justify-between items-center sticky inset-0 bg-surface-light dark:bg-surface-dark'>
+                        <span className="">
+                            {t("content.users")}
+                        </span>
+                    </div>
+                    <ul className="flex gap-1 flex-col px-2 mt-2">
+                        {
+                            results.users.items.map(
+                                u => <li key={u.id}>
+                                    <ResultItem
+                                        href={route("profile.show", { user: u.username })}
+                                        htmlTitle={
+                                            u.fullname
+                                                .replace(
+                                                    new RegExp(results.q, "gi"),
+                                                    `<span class="font-bold text-primary">${results.q}</span>`
+                                                )
+                                            + (user?.id === u.id ? ` <span class="font-bold text-xs">(${t("common.you")})</span>` : "")
+                                        }
+                                        htmlDesc={
+                                            u.username
+                                                .replace(
+                                                    new RegExp(results.q, "gi"),
+                                                    `<span class="font-bold">${results.q}</span>`
+                                                )
+                                        }
+                                        sideElement={
+                                            <img src={avatar(u.avatar)} className="size-8 rounded-full" />
+                                        }
+                                    />
+
                                 </li>
                             )
                         }
@@ -478,11 +519,8 @@ const SearchResult = ({ results }: { results?: Results }) => {
                                                     `<span class="font-bold text-primary">${results.q}</span>`
                                                 )
                                         }
-                                        sideElement={
-                                            <div className="basis-24">
-                                                <Tags />
-                                            </div>
-                                        } />
+                                        sideElement={<Tags />}
+                                    />
 
                                 </li>
                             )
@@ -495,6 +533,7 @@ const SearchResult = ({ results }: { results?: Results }) => {
                     results.questions.count === 0
                     && results.articles.count === 0
                     && results.subjects.count === 0
+                    && results.users.count === 0
                     && results.tags.count === 0
                 ) && <li className='size-full flex justify-center items-center'><NothingFound /></li>
             }
@@ -511,7 +550,7 @@ interface ResultItemProps {
 const ResultItem = ({ sideElement, href, htmlTitle, htmlDesc }: ResultItemProps) => {
     return <div className='rounded p-1 px-2 hover:bg-background-light/75 dark:hover:bg-background-dark/75'>
         <Link
-            className='bg-secondary flex gap-4'
+            className='flex gap-4'
             href={href}
         >
             {sideElement}

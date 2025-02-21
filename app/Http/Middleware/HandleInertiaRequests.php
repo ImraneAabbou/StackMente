@@ -109,7 +109,7 @@ class HandleInertiaRequests extends Middleware
                 'count' => $tagsQuery->count(),
             ],
             'users' => [
-                'items' => $usersQuery->limit(5)->get(),
+                'items' => $usersQuery->limit(10)->get(),
                 'count' => $usersQuery->count(),
             ],
         ];
