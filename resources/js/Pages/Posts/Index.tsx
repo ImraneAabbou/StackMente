@@ -191,22 +191,22 @@ const PostItem = (p: Post) => {
             <div className="flex flex-col gap-2">
                 <div className="flex gap-2 text-xs items-center justify-end">
                     <Link
-                        href={route("profile.show", { user: p.user.username })}
+                        href={p.user ? route("profile.show", { user: p.user.username }) : ""}
                         className="flex gap-1 items-center font-bold"
                     >
-                        <img className="size-4 rounded-full" src={avatar(p.user.avatar)} alt={p.user.fullname} />
+                        <img className="size-4 rounded-full" src={avatar(p.user?.avatar)} alt={p.user?.fullname} />
                         {
                             p.user_id === user?.id
                                 ? t("common.you")
-                                : p.user.username
+                                : p.user?.username
                         }
                     </Link>
-                    <span className=" italic text-secondary flex gap-1 items-center">
+                    <span className="italic text-secondary flex gap-1 items-center">
                         {formatDate(p.created_at)}
                     </span>
                 </div>
                 <div className="flex gap-1 sm:justify-end flex-wrap">
-                    {p.tags.map(t => <Link href={route("feed", { _query: { included_tags: [t.name] } })}><Tag key={t.id} {...t} >{t.name}</Tag></Link>)}
+                    {p.tags.map(t => <Link key={t.id} href={route("feed", { _query: { included_tags: [t.name] } })}><Tag {...t} >{t.name}</Tag></Link>)}
                 </div>
             </div>
         </div>
