@@ -7,11 +7,14 @@ import {
     SUBJECT,
 } from "@/Enums/PostType"
 import { FormEvent } from "react"
+import Layout from "@/Layouts/Layout"
+import { Mission } from "@/types/mission"
+import { mission_image } from "@/Utils/helpers/path"
 
 export default function ProfileMe() {
     const { auth: { user }, missions } = usePage().props
-    const joinedAt = useRelativeDateFormat(user.created_at)
-    const joinningDate = useFixedDateFormat(user.created_at)
+    const relativeFormat = useRelativeDateFormat()
+    const fixedFormat = useFixedDateFormat()
     const accomplishedMissionsIds = user.missions.map(m => m.id)
     const percentToNextLevel = (
         (user.stats.xp.total - user.stats.xp.curr_level_total)
@@ -24,123 +27,128 @@ export default function ProfileMe() {
     const subjects = user.posts.filter(p => p.type === SUBJECT)
 
 
-    return <div className="p-4 container">
-        <div className="flex gap-4 mb-5">
+    return <Layout>
+        <div className="flex flex-col gap-8 mb-12 mt-4">
+            <div className="flex gap-4">
 
-            <img src={`/images/users/${user.avatar}`} className="size-32 rounded-lg" />
+                <img src={`/images/users/${user.avatar}`} className="size-32 rounded-lg" />
 
-            <div className="flex flex-col">
-                <h1 className="text-2xl font-bold mb-2.5">{user.fullname}</h1>
-
-                <small className="text-gray-900 font-bold">
-                    @{user.username}
-                </small>
-                <small>
-                    <span className="font-bold">Joined :
-                    </span> {joinningDate} <span className="text-gray-500">({joinedAt})</span>
-                </small>
-                <div className="flex gap-4 items-center">
-                    <span className="font-bold">
-                        {user.stats.level}
+                <div className="flex flex-col">
+                    <div className="text-2xl font-bold">{user.fullname}</div>
+                    <span className="text-xs text-secondary font-bold">
+                        {user.username}
                     </span>
-                    <div className="rounded-full w-32 h-2 bg-gray-200 relative overflow-hidden">
-                        <span className="bg-green-500 absolute inset-0 rounded" style={{ width: `${percentToNextLevel}%` }}></span>
+                    <span className="text-xs text-secondary">
+                        <span className="">
+                            Member since {fixedFormat(user.created_at)}
+                        </span>
+                    </span>
+                    <div className="flex gap-4 items-center">
+                        <span className="font-bold">
+                            {user.stats.level}
+                        </span>
+                        <div className="rounded-full w-32 h-2 bg-secondary/25 relative overflow-hidden">
+                            <span className="bg-success-light dark:bg-success-dark absolute inset-0 rounded" style={{ width: `${percentToNextLevel}%` }}></span>
+                        </div>
                     </div>
                 </div>
+
+                <div className="flex flex-col ms-auto">
+                    <div className="flex justify-between gap-2"><span className="font-bold">Ranked</span> {user.stats.rank.total}</div>
+                    <div className="flex justify-between gap-2"><span className="font-bold">Timespent:</span> {user.stats.timespent}</div>
+                    <div className="flex justify-between gap-2"><span className="font-bold">Current streak:</span> {user.stats.login.streak}</div>
+                    <div className="flex justify-between gap-2"><span className="font-bold">Max streak:</span> {user.stats.login.max_streak}</div>
+                </div>
+
             </div>
 
-            <div className="flex flex-col ms-auto">
-                <div className="flex justify-between gap-2"><span className="font-bold">Ranked</span> {user.stats.rank.total}</div>
-                <div className="flex justify-between gap-2"><span className="font-bold">Timespent:</span> {user.stats.timespent}</div>
-                <div className="flex justify-between gap-2"><span className="font-bold">Current streak:</span> {user.stats.login.streak}</div>
-                <div className="flex justify-between gap-2"><span className="font-bold">Max streak:</span> {user.stats.login.max_streak}</div>
-            </div>
+            <section>
+                <h2 className="font-bold text-2xl mb-4">About</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus vero eaque fugiat recusandae nostrum officiis laboriosam earum, aliquam exercitationem dolorum dolore sapiente iste animi. Voluptatibus.</p>
+            </section>
 
-        </div>
+            <section className="my-8">
+                <h2 className="font-bold text-2xl mb-8">Achievements</h2>
+                <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-24">
+                    {
+                        user.missions.map(m =>
+                            <li key={m.id} className="basis-48">
+                                <AchievementItem mission={m} />
+                            </li>
+                        )
+                    }
+                </ul>
+            </section>
 
-        <div>
-            <h2 className="font-bold text-2xl mb-2.5">Missions</h2>
-            <ul className="flex flex-col gap-1">
+            <div className="grid grid-cols-3 gap-4">
+
                 {
-                    missions.map(m =>
-                        <li key={m.id} className={`text-gray-600`}>
-                            <span className={`font-bold ${accomplishedMissionsIds.includes(m.id) ? "text-green-500" : ""}`}>
-                                {m.title}:
-                            </span> {m.description}
-                        </li>
-                    )
+
+                    !!questions.length
+                    && <div>
+                        <h2 className="font-bold text-2xl mb-2.5">Questions</h2>
+                        <ul className="flex flex-col gap-1">
+                            {
+                                questions.map(p =>
+                                    <li key={p.id} className={``}>
+                                        <Link href={`/posts/${p.slug}`}>
+                                            <span className={`font-bold`}>
+                                                {p.title}:
+                                            </span>
+                                        </Link>
+                                    </li>
+                                )
+                            }
+                        </ul>
+                    </div>
                 }
-            </ul>
-        </div>
+                {
 
-        <div className="grid grid-cols-3 gap-4">
+                    !!subjects.length
+                    && <div>
+                        <h2 className="font-bold text-2xl mb-2.5">Subjects</h2>
+                        <ul className="flex flex-col gap-1">
+                            {
+                                subjects.map(p =>
+                                    <li key={p.id} className={``}>
+                                        <Link href={`/posts/${p.slug}`}>
+                                            <span className={`font-bold`}>
+                                                {p.title}:
+                                            </span>
+                                        </Link>
+                                    </li>
+                                )
+                            }
+                        </ul>
+                    </div>
+                }
 
-            {
+                {
 
-                !!questions.length
-                && <div>
-                    <h2 className="font-bold text-2xl mb-2.5">Questions</h2>
-                    <ul className="flex flex-col gap-1">
-                        {
-                            questions.map(p =>
-                                <li key={p.id} className={`text-gray-600`}>
-                                    <Link href={`/posts/${p.slug}`}>
-                                        <span className={`font-bold`}>
-                                            {p.title}:
-                                        </span>
-                                    </Link>
-                                </li>
-                            )
-                        }
-                    </ul>
-                </div>
-            }
-            {
-
-                !!subjects.length
-                && <div>
-                    <h2 className="font-bold text-2xl mb-2.5">Subjects</h2>
-                    <ul className="flex flex-col gap-1">
-                        {
-                            subjects.map(p =>
-                                <li key={p.id} className={`text-gray-600`}>
-                                    <Link href={`/posts/${p.slug}`}>
-                                        <span className={`font-bold`}>
-                                            {p.title}:
-                                        </span>
-                                    </Link>
-                                </li>
-                            )
-                        }
-                    </ul>
-                </div>
-            }
-
-            {
-
-                !!articles.length
-                && <div>
-                    <h2 className="font-bold text-2xl mb-2.5">Articles</h2>
-                    <ul className="flex flex-col gap-1">
-                        {
-                            articles.map(p =>
-                                <li key={p.id} className={`text-gray-600`}>
-                                    <Link href={`/posts/${p.slug}`}>
-                                        <span className={`font-bold`}>
-                                            {p.title}:
-                                        </span>
-                                    </Link>
-                                </li>
-                            )
-                        }
-                    </ul>
-                </div>
-            }
-        </div>
+                    !!articles.length
+                    && <div>
+                        <h2 className="font-bold text-2xl mb-2.5">Articles</h2>
+                        <ul className="flex flex-col gap-1">
+                            {
+                                articles.map(p =>
+                                    <li key={p.id} className={``}>
+                                        <Link href={`/posts/${p.slug}`}>
+                                            <span className={`font-bold`}>
+                                                {p.title}:
+                                            </span>
+                                        </Link>
+                                    </li>
+                                )
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
 
             <DeleteAccountForm withPass={user.hasPassword} />
 
-    </div>
+        </div>
+    </Layout>
 }
 
 
@@ -170,4 +178,13 @@ const DeleteAccountForm = ({ withPass }: { withPass: boolean }) => {
             <button className="bg-red-500 text-white" type="submit">Remove Account</button>
         </div>
     </form>
+}
+
+const AchievementItem = ({ mission: m }: { mission: Mission }) => {
+    return <div className="flex flex-col gap-2 text-center">
+        <img src={mission_image(m.image)} className="size-24 mx-auto" />
+        <span className={`font-semibold text-xs`}>
+            {m.title}
+        </span>
+    </div>
 }

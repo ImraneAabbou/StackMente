@@ -13,7 +13,7 @@ export default function useFixedDateFormat(withTime = false) {
             hour: withTime ? "numeric" : undefined,
             minute: withTime ? "numeric" : undefined,
         }
-        new Intl.DateTimeFormat(
+        return new Intl.DateTimeFormat(
             locale,
             options
         ).format(date)

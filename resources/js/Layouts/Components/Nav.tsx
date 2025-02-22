@@ -94,8 +94,6 @@ export default function Nav() {
 
     const [isDarkTheme, setDarkTheme] = useLocalStorageState("darkTheme", { defaultValue: false })
 
-    console.log("dark: ", isDarkTheme)
-
     useLayoutEffect(() => {
         document.documentElement.classList.toggle("dark", isDarkTheme)
     }, [isDarkTheme])
