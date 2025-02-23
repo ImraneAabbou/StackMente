@@ -1,4 +1,5 @@
 import { AccomplishedMission } from "./mission";
+import { Post } from "./post";
 
 export interface User {
     id: number;
@@ -12,6 +13,7 @@ export interface User {
     created_at: string;
     last_interaction: string;
     role: Role;
+    posts: Post[];
     hasPassword: boolean;
     providers: {
         github?: object;

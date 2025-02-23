@@ -1,152 +1,105 @@
 import useFixedDateFormat from "@/Utils/hooks/useFixedDateFormat"
-import useRelativeDateFormat from "@/Utils/hooks/useRelativeDateFormat"
-import { Link, useForm, usePage } from "@inertiajs/react"
-import {
-    QUESTION,
-    ARTICLE,
-    SUBJECT,
-} from "@/Enums/PostType"
+import { InertiaLinkProps, Link, useForm, usePage } from "@inertiajs/react"
 import { FormEvent } from "react"
-import Layout from "@/Layouts/Layout"
 import { Mission } from "@/types/mission"
-import { mission_image } from "@/Utils/helpers/path"
+import { avatar, mission_image } from "@/Utils/helpers/path"
+import Layout from "@/Layouts/Layout"
+import clsx from "clsx"
+import { Duration } from "luxon"
+import { useLaravelReactI18n } from "laravel-react-i18n"
 
 export default function ProfileMe() {
-    const { auth: { user }, missions } = usePage().props
-    const relativeFormat = useRelativeDateFormat()
+    const { auth: { user } } = usePage().props
     const fixedFormat = useFixedDateFormat()
-    const accomplishedMissionsIds = user.missions.map(m => m.id)
-    const percentToNextLevel = (
-        (user.stats.xp.total - user.stats.xp.curr_level_total)
-        /
-        (user.stats.xp.next_level_total - user.stats.xp.curr_level_total)
-    ) * 100
-
-    const questions = user.posts.filter(p => p.type === QUESTION)
-    const articles = user.posts.filter(p => p.type === ARTICLE)
-    const subjects = user.posts.filter(p => p.type === SUBJECT)
-
+    const percentToNextLevel = user.stats.xp.percent_to_next_level * 100
+    const d = Duration.fromMillis(user.stats.timespent).shiftTo("hours", "minutes", "seconds", "days")
+    const { t } = useLaravelReactI18n()
+    const formattedTimespent = `
+        ${d.days && Math.floor(d.days).toString().concat(t("content.d") as string) || ""}
+        ${d.hours && Math.floor(d.hours).toString().concat(t("content.h") as string) || ""}
+        ${d.minutes && Math.floor(d.minutes).toString().concat(t("content.m") as string) || ""}
+        ${d.seconds && Math.floor(d.seconds).toString().concat(t("content.s") as string) || ""}
+    `;
 
     return <Layout>
-        <div className="flex flex-col gap-8 mb-12 mt-4">
-            <div className="flex gap-4">
+        <div className="flex md:flex-row-reverse flex-col gap-12 mb-12 mt-4">
+            <ul className="flex flex-col gap-4 flex-none md:sticky top-32 h-full">
+                <li>
+                    <SideLink href={route("profile.me")} active={route().current("profile.me")}>Profile</SideLink>
+                </li>
+                <li>
+                    <SideLink href={"posts"}>Posts</SideLink>
+                </li>
+                <li>
+                    <SideLink href={"settings"}>Settings</SideLink>
+                </li>
+                <li>
+                    <SideLink
+                        href={route("profile.destroy")}
+                        active={route().current("profile.destroy")}
+                        className="!text-error-light dark:!text-error-dark"
+                    >
+                        Delete Account
+                    </SideLink>
+                </li>
+            </ul>
+            <div>
+                <div className="flex gap-8 lg:flex-row flex-col">
+                    <div className="flex gap-4  flex-col items-center md:items-start text-center md:text-start md:flex-row">
+                        <img src={avatar(user.avatar)} className="size-32 rounded-lg" />
 
-                <img src={`/images/users/${user.avatar}`} className="size-32 rounded-lg" />
-
-                <div className="flex flex-col">
-                    <div className="text-2xl font-bold">{user.fullname}</div>
-                    <span className="text-xs text-secondary font-bold">
-                        {user.username}
-                    </span>
-                    <span className="text-xs text-secondary">
-                        <span className="">
-                            Member since {fixedFormat(user.created_at)}
-                        </span>
-                    </span>
-                    <div className="flex gap-4 items-center">
-                        <span className="font-bold">
-                            {user.stats.level}
-                        </span>
-                        <div className="rounded-full w-32 h-2 bg-secondary/25 relative overflow-hidden">
-                            <span className="bg-success-light dark:bg-success-dark absolute inset-0 rounded" style={{ width: `${percentToNextLevel}%` }}></span>
+                        <div className="flex flex-col">
+                            <div className="text-xl font-bold">{user.fullname}</div>
+                            <span className="text-xs text-secondary font-bold">
+                                {user.username}
+                            </span>
+                            <span className="text-xs text-secondary">
+                                <span className="">
+                                    Member since {fixedFormat(user.created_at)}
+                                </span>
+                            </span>
+                            <div className="flex gap-4 items-center">
+                                <span className="font-bold">
+                                    {user.stats.level}
+                                </span>
+                                <div className="rounded-full w-32 h-2 bg-secondary/25 relative overflow-hidden">
+                                    <span className="bg-success-light dark:bg-success-dark absolute inset-0 rounded" style={{ width: `${percentToNextLevel}%` }}></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <div className="flex flex-col w-64 mx-auto lg:mx-0 lg:ms-auto rounded-lg border-secondary/25 border-2 p-4">
+                        <div className="flex justify-between gap-4"><span className="font-bold text-secondary">Global rank</span> {user.stats.rank.total}</div>
+                        <div className="flex justify-between gap-4"><span className="font-bold text-secondary">Timespent</span> <span className="italic">{formattedTimespent}</span></div>
+                        <div className="flex justify-between gap-4"><span className="font-bold text-secondary">Current streak</span> {user.stats.login.streak}</div>
+                        <div className="flex justify-between gap-4"><span className="font-bold text-secondary">Max streak</span> {user.stats.login.max_streak}</div>
+                    </div>
+
                 </div>
 
-                <div className="flex flex-col ms-auto">
-                    <div className="flex justify-between gap-2"><span className="font-bold">Ranked</span> {user.stats.rank.total}</div>
-                    <div className="flex justify-between gap-2"><span className="font-bold">Timespent:</span> {user.stats.timespent}</div>
-                    <div className="flex justify-between gap-2"><span className="font-bold">Current streak:</span> {user.stats.login.streak}</div>
-                    <div className="flex justify-between gap-2"><span className="font-bold">Max streak:</span> {user.stats.login.max_streak}</div>
+                <div className="mt-12">
+                    <div>
+                        <section>
+                            <h2 className="font-bold text-2xl mb-4">About</h2>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus vero eaque fugiat recusandae nostrum officiis laboriosam earum, aliquam exercitationem dolorum dolore sapiente iste animi. Voluptatibus.</p>
+                        </section>
+
+                        <section className="my-8">
+                            <h2 className="font-bold text-2xl mb-8">Achievements</h2>
+                            <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-24">
+                                {
+                                    user.missions.map(m =>
+                                        <li key={m.id} className="basis-48">
+                                            <AchievementItem mission={m} />
+                                        </li>
+                                    )
+                                }
+                            </ul>
+                        </section>
+                    </div>
                 </div>
-
             </div>
-
-            <section>
-                <h2 className="font-bold text-2xl mb-4">About</h2>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus vero eaque fugiat recusandae nostrum officiis laboriosam earum, aliquam exercitationem dolorum dolore sapiente iste animi. Voluptatibus.</p>
-            </section>
-
-            <section className="my-8">
-                <h2 className="font-bold text-2xl mb-8">Achievements</h2>
-                <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-24">
-                    {
-                        user.missions.map(m =>
-                            <li key={m.id} className="basis-48">
-                                <AchievementItem mission={m} />
-                            </li>
-                        )
-                    }
-                </ul>
-            </section>
-
-            <div className="grid grid-cols-3 gap-4">
-
-                {
-
-                    !!questions.length
-                    && <div>
-                        <h2 className="font-bold text-2xl mb-2.5">Questions</h2>
-                        <ul className="flex flex-col gap-1">
-                            {
-                                questions.map(p =>
-                                    <li key={p.id} className={``}>
-                                        <Link href={`/posts/${p.slug}`}>
-                                            <span className={`font-bold`}>
-                                                {p.title}:
-                                            </span>
-                                        </Link>
-                                    </li>
-                                )
-                            }
-                        </ul>
-                    </div>
-                }
-                {
-
-                    !!subjects.length
-                    && <div>
-                        <h2 className="font-bold text-2xl mb-2.5">Subjects</h2>
-                        <ul className="flex flex-col gap-1">
-                            {
-                                subjects.map(p =>
-                                    <li key={p.id} className={``}>
-                                        <Link href={`/posts/${p.slug}`}>
-                                            <span className={`font-bold`}>
-                                                {p.title}:
-                                            </span>
-                                        </Link>
-                                    </li>
-                                )
-                            }
-                        </ul>
-                    </div>
-                }
-
-                {
-
-                    !!articles.length
-                    && <div>
-                        <h2 className="font-bold text-2xl mb-2.5">Articles</h2>
-                        <ul className="flex flex-col gap-1">
-                            {
-                                articles.map(p =>
-                                    <li key={p.id} className={``}>
-                                        <Link href={`/posts/${p.slug}`}>
-                                            <span className={`font-bold`}>
-                                                {p.title}:
-                                            </span>
-                                        </Link>
-                                    </li>
-                                )
-                            }
-                        </ul>
-                    </div>
-                }
-            </div>
-
-            <DeleteAccountForm withPass={user.hasPassword} />
-
         </div>
     </Layout>
 }
@@ -187,4 +140,19 @@ const AchievementItem = ({ mission: m }: { mission: Mission }) => {
             {m.title}
         </span>
     </div>
+}
+
+const SideLink = ({ className = "", active = false, ...props }: InertiaLinkProps & { active?: boolean }) => {
+    return <Link
+        {...props}
+        className={
+            clsx(
+                "px-4 py-2 text-sm border-s-4",
+                active
+                    ? "font-semibold text-current border-current px-4"
+                    : "text-secondary hover:text-current text-2xs border-transparent",
+                className
+            )
+        }
+    />
 }

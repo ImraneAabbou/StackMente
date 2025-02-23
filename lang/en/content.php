@@ -63,4 +63,8 @@ return [
     'users' => "Users",
     "xp" => "XP",
     "dark_mode" => "Dark mode",
+    "d" => "d",
+    "h" => "h",
+    "m" => "m",
+    "s" => "s",
 ];
