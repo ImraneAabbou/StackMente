@@ -189,7 +189,7 @@ class HandleInertiaRequests extends Middleware
             ->keyBy('id')
             ->map(fn($reply) => $reply->setAttribute('content', Str::limit($reply->content, 100)));
         $users = User::whereIn('id', $userIds)->select(['id', 'fullname', 'username', 'avatar'])->get()->keyBy('id');
-        $missions = Mission::whereIn('id', $missionIds)->select(['id', 'title', 'xp_reward', 'image'])->get()->keyBy('id');
+        $missions = Mission::whereIn('id', $missionIds)->get()->keyBy('id');
 
         return [
             'items' => $notifications->map(fn($n) => array_filter([
