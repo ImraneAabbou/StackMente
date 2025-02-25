@@ -21,6 +21,8 @@ class User extends Authenticatable implements IMustVerifyEmail
 {
     use HasFactory, Notifiable, MustVerifyEmail, SoftDeletes, Reportable;
 
+    protected $appends = ['totalReceivedUpVotes', 'totalReceivedDownVotes', 'totalReceivedViews'];
+
     protected $fillable = [
         'fullname',
         'username',
@@ -79,11 +81,36 @@ class User extends Authenticatable implements IMustVerifyEmail
         return $this->hasMany(Reply::class);
     }
 
+    public function answers(): HasMany
+    {
+        return $this->comments()->where('is_marked', true);
+    }
+
+    public function getTotalReceivedUpVotesAttribute(): int
+    {
+        return $this->posts->map(
+            fn(Post $p) => $p->upVotes()->count()
+        )->sum();
+    }
+
+    public function getTotalReceivedDownVotesAttribute(): int
+    {
+        return $this->posts->map(
+            fn(Post $p) => $p->downVotes()->count()
+        )->sum();
+    }
+
+    public function getTotalReceivedViewsAttribute(): int
+    {
+        return $this->posts->map(
+            fn(Post $p) => $p->views
+        )->sum();
+    }
+
     public function resolveRouteBinding($value, $field = null): Model
     {
         return $this->withTrashed(
             collect([Role::ADMIN, Role::SUPER_ADMIN])->contains(auth()->user()?->role)
         )->where($field ?? 'id', $value)->firstOrFail();
     }
-
 }

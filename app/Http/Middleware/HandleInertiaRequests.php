@@ -76,7 +76,7 @@ class HandleInertiaRequests extends Middleware
             'q' => $q,
             'articles' => [
                 'items' => $articlesQuery
-                ->limit(5)
+                    ->limit(5)
                     ->get()
                     ->map(fn($p) => [
                         ...((array) $p),
@@ -86,7 +86,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'subjects' => [
                 'items' => $subjectsQuery
-                ->limit(5)
+                    ->limit(5)
                     ->get()
                     ->map(fn($p) => [
                         ...((array) $p),
@@ -96,7 +96,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'questions' => [
                 'items' => $questionsQuery
-                ->limit(5)
+                    ->limit(5)
                     ->get()
                     ->map(fn($p) => [
                         ...((array) $p),
@@ -149,8 +149,20 @@ class HandleInertiaRequests extends Middleware
                 ]
             ]
         ];
-
-        return array_merge_recursive($user->load(['missions', 'posts'])->toArray(), $userDetails);
+        return array_merge_recursive(
+            $user
+                ->loadCount(['answers'])
+                ->load(
+                    [
+                        'missions',
+                        'posts' => fn($q) => $q
+                            ->with(['tags'])
+                            ->withCount(['upVotes', 'downVotes', 'comments'])
+                    ]
+                )
+                ->toArray(),
+            $userDetails
+        );
     }
 
     /**

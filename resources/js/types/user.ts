@@ -4,6 +4,10 @@ import { Post } from "./post";
 export interface User {
     id: number;
     username: string;
+    totalReceivedViews: number;
+    totalReceivedUpVotes: number;
+    totalReceivedDownVotes: number;
+    answers_count: number;
     fullname: string;
     avatar?: string;
     bio?: string;

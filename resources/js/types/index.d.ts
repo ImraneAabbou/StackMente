@@ -33,11 +33,13 @@ export type PageProps<
         is_commented: boolean;
     };
 
+    user: User;
+
     results: Results;
 };
 
 export interface Results {
-    q: string,
+    q: string;
     articles: {
         items: Article[];
         count: number;
