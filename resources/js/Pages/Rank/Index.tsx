@@ -107,7 +107,7 @@ export default function RankIndex() {
                                                 <Link
                                                     href={
                                                         u.id === user?.id
-                                                            ? route("profile.me")
+                                                            ? route("profile.index")
                                                             : route("profile.show", { username: u.username })
                                                     }
                                                     className="flex items-center gap-3"

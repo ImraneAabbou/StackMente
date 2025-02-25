@@ -184,7 +184,7 @@ export default function Nav() {
                                         >
                                             <MenuItem>
                                                 <Link
-                                                    href={route("profile.me")}
+                                                    href={route("profile.index")}
                                                     className="flex gap-4  px-4 py-2 text-sm rounded"
                                                 >
                                                     <img src={avatar(user.avatar)} className="rounded-full size-12" />

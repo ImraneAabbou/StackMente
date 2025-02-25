@@ -129,7 +129,7 @@ class ProfileController extends Controller
     public function show(User $user): Response|RedirectResponse
     {
         return $user->id === auth()->user()?->id
-            ? to_route('profile.me')
+            ? to_route('profile.index')
             : Inertia::render('Profile/Show', [
                 'user' => $user->load(['missions', 'posts']),
                 'can_ban' => auth()->user()?->can('delete', $user)

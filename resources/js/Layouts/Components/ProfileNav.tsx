@@ -7,10 +7,10 @@ export default function ProfileNav() {
 
     return <ul className="flex flex-col gap-4 flex-none md:sticky top-32 h-full">
         <li>
-            <SideLink href={route("profile.me")} active={route().current("profile.me")}>{t("content.profile")}</SideLink>
+            <SideLink href={route("profile.index")} active={route().current("profile.index")}>{t("content.profile")}</SideLink>
         </li>
         <li>
-            <SideLink href={"settings"}>{t("content.settings")}</SideLink>
+            <SideLink href={route("profile.settings")} active={route().current("profile.settings")}>{t("content.settings")}</SideLink>
         </li>
         <li>
             <SideLink
