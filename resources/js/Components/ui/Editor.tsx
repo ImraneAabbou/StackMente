@@ -78,7 +78,7 @@ const Editor = forwardRef<Quill | null, EditorProps>(
 
             const quill = new Quill(editorContainer, {
                 modules: {
-                    toolbar: !readOnly || toolbar,
+                    toolbar: readOnly ? false : toolbar,
                     imageResize: readOnly ? undefined : {
                         displaySize: true,
                     },
