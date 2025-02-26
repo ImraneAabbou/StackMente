@@ -85,7 +85,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return back()->with('status', 'informations-updated');
+        return back();
     }
 
     /**

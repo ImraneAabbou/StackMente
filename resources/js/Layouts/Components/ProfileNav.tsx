@@ -10,7 +10,7 @@ export default function ProfileNav() {
             <SideLink href={route("profile.index")} active={route().current("profile.index")}>{t("content.profile")}</SideLink>
         </li>
         <li>
-            <SideLink href={route("profile.settings")} active={route().current("profile.settings")}>{t("content.settings")}</SideLink>
+            <SideLink href={route("profile.edit")} active={route().current("profile.edit")}>{t("content.settings")}</SideLink>
         </li>
         <li>
             <SideLink

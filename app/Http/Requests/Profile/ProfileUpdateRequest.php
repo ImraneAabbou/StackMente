@@ -48,6 +48,7 @@ class ProfileUpdateRequest extends FormRequest
                 $userHasPassword ? 'required_with:password' : null,
                 $userHasPassword ? 'current_password' : null,
             ]),
+            'bio' => ['nullable', 'string', 'max:1000'],
             'password' => [
                 'nullable',
                 'confirmed',
