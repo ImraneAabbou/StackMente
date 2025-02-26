@@ -1,6 +1,6 @@
 import ProfileLayout from "@/Layouts/ProfileLayout"
 import { useLaravelReactI18n } from "laravel-react-i18n"
-import { Field, Label, Description } from "@headlessui/react"
+import { Field, Label } from "@headlessui/react"
 import Error from "@/Components/ui/Error"
 import Input from "@/Components/ui/Input"
 import { useForm, usePage } from "@inertiajs/react"
@@ -10,6 +10,10 @@ import { FormEvent, FormHTMLAttributes, ReactNode, useRef } from "react"
 import Quill from "quill"
 import { ToolbarConfig } from "quill/modules/toolbar"
 import clsx from "clsx"
+import { useState } from 'react';
+import 'react-image-crop/dist/ReactCrop.css';
+import PhotoCropModal from "@/Components/modals/PhotoCropModal"
+
 
 const BIO_TOOLBAR: ToolbarConfig = [
 
@@ -34,6 +38,7 @@ const PasswordAndSecurityForm = () => {
 const AccountInformationsForm = () => {
     const { t } = useLaravelReactI18n()
     const user = usePage().props.auth.user
+    const [imageToCrop, setImageToCrop] = useState<null | File>(null);
     const { data, setData, errors, post, recentlySuccessful } = useForm({
         _method: "PUT",
         fullname: user.fullname,
@@ -56,18 +61,31 @@ const AccountInformationsForm = () => {
         <div className="flex flex-col lg:flex-row gap-12">
             <div>
                 <Field className="flex flex-col gap-4 justify-between max-w-md">
-                    <Label className="shrink-0 font-semibold">{t("settings.profile_picture")}</Label>
-                    <div className="mx-auto lg:mx-0">
-                        <div className="grow relative rounded-lg overflow-hidden">
-                            <input
-                                onChange={e => setData("avatar", (e.target.files!)[0])}
-                                type="file"
-                                className="absolute size-full opacity-0 cursor-pointer"
-                            />
-                            <img src={avatar(user.avatar)} className="w-full max-w-48 min-w-24" />
-                            <div className="bg-black w-full text-xs text-center px-1 py-2">{t("settings.click_to_change_picture")}</div>
-                        </div>
-                        <Error className="ms-1">{errors.avatar}</Error>
+                    <div className="flex flex-col">
+                        <Label className="shrink-0 font-semibold">{t("settings.profile_picture")}</Label>
+                        <Error>{errors.avatar}</Error>
+                    </div>
+                    <div className="relative rounded-lg overflow-hidden mx-auto lg:mx-0 max-w-48 min-w-24">
+                        <input
+                            onChange={
+                                e => isImgSquareRatio((e.target.files!)[0])
+                                    .then(
+                                        r => r ? setData("avatar", (e.target.files!)[0])
+                                            : setImageToCrop((e.target.files!)[0])
+                                    )
+                            }
+                            type="file"
+                            className="absolute size-full opacity-0 cursor-pointer"
+                        />
+                        <img
+                            src={
+                                data.avatar === null || typeof data.avatar === "string"
+                                    ? avatar(user.avatar)
+                                    : URL.createObjectURL(data.avatar)
+                            }
+                            className="w-full"
+                        />
+                        <div className="bg-black text-white w-full text-xs text-center px-1 py-2">{t("settings.click_to_change_picture")}</div>
                     </div>
                 </Field>
             </div>
@@ -109,6 +127,7 @@ const AccountInformationsForm = () => {
                 <Field className="flex flex-col sm:flex-row gap-2 sm:gap-8 justify-between sm:max-w-lg">
                     <Label className="shrink-0 font-semibold mt-1 min-w-24">{t("content.bio")}</Label>
                     <Editor
+                        defaultValue={data.bio}
                         ref={editorRef}
                         onChange={() =>
                             setData(
@@ -134,6 +153,14 @@ const AccountInformationsForm = () => {
                 </div>
             </div>
         </div>
+        {
+            imageToCrop
+            && <PhotoCropModal
+                file={imageToCrop}
+                onClose={() => setImageToCrop(null)}
+                onCrop={(croppedImage) => setData("avatar", croppedImage)}
+            />
+        }
     </RoundedForm>
 }
 
@@ -149,3 +176,17 @@ const RoundedForm = ({ className, title, children, ...props }: RoundedFormProps)
         {children}
     </form>
 }
+
+
+const isImgSquareRatio = (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+
+        img.onload = () => {
+            resolve(img.width === img.height);
+        };
+
+        img.onerror = () => resolve(false);
+    });
+};

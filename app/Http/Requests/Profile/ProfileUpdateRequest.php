@@ -42,7 +42,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
-            'avatar' => ['nullable', 'image'],
+            'avatar' => ['nullable', 'image', 'dimensions:ratio=1/1'],
             'current_password' => array_filter([
                 'nullable',
                 $userHasPassword ? 'required_with:password' : null,
