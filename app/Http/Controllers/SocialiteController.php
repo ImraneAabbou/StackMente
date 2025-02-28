@@ -6,7 +6,9 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\Response;
 
 class SocialiteController extends Controller
 {
@@ -37,14 +39,14 @@ class SocialiteController extends Controller
         // linking action
         $this->userService->linkWith($provider, $providedUser);
 
-        return redirect()->intended();
+        return redirect()->back();
     }
 
-    public function redirect(string $provider): RedirectResponse
+    public function redirect(string $provider): RedirectResponse|Response
     {
         if ($this->user && $this->userService->isLinkedWith($provider))
             return redirect()->intended();
 
-        return Socialite::driver($provider)->redirect();
+        return Inertia::location(Socialite::driver($provider)->redirect());
     }
 }

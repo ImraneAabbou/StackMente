@@ -17,6 +17,7 @@ import Articles from "@/Components/icons/Articles"
 import Subjects from "@/Components/icons/Subjects"
 import Views from "@/Components/icons/Views"
 import Check from "@/Components/icons/Check"
+import Editor from "@/Components/ui/Editor"
 
 export default function ProfileMe() {
     const { auth: { user } } = usePage().props
@@ -86,13 +87,13 @@ export default function ProfileMe() {
 
         </div>
 
+        {
+            !!user.bio // not null
+            && (user.bio !== "<p></p>") // not empty
+            && <Editor className="mt-4" readOnly defaultValue={user.bio} />
+        }
         <div className="mt-12">
             <div>
-                <section>
-                    <h2 className="font-bold text-2xl mb-4">{t("content.about")}</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus vero eaque fugiat recusandae nostrum officiis laboriosam earum, aliquam exercitationem dolorum dolore sapiente iste animi. Voluptatibus.</p>
-                </section>
-
                 <section className="my-8">
                     <h2 className="font-bold text-2xl mb-8">{t("content.achievements")}</h2>
                     <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-24">

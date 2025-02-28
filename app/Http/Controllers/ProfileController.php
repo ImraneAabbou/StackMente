@@ -69,7 +69,7 @@ class ProfileController extends Controller
         $user = $request->user();
         $validated = $request->validated();
         $validated['avatar'] =
-            $validated['avatar']
+            array_key_exists('avatar', $validated) && !is_null($validated['avatar'])
                 ? basename($validated['avatar']->store('users', 'images'))
                 : null;
 
