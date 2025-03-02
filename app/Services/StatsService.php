@@ -213,4 +213,33 @@ class StatsService
         $this->user->stats = $stats;
         $this->user->save();
     }
+
+    /**
+     * Returns the current user's information
+     */
+    public function getUserStats(): ?array
+    {
+        $userXP = $this->user['stats->xp->total'];
+        $currLevelTotal = static::calcToNextLevelTotalXPByLevel($this->user->stats['level'] - 1);
+        $nextLevelTotal = static::calcToNextLevelTotalXPByLevel($this->user->stats['level']);
+
+        $userStats = [
+            'stats' => [
+                'xp' => [
+                    'curr_level_total' => $currLevelTotal,
+                    'next_level_total' => $nextLevelTotal,
+                    'percent_to_next_level' => ($currLevelTotal - $userXP) / ($nextLevelTotal - $userXP)
+                ],
+                'rank' => [
+                    'total' => $this->getRank('total'),
+                    'daily' => $this->getRank('daily'),
+                    'weekly' => $this->getRank('weekly'),
+                    'monthly' =>$this->getRank('monthly'),
+                    'yearly' => $this->getRank('yearly'),
+                ]
+            ]
+        ];
+
+        return $userStats;
+    }
 }

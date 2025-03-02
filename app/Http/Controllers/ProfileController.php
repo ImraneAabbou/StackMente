@@ -128,10 +128,25 @@ class ProfileController extends Controller
      */
     public function show(User $user): Response|RedirectResponse
     {
+        $statsSrv = new StatsService($user);
+        $userDetails = $statsSrv->getUserStats();
         return $user->id === auth()->user()?->id
             ? to_route('profile.index')
             : Inertia::render('Profile/Show', [
-                'user' => $user->load(['missions', 'posts']),
+                'user' => array_merge_recursive(
+            $user
+                ->loadCount(['answers'])
+                ->load(
+                    [
+                        'missions',
+                        'posts' => fn($q) => $q
+                            ->with(['tags'])
+                            ->withCount(['upVotes', 'downVotes', 'comments'])
+                    ]
+                )
+                ->toArray(),
+            $userDetails
+        ),
                 'can_ban' => auth()->user()?->can('delete', $user)
             ]);
     }

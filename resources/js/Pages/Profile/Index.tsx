@@ -112,7 +112,7 @@ export default function ProfileMe() {
             <section className=" shrink-0">
                 <h2 className="font-bold text-2xl mb-8">
                     {
-                        t("content.statistiques")
+                        t("content.statistics")
                     }
                 </h2>
                 <div className="flex flex-col gap-2">

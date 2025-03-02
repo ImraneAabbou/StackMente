@@ -80,6 +80,6 @@ return [
     'max_streak' => 'Max streak',
     'about' => 'About',
     'achievements' => 'Achievements',
-    'statistiques' => 'Statistiques',
+    'statistics' => 'Statistics',
     'update' => 'Update',
 ];

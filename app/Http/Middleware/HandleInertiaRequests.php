@@ -126,29 +126,12 @@ class HandleInertiaRequests extends Middleware
         if (!$user)
             return null;
 
-        $userService = new StatsService($user);
-
-        $userXP = $user['stats->xp->total'];
-        $currLevelTotal = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level'] - 1);
-        $nextLevelTotal = StatsService::calcToNextLevelTotalXPByLevel($user->stats['level']);
-
+        $statsSrv = new StatsService($user);
         $userDetails = [
-            'hasPassword' => !!$user?->password,
-            'stats' => [
-                'xp' => [
-                    'curr_level_total' => $currLevelTotal,
-                    'next_level_total' => $nextLevelTotal,
-                    'percent_to_next_level' => ($currLevelTotal - $userXP) / ($nextLevelTotal - $userXP)
-                ],
-                'rank' => [
-                    'total' => $userService->getRank('total'),
-                    'daily' => $userService->getRank('daily'),
-                    'weekly' => $userService->getRank('weekly'),
-                    'monthly' => $userService->getRank('monthly'),
-                    'yearly' => $userService->getRank('yearly'),
-                ]
-            ]
+            ...$statsSrv->getUserStats($user),
+            'hasPassword' => !!$user->password
         ];
+
         return array_merge_recursive(
             $user
                 ->loadCount(['answers'])
