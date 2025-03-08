@@ -6,7 +6,7 @@ import { avatar } from '@/Utils/helpers/path'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Link, router, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
-import { ChangeEvent, FormEvent, ReactNode, useCallback, useLayoutEffect, useRef } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, useCallback, useContext, useLayoutEffect, useRef } from 'react'
 import { debounce } from "lodash"
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
@@ -41,6 +41,7 @@ import Subjects from '@/Components/icons/Subjects'
 import Logout from '@/Components/icons/Logout'
 import DarkMode from '@/Components/icons/DarkMode'
 import useLocalStorageState from 'use-local-storage-state'
+import ThemeCtx from '@/Contexts/ThemeCtx'
 
 const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.index", "articles.index", "subjects.index"]
 
@@ -91,13 +92,7 @@ export default function Nav() {
         }
         setShouldShowSearchResult(false);
     };
-
-    const [isDarkTheme, setDarkTheme] = useLocalStorageState("darkTheme", { defaultValue: false })
-
-    useLayoutEffect(() => {
-        document.documentElement.classList.toggle("dark", isDarkTheme)
-    }, [isDarkTheme])
-
+    const { isDark, setDark } = useContext(ThemeCtx)
 
     return (
         <nav className="sticky z-50 bg-background-light/50 dark:bg-background-dark/50 backdrop-blur top-0">
@@ -196,12 +191,12 @@ export default function Nav() {
                                             </MenuItem>
                                             <MenuItem>
                                                 <button
-                                                    onClick={(e) => {e.preventDefault(); setDarkTheme(!isDarkTheme)}}
+                                                    onClick={(e) => { e.preventDefault(); setDark(!isDark) }}
                                                     className="flex gap-2 items-center text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
                                                 >
                                                     <DarkMode size={20} />
                                                     {t("content.dark_mode")}
-                                                    <Switch checked={isDarkTheme} className='ms-auto bg-secondary pointer-events-none' />
+                                                    <Switch checked={isDark} className='ms-auto bg-secondary pointer-events-none' />
                                                 </button>
                                             </MenuItem>
                                             <MenuItem>
