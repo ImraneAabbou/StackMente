@@ -3,11 +3,13 @@ import type { Notification } from "./notification";
 import { Tag, TagWithCounts } from "./tag";
 import { Article, Post, Question, Subject } from "./post";
 import { Comment } from "./comment";
+import { Backup } from "./backup";
 
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
     status?: string;
+    backups: Backup[];
     auth: {
         user: User;
     };

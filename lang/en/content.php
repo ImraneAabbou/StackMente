@@ -74,6 +74,7 @@ return [
     'profile' => 'Profile',
     'settings' => 'Settings',
     'delete_account' => 'Delete account',
+    'delete' => "Delete",
     'timespent' => 'Timespent',
     'global_rank' => 'Global rank',
     'current_streak' => 'Current streak',

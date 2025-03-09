@@ -8,9 +8,13 @@ import Flag from '@/Components/icons/Flag'
 import Medal from '@/Components/icons/Medal'
 import UserMenu from '@/Components/UserMenu'
 import Menu from '@/Components/icons/Menu'
+import DB from '@/Components/icons/DB'
+import { useLaravelReactI18n } from 'laravel-react-i18n'
 
 
 function NavigationLinks() {
+    const { t } = useLaravelReactI18n()
+
     const navigation = [
         {
             name: 'Dashboard',
@@ -42,6 +46,12 @@ function NavigationLinks() {
             ],
             icon: <Flag size={16} />,
             current: route().current("reports.*")
+        },
+        {
+            name: t("backup.backup_and_restore"),
+            href: route("backups.index"),
+            icon: <DB size={16} />,
+            current: route().current("backups.*")
         },
     ]
     return <ul role="list" className="-mx-2 space-y-1">
