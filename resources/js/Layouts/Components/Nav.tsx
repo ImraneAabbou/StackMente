@@ -6,7 +6,7 @@ import { avatar } from '@/Utils/helpers/path'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Link, router, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
-import { ChangeEvent, FormEvent, ReactNode, useCallback, useContext, useLayoutEffect, useRef } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, useCallback, useContext, useRef } from 'react'
 import { debounce } from "lodash"
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
@@ -40,8 +40,9 @@ import Articles from '@/Components/icons/Articles'
 import Subjects from '@/Components/icons/Subjects'
 import Logout from '@/Components/icons/Logout'
 import DarkMode from '@/Components/icons/DarkMode'
-import useLocalStorageState from 'use-local-storage-state'
 import ThemeCtx from '@/Contexts/ThemeCtx'
+import Admin from '@/Components/icons/Admin'
+import UserMenu from '@/Components/UserMenu'
 
 const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.index", "articles.index", "subjects.index"]
 
@@ -157,60 +158,7 @@ export default function Nav() {
                                         </MenuButton>
                                         <NotificationsItems />
                                     </Menu>
-                                    <Menu as="div" className="relative">
-                                        <div>
-                                            <MenuButton className="relative flex rounded-full text-sm">
-                                                <ProgressCircle size={48} value={user.stats.xp.percent_to_next_level}>
-                                                    <span className="absolute -inset-1.5" />
-                                                    <span className="sr-only">Open user menu</span>
-                                                    <img
-                                                        alt=""
-                                                        src={avatar(user.avatar)}
-                                                        className="rounded-full"
-                                                    />
-                                                </ProgressCircle>
-                                            </MenuButton>
-                                        </div>
-                                        <MenuItems
-                                            className="
-                flex flex-col gap-1 p-1 py-2 mt-2 z-10 bg-surface-light dark:bg-surface-dark
-                sm:absolute w-screen left-0 sm:left-auto fixed right-0 sm:max-w-64 rounded-md shadow-lg
-            "
-                                        >
-                                            <MenuItem>
-                                                <Link
-                                                    href={route("profile.index")}
-                                                    className="flex gap-4  px-4 py-2 text-sm rounded"
-                                                >
-                                                    <img src={avatar(user.avatar)} className="rounded-full size-12" />
-                                                    <div className=''>
-                                                        <div className='font-semibold'>{user.fullname}</div>
-                                                        <div className='text-secondary text-xs'>{user.username}</div>
-                                                    </div>
-                                                </Link>
-                                            </MenuItem>
-                                            <MenuItem>
-                                                <button
-                                                    onClick={(e) => { e.preventDefault(); setDark(!isDark) }}
-                                                    className="flex gap-2 items-center text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
-                                                >
-                                                    <DarkMode size={20} />
-                                                    {t("content.dark_mode")}
-                                                    <Switch checked={isDark} className='ms-auto bg-secondary pointer-events-none' />
-                                                </button>
-                                            </MenuItem>
-                                            <MenuItem>
-                                                <Link
-                                                    href={route("logout")}
-                                                    method='post'
-                                                    className="flex gap-2 items-center hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
-                                                >
-                                                    <Logout size={20} />
-                                                    {t("content.logout")}
-                                                </Link>
-                                            </MenuItem>
-                                        </MenuItems>
-                                    </Menu>
+                                    <UserMenu />
                                 </>
                                 : <>
                                     <Link

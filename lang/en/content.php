@@ -82,4 +82,5 @@ return [
     'achievements' => 'Achievements',
     'statistics' => 'Statistics',
     'update' => 'Update',
+    'admin_panel' => 'Admin Panel',
 ];

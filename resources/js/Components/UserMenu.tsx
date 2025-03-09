@@ -1,0 +1,81 @@
+import { Menu, MenuItem, MenuItems, MenuButton, } from "@headlessui/react";
+import Logout from "@/Components/icons/Logout";
+import Switch from "@/Components/ui/Switch";
+import { useLaravelReactI18n } from "laravel-react-i18n";
+import { ReactNode, useContext } from "react";
+import { usePage, Link } from "@inertiajs/react";
+import { ProgressCircle } from "@/Components/ui/ProgressCircle";
+import DarkMode from '@/Components/icons/DarkMode'
+import Admin from '@/Components/icons/Admin'
+import { avatar } from "@/Utils/helpers/path";
+import ThemeCtx from "@/Contexts/ThemeCtx";
+
+export default function UserMenu({ children, anchor }: { children?: ReactNode }) {
+    const { t } = useLaravelReactI18n()
+    const { auth: { user } } = usePage().props
+    const { isDark, setDark } = useContext(ThemeCtx)
+
+    return <Menu as="div" className="relative">
+        <div>
+            <MenuButton className="relative flex rounded-full text-sm items-center gap-3">
+                <ProgressCircle size={48} value={user.stats.xp.percent_to_next_level}>
+                    <span className="absolute -inset-1.5" />
+                    <img
+                        alt=""
+                        src={avatar(user.avatar)}
+                        className="rounded-full"
+                    />
+                </ProgressCircle>
+                {children}
+            </MenuButton>
+        </div>
+        <MenuItems
+            className="
+                flex flex-col gap-1 p-1 py-2 mt-2 z-10 bg-surface-light dark:bg-surface-dark
+                sm:absolute w-screen left-0 sm:left-auto fixed right-0 sm:max-w-64 rounded-md shadow-lg
+            "
+        >
+            <MenuItem>
+                <Link
+                    href={route("profile.index")}
+                    className="flex gap-4  px-4 py-2 text-sm rounded"
+                >
+                    <img src={avatar(user.avatar)} className="rounded-full size-12" />
+                    <div className=''>
+                        <div className='font-semibold'>{user.fullname}</div>
+                        <div className='text-secondary text-xs'>{user.username}</div>
+                    </div>
+                </Link>
+            </MenuItem>
+            <MenuItem>
+                <Link
+                    href={route("admin.index")}
+                    className="flex gap-2 items-center hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
+                >
+                    <Admin size={20} />
+                    {t("content.admin_panel")}
+                </Link>
+            </MenuItem>
+            <MenuItem>
+                <button
+                    onClick={(e) => { e.preventDefault(); setDark(!isDark) }}
+                    className="flex gap-2 items-center text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
+                >
+                    <DarkMode size={20} />
+                    {t("content.dark_mode")}
+                    <Switch checked={isDark} className='ms-auto bg-secondary pointer-events-none' />
+                </button>
+            </MenuItem>
+            <MenuItem>
+                <Link
+                    href={route("logout")}
+                    method='post'
+                    className="flex gap-2 items-center hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
+                >
+                    <Logout size={20} />
+                    {t("content.logout")}
+                </Link>
+            </MenuItem>
+        </MenuItems>
+    </Menu>
+}

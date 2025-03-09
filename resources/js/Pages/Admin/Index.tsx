@@ -27,8 +27,6 @@ export default function AdminIndex() {
     const { isDark } = useContext(ThemeCtx)
     const [period, setPeriod] = useState(YEARLY)
 
-    console.log(analysis)
-
     return <AdminLayout>
         <h1 className="text-2xl font-display">{t("content.users")}</h1>
         <div className="flex flex-col gap-8 lg:items-center lg:flex-row mt-8">
