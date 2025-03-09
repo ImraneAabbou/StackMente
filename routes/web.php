@@ -78,3 +78,4 @@ Route::get('/rank', UsersRankingController::class)->name('rank');
 Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';

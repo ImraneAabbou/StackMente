@@ -82,6 +82,7 @@ class UserFactory extends Factory
                 'timespent' => $timespent,
                 'last_interaction' => $last_interaction,
             ],
+            'created_at' => fake()->dateTimeBetween(now()->subYears(3))
         ];
     }
 }
