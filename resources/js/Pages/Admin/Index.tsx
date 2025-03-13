@@ -236,7 +236,7 @@ export default function AdminIndex() {
                         />
                     </div>
 
-                    <div className="flex flex-col grow p-4 rounded-xl lg:max-w-lg">
+                    <div className="flex flex-col items-center grow p-4 rounded-xl lg:max-w-lg">
                         <Pie
                             data={{
                                 labels: [
