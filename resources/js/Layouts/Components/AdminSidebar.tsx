@@ -168,14 +168,18 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
             </div>
         </div>
 
-        <div className="sticky top-0 h-16 flex items-center justify-between shadow-sm px-4">
-            <button type="button" className="-m-2.5 p-2.5 lg:invisible" onClick={() => setSidebarOpen(true)}>
-                <Menu size={32} />
-            </button>
-            <UserMenu />
-        </div>
         <main className="py-10 lg:ps-72">
-            <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+            <div className="container">
+                <div className="fixed w-full inset-0 h-16 flex items-center justify-between px-4 bg-background-light dark:bg-background-dark">
+                    <button type="button" className="-m-2.5 p-2.5 lg:invisible" onClick={() => setSidebarOpen(true)}>
+                        <Menu size={32} />
+                    </button>
+                    <UserMenu />
+                </div>
+                <div className='mt-12'>
+                    {children}
+                </div>
+            </div>
         </main>
     </div>
 }
