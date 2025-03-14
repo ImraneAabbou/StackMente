@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'users' => 'Users Analysis & Registrations activity',
+    'posts' => 'Posts Analysis & Publications activity',
     'total_users' => 'Total users',
     'MONTHLY' => 'Last months',
     'YEARLY' => 'Last years',
@@ -21,6 +23,7 @@ return [
     'total_questions_desc' => 'Total published posts that with question type',
     'publications' => 'Publications',
     'resources_usage' => 'Resources Usage',
+    'resources_usage_subtitle' => 'Monitoring your server\'s RAM & Storage usage',
     'ram_usage_title' => 'RAM',
     'ram_usage' => 'Memory Usage',
     'ram_total' => 'Total Memory',

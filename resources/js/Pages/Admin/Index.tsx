@@ -42,7 +42,10 @@ function Registrations() {
     const [registrationsPeriod, setRegistrationsPeriod] = useState<typeof MONTHLY | typeof YEARLY>(MONTHLY)
 
     return <section>
-        <h1 className="text-2xl font-display">{t("content.users")}</h1>
+        <div className="flex flex-col">
+            <h1 className="text-2xl font-display">{t("content.users")}</h1>
+            <p className="text-secondary">{t("analysis.users")}</p>
+        </div>
         <div className="flex flex-col gap-8 lg:justify-around lg:flex-row mt-8">
 
             <div className="flex lg:flex-col flex-wrap gap-4 grow lg:max-w-sm">
@@ -158,7 +161,10 @@ function ResourcesUsage() {
     const { isDark } = useContext(ThemeCtx)
 
     return <section>
-        <h1 className="text-2xl font-display">{t("analysis.resources_usage")}</h1>
+        <div className="flex flex-col">
+            <h1 className="text-2xl font-display">{t("analysis.resources_usage")}</h1>
+            <p className="text-secondary">{t("analysis.resources_usage_subtitle")}</p>
+        </div>
         <div className="flex flex-col gap-8 lg:flex-row justify-around mt-8 bg-surface-light dark:bg-surface-dark  p-4 rounded-xl">
 
             <div className="flex items-center flex-row-reverse justify-center gap-12">
@@ -309,7 +315,10 @@ function Publications() {
     const { isDark } = useContext(ThemeCtx)
 
     return <section>
-        <h1 className="text-2xl font-display">{t("content.posts")}</h1>
+        <div className="flex flex-col">
+            <h1 className="text-2xl font-display">{t("content.posts")}</h1>
+            <p className="text-secondary">{t("analysis.posts")}</p>
+        </div>
         <div className="flex flex-col gap-8 lg:justify-around lg:flex-row-reverse mt-8">
 
             <div className="flex lg:flex-col flex-wrap gap-4 grow lg:max-w-sm">
