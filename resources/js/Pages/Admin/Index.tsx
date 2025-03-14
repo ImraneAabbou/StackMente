@@ -27,7 +27,7 @@ export default function AdminIndex() {
     const { analysis: { system_usage, ...analysis } } = usePage().props
     const { t } = useLaravelReactI18n()
     const { isDark } = useContext(ThemeCtx)
-    const [period, setPeriod] = useState(YEARLY)
+    const [period, setPeriod] = useState<typeof MONTHLY | typeof YEARLY>(YEARLY)
 
     return <AdminLayout>
         <div className="flex flex-col gap-12">
@@ -84,7 +84,7 @@ export default function AdminIndex() {
                     </div>
 
                     <div className="flex flex-col grow bg-surface-light dark:bg-surface-dark p-4 rounded-xl lg:max-w-2xl">
-                        <Select className="self-end" value={period} onChange={e => setPeriod(e.target.value)}>
+                        <Select className="self-end" value={period} onChange={e => setPeriod(e.target.value as (typeof YEARLY | typeof MONTHLY))}>
                             {
                                 [MONTHLY, YEARLY].map(
                                     p => <option value={p} key={p}>{t("analysis." + p)}</option>

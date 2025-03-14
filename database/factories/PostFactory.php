@@ -30,6 +30,7 @@ class PostFactory extends Factory
             'content' => fake()->realText($maxContentChars),
             'views' => fake()->numberBetween(100, 1000),
             'type' => $type,
+            'created_at' => fake()->dateTimeBetween(now()->subYears(3))
         ];
     }
 }

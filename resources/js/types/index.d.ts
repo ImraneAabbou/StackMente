@@ -4,6 +4,7 @@ import { Tag, TagWithCounts } from "./tag";
 import { Article, Post, Question, Subject } from "./post";
 import { Comment } from "./comment";
 import { Backup } from "./backup";
+import { Analysis } from "./analysis";
 
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
@@ -34,6 +35,8 @@ export type PageProps<
         comments: Comment[];
         is_commented: boolean;
     };
+
+    analysis: Analysis;
 
     user: User;
 

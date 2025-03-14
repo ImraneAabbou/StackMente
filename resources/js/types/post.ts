@@ -12,7 +12,7 @@ export interface Post {
     up_votes_count: number;
     down_votes_count: number;
     user_vote?: typeof UP | typeof DOWN;
-    type: typeof ARTICLE | typeof SUBJECT | typeof QUESTION;
+    type: PostType;
     comments_count: number;
     tags: Tag[];
     user: User;
@@ -33,3 +33,5 @@ export interface Question extends Post {
 export interface Subject extends Post {
     type: typeof SUBJECT;
 }
+
+export type PostType = typeof ARTICLE | typeof SUBJECT | typeof QUESTION
