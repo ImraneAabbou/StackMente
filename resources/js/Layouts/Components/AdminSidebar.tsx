@@ -148,17 +148,8 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
         </Dialog>
 
         <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col lg:z-10">
-            <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-secondary/25 px-6">
-                <Link href={route("feed")} className="flex h-16 shrink-0 items-center gap-2">
-                    <img
-                        className="h-8 w-auto"
-                        src={"/favicon.ico"}
-                    />
-                    <div className='font-semibold text-lg'>
-                        StackMente
-                    </div>
-                </Link>
-                <nav className="flex flex-1 flex-col">
+            <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6">
+                <nav className="flex flex-1 flex-col mt-24">
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                         <li>
                             <NavigationLinks />
@@ -170,7 +161,16 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
 
         <main className="py-10 lg:ps-72">
             <div className="container">
-                <div className="fixed w-full inset-0 h-16 flex items-center justify-between px-4 bg-background-light dark:bg-background-dark">
+                <div className="fixed z-50 w-full inset-0 h-16 flex items-center justify-between px-4 backdrop-blur">
+                    <Link href={route("feed")} className="hidden lg:flex h-16 shrink-0 items-center gap-2">
+                        <img
+                            className="h-8 w-auto"
+                            src={"/favicon.ico"}
+                        />
+                        <div className='font-semibold text-lg'>
+                            StackMente
+                        </div>
+                    </Link>
                     <button type="button" className="-m-2.5 p-2.5 lg:invisible" onClick={() => setSidebarOpen(true)}>
                         <Menu size={32} />
                     </button>

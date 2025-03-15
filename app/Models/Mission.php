@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use App\Enums\MissionType;
+use App\Observers\MissionObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy(MissionObserver::class)]
 class Mission extends Model
 {
     protected $fillable = [
@@ -14,7 +17,6 @@ class Mission extends Model
         'threshold',
         'xp_reward',
     ];
-    protected $hidden = ["translation_key"];
 
     protected $appends = ['title', 'description'];
 

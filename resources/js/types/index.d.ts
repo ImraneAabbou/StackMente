@@ -5,6 +5,7 @@ import { Article, Post, Question, Subject } from "./post";
 import { Comment } from "./comment";
 import { Backup } from "./backup";
 import { Analysis } from "./analysis";
+import { Mission } from "./mission";
 
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
@@ -37,6 +38,10 @@ export type PageProps<
     };
 
     analysis: Analysis;
+
+    missions: Mission[];
+
+    mission: Mission;
 
     user: User;
 

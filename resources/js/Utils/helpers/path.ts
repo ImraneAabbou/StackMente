@@ -4,6 +4,6 @@ export function avatar(file?: string) {
         : `/images/users/${file ?? "DEFAULT.jpg"}`;
 }
 
-export function mission_image(file: string) {
-    return `/images/missions/${file}`
+export function mission_image(file?: string) {
+    return `/images/missions/${file ?? "DEFAULT.jpg"}`;
 }

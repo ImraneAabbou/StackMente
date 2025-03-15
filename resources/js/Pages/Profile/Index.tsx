@@ -1,7 +1,6 @@
 import useFixedDateFormat from "@/Utils/hooks/useFixedDateFormat"
 import { Link, usePage } from "@inertiajs/react"
-import { Mission } from "@/types/mission"
-import { avatar, mission_image } from "@/Utils/helpers/path"
+import { avatar } from "@/Utils/helpers/path"
 import { Duration } from "luxon"
 import { useLaravelReactI18n } from "laravel-react-i18n"
 import ProfileLayout from "@/Layouts/ProfileLayout"
@@ -18,6 +17,7 @@ import Subjects from "@/Components/icons/Subjects"
 import Views from "@/Components/icons/Views"
 import Check from "@/Components/icons/Check"
 import Editor from "@/Components/ui/Editor"
+import AchievementItem from "@/Components/AchievementItem"
 
 export default function ProfileMe() {
     const { auth: { user } } = usePage().props
@@ -244,14 +244,4 @@ export default function ProfileMe() {
             </section>
         </div>
     </ProfileLayout>
-}
-
-
-const AchievementItem = ({ mission: m }: { mission: Mission }) => {
-    return <div className="flex flex-col gap-2 text-center">
-        <img src={mission_image(m.image)} className="size-24 mx-auto" />
-        <span className={`font-semibold text-xs`}>
-            {m.title}
-        </span>
-    </div>
 }

@@ -4,6 +4,7 @@ import ReactIntlProvider from "./ReactIntlProvider"
 import ReportActionProvider from "./ReportActionProvider";
 import ProfileDeleteProvider from "./ProfileDeleteProvider";
 import ThemeProvider from "./ThemeProvider"
+import ConfirmDeleteProvider from "./ConfirmDeleteProvider";
 
 export default function Providers({ children }: { children: ReactNode }) {
 
@@ -12,7 +13,9 @@ export default function Providers({ children }: { children: ReactNode }) {
             <ReactIntlProvider>
                 <ReportActionProvider>
                     <ProfileDeleteProvider>
-                        {children}
+                        <ConfirmDeleteProvider>
+                            {children}
+                        </ConfirmDeleteProvider>
                     </ProfileDeleteProvider>
                 </ReportActionProvider>
             </ReactIntlProvider>

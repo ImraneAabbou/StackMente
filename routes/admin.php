@@ -3,7 +3,6 @@
 use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\MissionController;
-use App\Http\Controllers\RestoreController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [AdminPanelController::class, 'dashboard'])->name('admin.index');
@@ -21,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/missions', [MissionController::class, 'index'])->name('missions.index');
     Route::get('/admin/missions/create', [MissionController::class, 'create'])->name('missions.create');
     Route::get('/admin/missions/{mission}/edit', [MissionController::class, 'edit'])->name('missions.edit');
+    Route::put('/admin/missions/{mission}', [MissionController::class, 'update'])->name('missions.update');
+    Route::delete('/admin/missions/{mission}', [MissionController::class, 'destroy'])->name('missions.destroy');
 
     // Backup and restore
     Route::get('/admin/backups/', [BackupController::class, 'index'])->name('backups.index');
