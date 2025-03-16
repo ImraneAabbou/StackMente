@@ -94,12 +94,12 @@ class ProfileController extends Controller
     public function destroy(DeleteAccountRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $user->username = "deleted-" . Str::uuid();
+        $user->username = 'deleted-' . Str::uuid();
         $user->fullname = $user->username;
-        $user->email = $user->username . "@stackmente.com";
+        $user->email = $user->username . '@stackmente.com';
         $user->password = null;
         $user->email_verified_at = null;
-        $user->avatar = "";
+        $user->avatar = '';
         $user->providers = [];
         (new StatsService($user))->resetStats();
 
@@ -113,14 +113,30 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function ban(User $user): RedirectResponse {
-        $user->delete();
-        return back()->with("banned");
+    public function delete(User $user)
+    {
+        $user->username = 'deleted-' . Str::uuid();
+        $user->fullname = $user->username;
+        $user->email = $user->username . '@stackmente.com';
+        $user->password = null;
+        $user->email_verified_at = null;
+        $user->avatar = '';
+        $user->providers = [];
+        (new StatsService($user))->resetStats();
+
+        return back();
     }
 
-    public function unban(User $user): RedirectResponse {
+    public function ban(User $user): RedirectResponse
+    {
+        $user->delete();
+        return back()->with('banned');
+    }
+
+    public function unban(User $user): RedirectResponse
+    {
         $user->restore();
-        return back()->with("unbanned");
+        return back()->with('unbanned');
     }
 
     /**
@@ -134,19 +150,19 @@ class ProfileController extends Controller
             ? to_route('profile.index')
             : Inertia::render('Profile/Show', [
                 'user' => array_merge_recursive(
-            $user
-                ->loadCount(['answers'])
-                ->load(
-                    [
-                        'missions',
-                        'posts' => fn($q) => $q
-                            ->with(['tags'])
-                            ->withCount(['upVotes', 'downVotes', 'comments'])
-                    ]
-                )
-                ->toArray(),
-            $userDetails
-        ),
+                    $user
+                        ->loadCount(['answers'])
+                        ->load(
+                            [
+                                'missions',
+                                'posts' => fn($q) => $q
+                                    ->with(['tags'])
+                                    ->withCount(['upVotes', 'downVotes', 'comments'])
+                            ]
+                        )
+                        ->toArray(),
+                    $userDetails
+                ),
                 'can_ban' => auth()->user()?->can('delete', $user)
             ]);
     }

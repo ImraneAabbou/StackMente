@@ -8,6 +8,7 @@ use App\Traits\Reportable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as IMustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -72,6 +73,13 @@ class User extends Authenticatable implements IMustVerifyEmail
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    static function onlyBanned(): Builder
+    {
+        return User::onlyTrashed()
+            ->whereNotLike('fullname', 'deleted-%')
+            ->whereNotLike('username', 'deleted-%');
     }
 
     /**

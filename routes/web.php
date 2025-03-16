@@ -68,8 +68,9 @@ Route::get('/questions/{post:slug}', [PostController::class, 'show'])->name('que
 Route::get('/posts', [PostController::class, 'index'])->name('feed');
 
 Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
-Route::post('/profile/{user:username}/ban', [ProfileController::class, 'ban']);
-Route::delete('/profile/{user:username}/ban', [ProfileController::class, 'unban']);
+Route::delete('/profile/{user:username}', [ProfileController::class, 'delete'])->name("users.delete");
+Route::post('/profile/{user:username}/ban', [ProfileController::class, 'ban'])->name("profile.ban");
+Route::delete('/profile/{user:username}/ban', [ProfileController::class, 'unban'])->name("profile.unban");
 Route::post('/profile/{reportable}/reports', [ProfileController::class, 'report']);
 Route::delete('/profile/{reportable}/reports', [ProfileController::class, 'clearReports'])->can('delete', [Report::class]);
 

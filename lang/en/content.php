@@ -99,4 +99,11 @@ return [
     'xp_reward_desc' => 'Number of XP the user will be rewarded with once achievement',
     'missions_note_title' => 'Creating a mission',
     'missions_note_desc' => "submitting this form with data is able to create a mission but due to plateform's i18n, a technical intervention might be required to set both mission title & description in language files before or after this form gets submitted",
+    'banned_users_title' => "Banned Users",
+    'banned_users_desc' => "managing & controlling user bans",
+    'banned_at' => "Banned At",
+    'unban' => "Unban",
+    'no_bans_found' => "No Bans Found",
+    'confirm_delete_modal_title' => "Are you sure ?",
+    'confirm_delete_modal_desc' => "once this action is confirmed it can't be undone.",
 ];

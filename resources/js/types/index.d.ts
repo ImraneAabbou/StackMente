@@ -45,6 +45,11 @@ export type PageProps<
 
     user: User;
 
+    banned_users: {
+       items: User[],
+       next_page_url: null | string
+    }
+
     results: Results;
 };
 

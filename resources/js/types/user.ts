@@ -26,6 +26,7 @@ export interface User {
         google?: object;
     };
     missions: AccomplishedMission[];
+    deleted_at: string;
 }
 
 export interface RankedUser extends User {

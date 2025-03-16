@@ -140,14 +140,6 @@ class UserService
         return $linkedProviders->contains($provider);
     }
 
-    /**
-     * @return Collection<int,User>
-     */
-    static function getBannedUsers(): Collection
-    {
-        return User::onlyTrashed()->get();
-    }
-
     /*
      * Bans user (using soft delete)
      */

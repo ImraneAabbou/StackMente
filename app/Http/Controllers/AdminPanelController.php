@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Role;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -152,9 +153,28 @@ class AdminPanelController extends Controller
         ]);
     }
 
-    public function bans(): Response
+    public function bans(Request $request): Response
     {
-        return Inertia::render('Admin/Bans');
+        $q = $request->query('q');
+        $bannedUsersPagination = User::onlyBanned()
+            ->when(
+                !is_null($q),
+                fn($dbQuery) => $dbQuery
+                    ->where(
+                        fn($c) => $c
+                            ->whereLike('fullname', "%$q%")
+                            ->orWhereLike('username', "%$q%")
+                            ->orWhereLike('email', "%$q%")
+                    )
+            )
+            ->cursorPaginate(25);
+
+        return Inertia::render('Admin/Bans/Index', [
+            'banned_users' => [
+                'items' => $bannedUsersPagination->items(),
+                'next_page_url' => $bannedUsersPagination->nextPageUrl()
+            ]
+        ]);
     }
 
     // Reports
