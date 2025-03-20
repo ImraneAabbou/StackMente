@@ -2,8 +2,10 @@
 
 namespace App\Observers;
 
+use App\Enums\ReportableType;
 use App\Events\Replied;
 use App\Models\Reply;
+use App\Models\Report;
 
 class ReplyObserver
 {
@@ -30,7 +32,10 @@ class ReplyObserver
      */
     public function deleted(Reply $reply): void
     {
-        //
+        // clear reports
+        Report::where('reportable_type', ReportableType::REPLY)
+            ->where('reportable_id', $reply->id)
+            ->delete();
     }
 
     /**
@@ -46,6 +51,6 @@ class ReplyObserver
      */
     public function forceDeleted(Reply $reply): void
     {
-        //
+        $this->deleted($reply);
     }
 }

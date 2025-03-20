@@ -3,9 +3,11 @@
 namespace App\Observers;
 
 use App\Actions\SyncEverything;
+use App\Enums\ReportableType;
 use App\Events\Commented;
 use App\Events\CommentMarked;
 use App\Models\Comment;
+use App\Models\Report;
 use App\Services\StatsService;
 
 class CommentObserver
@@ -63,7 +65,10 @@ class CommentObserver
      */
     public function deleted(Comment $comment): void
     {
-        //
+        // clear reports
+        Report::where('reportable_type', ReportableType::COMMENT)
+            ->where('reportable_id', $comment->id)
+            ->delete();
     }
 
     /**
@@ -79,6 +84,6 @@ class CommentObserver
      */
     public function forceDeleted(Comment $comment): void
     {
-        //
+        $this->deleted($comment);
     }
 }

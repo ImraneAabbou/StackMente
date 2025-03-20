@@ -8,10 +8,10 @@ use App\Traits\Reportable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as IMustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -78,6 +78,13 @@ class User extends Authenticatable implements IMustVerifyEmail
     static function onlyBanned(): Builder
     {
         return User::onlyTrashed()
+            ->whereNotLike('fullname', 'deleted-%')
+            ->whereNotLike('username', 'deleted-%');
+    }
+
+    static function withBanned(): Builder
+    {
+        return User::withTrashed()
             ->whereNotLike('fullname', 'deleted-%')
             ->whereNotLike('username', 'deleted-%');
     }

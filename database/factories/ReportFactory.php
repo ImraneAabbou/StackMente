@@ -20,6 +20,7 @@ class ReportFactory extends Factory
         return [
             'reason' => fake()->randomElement(array_column(ReportReason::cases(), 'value')),
             'explanation' => fake()->sentence(),
+            'created_at' => fake()->dateTimeThisDecade(),
         ];
     }
 }

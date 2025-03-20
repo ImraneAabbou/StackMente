@@ -106,4 +106,9 @@ return [
     'no_bans_found' => "No Bans Found",
     'confirm_delete_modal_title' => "Are you sure ?",
     'confirm_delete_modal_desc' => "once this action is confirmed it can't be undone.",
+    'banned' => "Banned",
+    'clear_reports' => "Clear Reports",
+    "no_reports_found" => "No Reports Found",
+    "comment_by" => "Comment by",
+    "reply_by" => "Reply by",
 ];

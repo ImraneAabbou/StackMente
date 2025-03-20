@@ -2,6 +2,8 @@
 
 namespace App\Observers;
 
+use App\Enums\ReportableType;
+use App\Models\Report;
 use App\Models\User;
 use App\Services\StatsService;
 
@@ -29,6 +31,11 @@ class UserObserver
     public function deleted(User $user): void
     {
         (new StatsService($user))->resetStats();
+
+        // clear reports
+        Report::where('reportable_type', ReportableType::USER)
+            ->where('reportable_id', $user->id)
+            ->delete();
     }
 
     /**
@@ -44,6 +51,6 @@ class UserObserver
      */
     public function forceDeleted(User $user): void
     {
-        //
+        $this->deleted($user);
     }
 }

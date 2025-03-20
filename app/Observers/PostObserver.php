@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Actions\SyncEverything;
+use App\Enums\ReportableType;
 use App\Models\Post;
+use App\Models\Report;
 
 class PostObserver
 {
@@ -28,7 +30,10 @@ class PostObserver
      */
     public function deleted(Post $post): void
     {
-        //
+        // clear reports
+        Report::where('reportable_type', ReportableType::POST)
+            ->where('reportable_id', $post->id)
+            ->delete();
     }
 
     /**
@@ -44,6 +49,6 @@ class PostObserver
      */
     public function forceDeleted(Post $post): void
     {
-        //
+        $this->deleted($post);
     }
 }

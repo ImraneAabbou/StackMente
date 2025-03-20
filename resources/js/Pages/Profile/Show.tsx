@@ -4,7 +4,6 @@ import { Mission } from "@/types/mission"
 import { avatar, mission_image } from "@/Utils/helpers/path"
 import { Duration } from "luxon"
 import { useLaravelReactI18n } from "laravel-react-i18n"
-import ProfileLayout from "@/Layouts/ProfileLayout"
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 import UpVote from "@/Components/icons/UpVote";
 import DownVote from "@/Components/icons/DownVote";
@@ -19,14 +18,16 @@ import Views from "@/Components/icons/Views"
 import Check from "@/Components/icons/Check"
 import Editor from "@/Components/ui/Editor"
 import Layout from "@/Layouts/Layout"
+import { useContext } from "react"
+import ReportActionCtx from "@/Contexts/ReportActionCtx"
 
 export default function ProfileMe() {
-    const {  user } = usePage().props
-    console.log(user)
+    const { user } = usePage().props
     const fixedFormat = useFixedDateFormat()
     const percentToNextLevel = user.stats.xp.percent_to_next_level * 100
     const d = Duration.fromMillis(user.stats.timespent).shiftTo("hours", "minutes", "seconds", "days")
     const { t } = useLaravelReactI18n()
+    const {setReportAction} = useContext(ReportActionCtx)
     const formattedTimespent = `
         ${d.days && Math.floor(d.days).toString().concat(t("content.d") as string) || ""}
         ${d.hours && Math.floor(d.hours).toString().concat(t("content.h") as string) || ""}
@@ -76,6 +77,9 @@ export default function ProfileMe() {
                         <div className="rounded-full w-32 h-2 bg-secondary/25 relative overflow-hidden">
                             <span className="bg-success-light dark:bg-success-dark absolute inset-0 rounded" style={{ width: `${percentToNextLevel}%` }}></span>
                         </div>
+                    </div>
+                    <div>
+                        <button onClick={() => setReportAction(route("profile.report", {reportable: user.username}))}>report</button>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ import { Comment } from "./comment";
 import { Backup } from "./backup";
 import { Analysis } from "./analysis";
 import { Mission } from "./mission";
+import { Report } from "./report";
 
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
@@ -46,9 +47,19 @@ export type PageProps<
     user: User;
 
     banned_users: {
-       items: User[],
-       next_page_url: null | string
-    }
+        items: User[];
+        next_page_url?: string;
+    };
+
+    reports: {
+        next_page_url?: string;
+        items: Report[];
+    };
+
+    reportableWithMessages: {
+        next_page_url?: string;
+        items: Report[];
+    };
 
     results: Results;
 };

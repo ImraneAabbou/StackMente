@@ -38,9 +38,7 @@ function NavigationLinks() {
             name: 'Reports',
             links: [
                 { href: route("reports.users"), name: "Users", current: route().current("reports.users") },
-                { href: route("reports.articles"), name: "Articles", current: route().current("reports.articles") },
-                { href: route("reports.subjects"), name: "Subjects", current: route().current("reports.subjects") },
-                { href: route("reports.questions"), name: "Questions", current: route().current("reports.questions") },
+                { href: route("reports.posts"), name: "Posts", current: route().current("reports.posts") },
                 { href: route("reports.comments"), name: "Comments", current: route().current("reports.comments") },
                 { href: route("reports.replies"), name: "Replies", current: route().current("reports.replies") },
             ],

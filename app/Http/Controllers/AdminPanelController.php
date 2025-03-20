@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReportableType;
 use App\Enums\Role;
+use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Reply;
+use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -178,33 +182,192 @@ class AdminPanelController extends Controller
     }
 
     // Reports
-    public function reportsUsers(): Response
+    public function reportsUsers(Request $request): Response
     {
-        return Inertia::render('Admin/Reports/Users');
+        $q = $request->query('q');
+        $reportsPagination = Report::select('reports.*')
+            ->selectSub(function ($query) {
+                $query
+                    ->selectRaw('COUNT(*)')
+                    ->from('reports as r')
+                    ->whereColumn('r.reportable_id', 'reports.reportable_id')
+                    ->where('r.reportable_type', ReportableType::USER);
+            }, 'reports_count')
+            ->whereIn('id', function ($query) {
+                $query
+                    ->selectRaw('MAX(id)')
+                    ->from('reports')
+                    ->where('reportable_type', ReportableType::USER)
+                    ->groupBy('reportable_id');
+            })
+            ->when($q, fn($query) => $query
+                ->whereHasMorph('reportable', [User::class], function ($c) use ($q) {
+                    $c->withTrashed()->where(function ($c) use ($q) {
+                        $c
+                            ->where('fullname', 'like', "%$q%")
+                            ->orWhere('username', 'like', "%$q%")
+                            ->orWhere('email', 'like', "%$q%");
+                    });
+                }))
+            ->with(['reportable', 'user'])
+            ->cursorPaginate(25)
+            ->withQueryString();
+
+        return Inertia::render(
+            'Admin/Reports/Users',
+            [
+                'reports' => [
+                    'items' => $reportsPagination->items(),
+                    'next_page_url' => $reportsPagination->nextPageUrl(),
+                ],
+            ]
+        );
     }
 
-    public function reportsComments(): Response
+    public function reportMessages($reportable)
     {
-        return Inertia::render('Admin/Reports/Comments');
+        $reportsWithMessagesPagination = $reportable->reports()->with(['user'])->cursorPaginate(1);
+        return Inertia::render('Admin/Reports/Messages', [
+            'reportableWithMessages' => [
+                'items' => $reportsWithMessagesPagination->items(),
+                'next_page_url' => $reportsWithMessagesPagination->nextPageUrl(),
+            ],
+        ]);
     }
 
-    public function reportsReplies(): Response
+    public function reportsComments(Request $request): Response
     {
-        return Inertia::render('Admin/Reports/Replies');
+        $q = $request->query('q');
+        $reportsPagination = Report::select('reports.*')
+            ->selectSub(function ($query) {
+                $query
+                    ->selectRaw('COUNT(*)')
+                    ->from('reports as r')
+                    ->whereColumn('r.reportable_id', 'reports.reportable_id')
+                    ->where('r.reportable_type', ReportableType::COMMENT);
+            }, 'reports_count')
+            ->whereIn('id', function ($query) {
+                $query
+                    ->selectRaw('MAX(id)')
+                    ->from('reports')
+                    ->where('reportable_type', ReportableType::COMMENT)
+                    ->groupBy('reportable_id');
+            })
+            ->when($q, function ($query) use ($q) {
+                $query
+                    ->whereHasMorph('reportable', [Comment::class], function ($c) use ($q) {
+                        $c->where(function ($c) use ($q) {
+                            $c
+                                ->where('content', 'like', "%$q%")
+                                ->orWhereHas('user', function ($userQuery) use ($q) {
+                                    $userQuery
+                                        ->whereLike('fullname', "%$q%")
+                                        ->orWhereLike('username', "%$q%")
+                                        ->orWhereLike('email', "%$q%");
+                                });
+                        });
+                    });
+            })
+            ->with(['reportable:id,user_id,post_id', 'reportable.user', 'reportable.post:id,type,slug'])
+            ->cursorPaginate(25)
+            ->withQueryString();
+
+        return Inertia::render(
+            'Admin/Reports/Comments',
+            [
+                'reports' => [
+                    'items' => $reportsPagination->items(),
+                    'next_page_url' => $reportsPagination->nextPageUrl(),
+                ],
+            ]
+        );
     }
 
-    public function reportsQuestions(): Response
+    public function reportsReplies(Request $request): Response
     {
-        return Inertia::render('Admin/Reports/Questions');
+        $q = $request->query('q');
+        $reportsPagination = Report::select('reports.*')
+            ->selectSub(function ($query) {
+                $query
+                    ->selectRaw('COUNT(*)')
+                    ->from('reports as r')
+                    ->whereColumn('r.reportable_id', 'reports.reportable_id')
+                    ->where('r.reportable_type', ReportableType::REPLY);
+            }, 'reports_count')
+            ->whereIn('id', function ($query) {
+                $query
+                    ->selectRaw('MAX(id)')
+                    ->from('reports')
+                    ->where('reportable_type', ReportableType::REPLY)
+                    ->groupBy('reportable_id');
+            })
+            ->when($q, function ($query) use ($q) {
+                $query
+                    ->whereHasMorph('reportable', [Reply::class], function ($c) use ($q) {
+                        $c->where(function ($c) use ($q) {
+                            $c
+                                ->where('content', 'like', "%$q%")
+                                ->orWhereHas('user', function ($userQuery) use ($q) {
+                                    $userQuery
+                                        ->whereLike('fullname', "%$q%")
+                                        ->orWhereLike('username', "%$q%")
+                                        ->orWhereLike('email', "%$q%");
+                                });
+                        });
+                    });
+            })
+            ->with(['reportable:id,user_id,comment_id', 'reportable.user', 'reportable.comment.post:id,type,slug'])
+            ->cursorPaginate(25)
+            ->withQueryString();
+
+        return Inertia::render(
+            'Admin/Reports/Replies',
+            [
+                'reports' => [
+                    'items' => $reportsPagination->items(),
+                    'next_page_url' => $reportsPagination->nextPageUrl(),
+                ],
+            ]
+        );
     }
 
-    public function reportsSubjects(): Response
+    public function reportsPosts(Request $request): Response
     {
-        return Inertia::render('Admin/Reports/Subjects');
-    }
+        $q = $request->query('q');
+        $reportsPagination = Report::select('reports.*')
+            ->selectSub(function ($query) {
+                $query
+                    ->selectRaw('COUNT(*)')
+                    ->from('reports as r')
+                    ->whereColumn('r.reportable_id', 'reports.reportable_id')
+                    ->where('r.reportable_type', ReportableType::POST);
+            }, 'reports_count')
+            ->whereIn('id', function ($query) {
+                $query
+                    ->selectRaw('MAX(id)')
+                    ->from('reports')
+                    ->where('reportable_type', ReportableType::POST)
+                    ->groupBy('reportable_id');
+            })
+            ->when($q, fn($query) => $query
+                ->whereHasMorph('reportable', [Post::class], function ($c) use ($q) {
+                    $c->where(function ($c) use ($q) {
+                        $c
+                            ->where('title', 'like', "%$q%");
+                    });
+                }))
+            ->with(['reportable'])
+            ->cursorPaginate(25)
+            ->withQueryString();
 
-    public function reportsArticles(): Response
-    {
-        return Inertia::render('Admin/Reports/Articles');
+        return Inertia::render(
+            'Admin/Reports/Posts',
+            [
+                'reports' => [
+                    'items' => $reportsPagination->items(),
+                    'next_page_url' => $reportsPagination->nextPageUrl(),
+                ],
+            ]
+        );
     }
 }

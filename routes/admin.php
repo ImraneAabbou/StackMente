@@ -10,11 +10,13 @@ Route::middleware('auth')->group(function () {
 
     // Reports
     Route::get('/admin/reports/users', [AdminPanelController::class, 'reportsUsers'])->name('reports.users');
+    Route::get('/admin/reports/users/{reportable}', [AdminPanelController::class, 'reportMessages'])->name('reports.users.messages');
     Route::get('/admin/reports/comments', [AdminPanelController::class, 'reportsComments'])->name('reports.comments');
+    Route::get('/admin/reports/comments/{reportable}', [AdminPanelController::class, 'reportMessages'])->name('reports.comments.messages');
     Route::get('/admin/reports/replies', [AdminPanelController::class, 'reportsReplies'])->name('reports.replies');
-    Route::get('/admin/reports/questions', [AdminPanelController::class, 'reportsQuestions'])->name('reports.questions');
-    Route::get('/admin/reports/subjects', [AdminPanelController::class, 'reportsSubjects'])->name('reports.subjects');
-    Route::get('/admin/reports/articles', [AdminPanelController::class, 'reportsArticles'])->name('reports.articles');
+    Route::get('/admin/reports/replies/{reportable}', [AdminPanelController::class, 'reportMessages'])->name('reports.replies.messages');
+    Route::get('/admin/reports/posts', [AdminPanelController::class, 'reportsPosts'])->name('reports.posts');
+    Route::get('/admin/reports/posts/{reportable}', [AdminPanelController::class, 'reportMessages'])->name('reports.posts.messages');
 
     // Missions
     Route::get('/admin/missions', [MissionController::class, 'index'])->name('missions.index');

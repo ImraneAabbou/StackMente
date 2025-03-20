@@ -21,7 +21,8 @@ export default function ConfirmDeleteModal({ action, onClose }: ConfirmDeleteMod
             onSuccess: () => {
                 reset()
                 onClose()
-            }
+            },
+            preserveState: "errors"
         })
     }
 

@@ -3,18 +3,19 @@
 namespace App\Models;
 
 use App\Enums\PostType;
+use App\Observers\PostObserver;
 use App\Traits\Reportable;
 use App\Traits\Votable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
-#[ObservedBy([ObservedBy::class])]
+#[ObservedBy(PostObserver::class)]
 class Post extends Model
 {
     /** @use HasFactory<\Database\Factories\PostFactory> */
@@ -29,8 +30,9 @@ class Post extends Model
         'type',
     ];
 
-    public function answer(): HasOne {
-        return $this->hasOne(Comment::class)->where("is_marked", true);
+    public function answer(): HasOne
+    {
+        return $this->hasOne(Comment::class)->where('is_marked', true);
     }
 
     /**
@@ -64,6 +66,7 @@ class Post extends Model
     {
         return $this->hasMany(Reply::class);
     }
+
     /**
      * @return Builder<Post>
      */
@@ -71,6 +74,7 @@ class Post extends Model
     {
         return Post::where('type', PostType::SUBJECT);
     }
+
     /**
      * @return Builder<Post>
      */
@@ -78,6 +82,7 @@ class Post extends Model
     {
         return Post::where('type', PostType::QUESTION);
     }
+
     /**
      * @return Builder<Post>
      */
@@ -85,5 +90,4 @@ class Post extends Model
     {
         return Post::where('type', PostType::ARTICLE);
     }
-
 }

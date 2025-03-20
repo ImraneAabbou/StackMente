@@ -199,6 +199,6 @@ class PostController extends Controller
     public function destroy(Post $post): RedirectResponse
     {
         $post->delete();
-        return back()->with('status', 'deleted-successfuly');
+        return back();
     }
 }
