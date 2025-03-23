@@ -157,12 +157,12 @@ const PostItem = (p: Post) => {
             <div className="text-2xs flex sm:flex-col gap-4 sm:gap-0 items-center sm:items-end">
                 {
                     p.answer_exists &&
-                    <span className="px-1 font-semibold py-0.5 rounded sm:bg-success-light/25 dark:sm:bg-success-dark/25 text-success-light dark:text-success-dark italic flex gap-1 items-center">
+                    <Link href={route(routeName, { post: p.slug }) + "#answer"} className="px-1 font-semibold py-0.5 rounded sm:bg-success-light/25 dark:sm:bg-success-dark/25 text-success-light dark:text-success-dark italic flex gap-1 items-center">
                         <Check size={16} />
                         <span className="hidden sm:block">
                             {t("content.answered")}
                         </span>
-                    </span>
+                    </Link>
                 }
                 <span className="text-secondary flex gap-1 items-center">
                     <FormattedNumber value={p.comments_count} style="decimal" notation="compact" />
