@@ -1,12 +1,10 @@
 import Notifications from '@/Components/icons/Notifications'
 import Input from '@/Components/ui/Input'
-import { ProgressCircle } from '@/Components/ui/ProgressCircle'
-import Switch from '@/Components/ui/Switch'
 import { avatar } from '@/Utils/helpers/path'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Link, router, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
-import { ChangeEvent, FormEvent, ReactNode, useCallback, useContext, useRef } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, useCallback, useRef } from 'react'
 import { debounce } from "lodash"
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
@@ -38,10 +36,6 @@ import Questions from '@/Components/icons/Questions'
 import Tags from '@/Components/icons/Tags'
 import Articles from '@/Components/icons/Articles'
 import Subjects from '@/Components/icons/Subjects'
-import Logout from '@/Components/icons/Logout'
-import DarkMode from '@/Components/icons/DarkMode'
-import ThemeCtx from '@/Contexts/ThemeCtx'
-import Admin from '@/Components/icons/Admin'
 import UserMenu from '@/Components/UserMenu'
 
 const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.index", "articles.index", "subjects.index"]
@@ -67,7 +61,6 @@ export default function Nav() {
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         setData("q", e.target.value)
-        if (!(e.target.value.trim().length >= 3)) return;
         setShouldShowSearchResult(!!e.target.value.trim())
         x(e.target.value)
     }
@@ -93,7 +86,6 @@ export default function Nav() {
         }
         setShouldShowSearchResult(false);
     };
-    const { isDark, setDark } = useContext(ThemeCtx)
 
     return (
         <nav className="sticky z-50 bg-background-light/50 dark:bg-background-dark/50 backdrop-blur top-0">
@@ -264,6 +256,7 @@ const SearchResult = ({ results }: { results?: Results }) => {
                             {t("content.questions")}
                         </span>
                         {
+                            results.questions.count > 5 &&
                             <Link
                                 href={route("questions.index", { _query: { q: results.q } })}
                                 className='text-xs text-primary'
@@ -312,6 +305,7 @@ const SearchResult = ({ results }: { results?: Results }) => {
                             {t("content.subjects")}
                         </span>
                         {
+                            results.articles.count > 5 &&
                             <Link
                                 href={route("subjects.index", { _query: { q: results.q } })}
                                 className='text-xs text-primary'
@@ -360,6 +354,7 @@ const SearchResult = ({ results }: { results?: Results }) => {
                             {t("content.articles")}
                         </span>
                         {
+                            results.articles.count > 5 &&
                             <Link
                                 href={route("articles.index", { _query: { q: results.q } })}
                                 className='text-xs text-primary'
