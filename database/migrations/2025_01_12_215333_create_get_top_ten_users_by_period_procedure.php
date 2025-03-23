@@ -27,6 +27,7 @@ return new class extends Migration {
                     avatar,
                     stats
                 FROM users
+                WHERE deleted_at IS NULL
                 LIMIT 10;
 
             END
