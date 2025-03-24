@@ -91,6 +91,7 @@ export default function AdminBansIndex() {
                                                 <MenuItem>
                                                     <Link
                                                         href={route("profile.unban", { user: b.username })}
+                                                        preserveState="errors"
                                                         method="delete"
                                                         className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-background-light dark:hover:bg-background-dark">
                                                         <Refresh size={16} />

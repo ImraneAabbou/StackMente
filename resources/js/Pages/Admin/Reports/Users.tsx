@@ -15,6 +15,7 @@ import Minus from "@/Components/icons/Minus";
 import Trash from "@/Components/icons/Trash";
 import ConfirmDeleteCtx from "@/Contexts/ConfirmDeleteCtx";
 import SearchInput from "./_Common/SearchInput";
+import Prohibited from "@/Components/icons/Prohibited";
 
 
 type GrouppedUserReport = UserReport & {
@@ -108,8 +109,18 @@ export default function AdminReportsUsers() {
                                                     </button>
                                                 </MenuItem>
                                                 <MenuItem>
+                                                    <Link
+                                                        href={route("profile.ban", { user: r.reportable.username })}
+                                                        preserveState="errors"
+                                                        method="post"
+                                                        className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-background-light dark:hover:bg-background-dark text-error-light dark:text-error-dark">
+                                                        <Prohibited size={16} />
+                                                        {t("content.ban")}
+                                                    </Link>
+                                                </MenuItem>
+                                                <MenuItem>
                                                     <button
-                                                        onClick={() => setAction(route("profile.destroy", { user: r.reportable.username }))}
+                                                        onClick={() => setAction(route("profile.ban", { user: r.reportable.username }))}
                                                         className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-background-light dark:hover:bg-background-dark text-error-light dark:text-error-dark">
                                                         <Trash size={16} />
                                                         {t("content.delete")}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserBanned;
 use App\Http\Requests\Auth\RegisterationRequest;
 use App\Http\Requests\Profile\DeleteAccountRequest;
 use App\Http\Requests\Profile\ProfileUpdateRequest;
@@ -129,8 +130,9 @@ class ProfileController extends Controller
 
     public function ban(User $user): RedirectResponse
     {
+        event(new UserBanned($user));
         $user->delete();
-        return back()->with('banned');
+        return back();
     }
 
     public function unban(User $user): RedirectResponse

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Enums\ReportableType;
+use App\Events\UserBanned;
 use App\Models\Report;
 use App\Services\UserService;
 
@@ -18,6 +19,7 @@ class ReportObserver
 
         if ($report->reportable_type === ReportableType::USER->value) {
             $u = new UserService($report->reportable);
+            event(new UserBanned($report->reportable));
             $u->ban();
         } elseif ($report->reportable_type === ReportableType::POST->value) {
             $report->reportable()->delete();

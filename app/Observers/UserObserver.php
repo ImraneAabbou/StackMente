@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Enums\ReportableType;
+use App\Events\UserUnbanned;
 use App\Models\Report;
 use App\Models\User;
 use App\Services\StatsService;
@@ -43,7 +44,7 @@ class UserObserver
      */
     public function restored(User $user): void
     {
-        //
+        event(new UserUnbanned($user));
     }
 
     /**
