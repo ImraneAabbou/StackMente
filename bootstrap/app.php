@@ -24,7 +24,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->respond(function (Response $response, Throwable $_, Request $request) {
             if (in_array($response->getStatusCode(), [500, 404, 403, 419]) && config('inertia.enable_custom_error_pages')) {
-                return Inertia::render('Errors/Err' . $response->getStatusCode())
+                return Inertia::render('Errors/Err' . $response->getStatusCode(), [
+                    "auth" => [
+                        "user" => $request->user()
+                    ]
+                ])
                     ->toResponse($request)
                     ->setStatusCode($response->getStatusCode());
             }
