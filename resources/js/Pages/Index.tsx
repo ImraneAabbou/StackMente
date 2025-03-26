@@ -9,21 +9,38 @@ export default function Index() {
 
             <style>
                 {`
-    @keyframes subtleMove {
-        0% {
-            transform: translateY(0) rotate(0deg) scale(1);
-            opacity: 0.25;
-        }
-        50% {
-            transform: translateY(-10px) rotate(360deg) scale(1.25);
-            opacity: 0.3;
-        }
-        100% {
-            transform: translateY(0) rotate(0deg) scale(1);
-            opacity: 0.25;
-        }
-    }
-`}
+                @keyframes subtleMove {
+                    0% {
+                        transform: translateY(0) rotate(0deg) scale(1);
+                        opacity: 0.75;
+                    }
+                    50% {
+                        transform: translateY(-10px) rotate(360deg) scale(1.25);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateY(0) rotate(0deg) scale(1);
+                        opacity: 0.75;
+                    }
+                }
+                @keyframes floatUpDown {
+                    0%, 100% {
+                        transform: translateY(0);
+                    }
+                    50% {
+                        transform: translateY(-20px);
+                    }
+                }
+
+                @keyframes driftLeftRight {
+                    0%, 100% {
+                        transform: translateX(-25px) translateY(0px);
+                    }
+                    50% {
+                        transform: translateX(0px) translateY(-25px);
+                    }
+                }
+            `}
             </style>
 
             <header className="absolute inset-x-0 top-0 z-50">
@@ -55,7 +72,7 @@ export default function Index() {
                 </nav>
             </header>
 
-            <div className="relative isolate px-6 pt-14 lg:px-8">
+            <div className="relative isolate pt-14">
                 <svg
                     className="absolute inset-0 -z-10 h-full w-full stroke-onBackground-dark/10 dark:stroke-onBackground-light/10 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
                     aria-hidden="true"
@@ -83,7 +100,7 @@ export default function Index() {
 
                 <div
                     aria-hidden="true"
-                    className="absolute inset-x-0 -top-40 transform-gpu -z-10 size-full overflow-hidden blur-3xl opacity-50 animate-pulse"
+                    className="absolute inset-x-0 -top-40 transform-gpu -z-10 size-full overflow-hidden blur-3xl animate-pulse"
                 >
                     <div
                         style={{
@@ -94,30 +111,39 @@ export default function Index() {
                         className="relative left-[calc(50%-11rem)] aspect-1155/678 w-[36.125rem] bg-gradient-to-tr from-secondary to-primary opacity-25 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem] size-full origin-bottom"
                     />
                 </div>
-                <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-                    <div className="text-center">
-                        <h1
-                            className="text-5xl font-semibold tracking-tight text-balance sm:text-7xl hyphens-manual"
-                            dangerouslySetInnerHTML={
-                                {
-                                    __html: t("content.headline") as string
-                                }
-                            }
+                <div className="min-h-screen flex gap-16 lg:gap-0 flex-col-reverse lg:flex-row lg:items-center lg:justify-between container">
+                    <div className="aspect-square relative size-full max-w-md mx-auto lg:mx-0 lg:max-w-xl">
+                        <img
+                            src="/images/hero/small-cloud.svg"
+                            className="absolute size-full"
+                            style={{ animation: "driftLeftRight 15s ease-in-out infinite alternate 10s" }}
                         />
-                        <p className="mt-8 text-lg text-gray font-light text-pretty sm:text-xl/8">
-                            {
-                                t("content.subheadline")
-                            }
-                        </p>
-                        <div className="mt-10 flex items-center justify-center gap-x-6">
-                            <Link
-                                href={route("feed")}
-                                className="rounded-md px-3.5 py-2.5 bg-gray/25 hover:bg-gray/50 text-sm font-semibold shadow-xs"
-                            >
-                                {
-                                    t("content.to_feed")
+                        <img
+                            src="/images/hero/big-cloud.svg"
+                            className="absolute size-full"
+                            style={{ animation: "driftLeftRight 20s ease-in-out infinite alternate-reverse" }}
+                        />
+                        <img
+                            src="/images/hero/jumping-guy.svg"
+                            className="absolute h-full"
+                            style={{ animation: "floatUpDown 12s ease-in-out infinite" }}
+                        />
+                    </div>
+                    <div className="mt-36 lg:mt-0 px-2 sm:px-12">
+                        <div className="text-center">
+                            <h1
+                                className="text-4xl font-semibold tracking-tight text-balance lg:text-6xl hyphens-manual"
+                                dangerouslySetInnerHTML={
+                                    {
+                                        __html: t("content.headline") as string
+                                    }
                                 }
-                            </Link>
+                            />
+                            <p className="mt-8 text-gray text-pretty text-sm lg:text-base">
+                                {
+                                    t("content.subheadline")
+                                }
+                            </p>
                         </div>
                     </div>
                 </div>
