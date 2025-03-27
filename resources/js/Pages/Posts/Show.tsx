@@ -167,7 +167,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
         })
     }
 
-    return <div className="target:border-2 p-2 rounded" id={comment.is_marked ? "answer" : `comment-${comment.id}`}>
+    return <div className="border-2 border-transparent target:border-secondary/25 p-2 rounded" id={comment.is_marked ? "answer" : `comment-${comment.id}`}>
         <div className="flex flex-wrap justify-between items-center">
             <div className="flex gap-4 flex-warp items-center">
                 <Link href={comment.user ? route("profile.show", { user: comment.user?.username }) : "#"} className="flex gap-2 items-center">
@@ -321,7 +321,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                     {
                         comment.updated_at !== comment.created_at
                         && <div className="flex gap-1">
-                            /
+                            |
                             <span className="">{t("content.modified")}</span>
                             <span>
                                 {formatDate(comment.updated_at)}
