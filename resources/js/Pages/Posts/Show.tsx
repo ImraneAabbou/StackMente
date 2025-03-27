@@ -33,8 +33,7 @@ export default function PostsIndex() {
             <div className="flex gap-8 flex-col mt-16">
                 {
                     comments
-                        .map(comment => <Comment key={comment.id} comment={comment} />
-                        )
+                        .map(comment => <Comment key={comment.id} comment={comment} />)
                 }
                 {
                     !is_commented && <CommentingForm action={route('comments.store', { post: post.slug })} />
@@ -181,7 +180,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                     }
                 </Link>
                 {
-                    isPostOwned
+                    isPostOwned && post.type !== "SUBJECT"
                         ? <Link href={route("comments.mark", { comment: comment.id })} method="put" className="flex gap-2 items-center">
                             {
                                 <span
@@ -397,7 +396,7 @@ const Reply = ({ reply }: { reply: ReplyType }) => {
                     ? <button
                         className="text-2xs flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
                         onClick={
-                            () => setReportAction(route("comments.report", { reportable: comment.id }))
+                            () => setReportAction(route("replies.report", { reportable: reply.id }))
                         }
                     >
                         {t("content.report")}

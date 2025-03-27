@@ -11,27 +11,27 @@ export interface NotificationBase {
 };
 
 export interface CommentReceivedNotification extends NotificationBase {
-    user: User;
+    user?: User;
     post: Post;
     comment: Comment;
     type: "COMMENT_RECEIVED";
 }
 
 export interface CommentVoteReceivedNotification extends NotificationBase {
-    user: User;
+    user?: User;
     post: Post;
     comment: Comment;
     type: "COMMENT_VOTE_RECEIVED";
 }
 
 export interface PostVoteReceivedNotification extends NotificationBase {
-    user: User;
+    user?: User;
     post: Post;
     type: "POST_VOTE_RECEIVED";
 }
 
 export interface ReplyReceivedNotification extends NotificationBase {
-    user: User;
+    user?: User;
     post: Post;
     reply: Reply;
     type: "REPLY_RECEIVED"
@@ -43,7 +43,7 @@ export interface MissionAccomplishedNotification extends NotificationBase {
 }
 
 export interface CommentMarkedNotification extends NotificationBase {
-    user: User;
+    user?: User;
     post: Post;
     comment: Comment;
     type: "COMMENT_MARKED"

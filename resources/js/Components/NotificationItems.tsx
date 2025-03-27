@@ -63,7 +63,7 @@ export const PostVoteReceived = ({ notification: n }: { notification: PostVoteRe
 
     return <BaseNotification
         id={n.id}
-        src={avatar(n.user.avatar)}
+        src={avatar(n.user?.avatar)}
         created_at={n.created_at}
         read_at={n.read_at}
         className="flex flex-col"
@@ -75,7 +75,7 @@ export const PostVoteReceived = ({ notification: n }: { notification: PostVoteRe
                         className="font-bold"
                     >
                         {
-                            n.user.fullname
+                            n.user?.fullname ?? "Someone"
                         }
                     </span>
                 ,
@@ -94,7 +94,7 @@ export const CommentVoteReceived = ({ notification: n }: { notification: Comment
     const routeName = n.post.type.toLowerCase() + "s.show"
 
     return <BaseNotification
-        src={avatar(n.user.avatar)}
+        src={avatar(n.user?.avatar)}
         created_at={n.created_at} read_at={n.read_at}
         id={n.id}
         url={route(routeName, { post: n.post.slug }) + (n.comment.is_marked ? "#answer" : `#comment-${n.comment.id}`)}
@@ -103,7 +103,7 @@ export const CommentVoteReceived = ({ notification: n }: { notification: Comment
                 voter_fullname:
                     <span className="font-bold">
                         {
-                            n.user.fullname
+                            n.user?.fullname ?? "Someone"
                         }
                     </span>
                 ,
@@ -123,7 +123,7 @@ export const CommentReceived = ({ notification: n }: { notification: CommentRece
     const routeName = n.post.type.toLowerCase() + "s.show"
 
     return <BaseNotification
-        src={avatar(n.user.avatar)}
+        src={avatar(n.user?.avatar)}
         created_at={n.created_at} read_at={n.read_at}
         id={n.id}
         url={route(routeName, { post: n.post.slug }) + (n.comment.is_marked ? "#answer" : `#comment-${n.comment.id}`)}
@@ -132,7 +132,7 @@ export const CommentReceived = ({ notification: n }: { notification: CommentRece
                 commenter_fullname:
                     <span className="font-bold">
                         {
-                            n.user.fullname
+                            n.user?.fullname ?? "Someone"
                         }
                     </span>
                 ,
@@ -154,7 +154,7 @@ export const ReplyReceived = ({ notification: n }: { notification: ReplyReceived
     const routeName = n.post.type.toLowerCase() + "s.show"
 
     return <BaseNotification
-        src={avatar(n.user.avatar)} created_at={n.created_at} read_at={n.read_at}
+        src={avatar(n.user?.avatar)} created_at={n.created_at} read_at={n.read_at}
         id={n.id}
         url={route(routeName, { post: n.post.slug }) + `#reply-${n.reply.id}`}
         title={
@@ -162,7 +162,7 @@ export const ReplyReceived = ({ notification: n }: { notification: ReplyReceived
                 replier_fullname:
                     <span className="font-bold">
                         {
-                            n.user.fullname
+                            n.user?.fullname ?? "Someone"
                         }
                     </span>
                 ,
@@ -211,7 +211,7 @@ export const CommentMarked = ({ notification: n }: { notification: CommentMarked
     const routeName = n.post.type.toLowerCase() + "s.show"
 
     return <BaseNotification
-        src={avatar(n.user.avatar)}
+        src={avatar(n.user?.avatar)}
         created_at={n.created_at}
         read_at={n.read_at}
         id={n.id}
@@ -221,7 +221,7 @@ export const CommentMarked = ({ notification: n }: { notification: CommentMarked
                 author_fullname:
                     <span className="font-bold">
                         {
-                            n.user.fullname
+                            n.user?.fullname ?? "Someone"
                         }
                     </span>
                 ,
