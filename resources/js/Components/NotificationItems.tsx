@@ -145,7 +145,10 @@ export const CommentReceived = ({ notification: n }: { notification: CommentRece
             }) as string
         }
     >
-        <span className={`text-xs ${!n.read_at ? "font-bold" : "italic"}`}>"{n.comment.content}"</span>
+        <span
+            className={`text-xs ${!n.read_at ? "font-bold" : "italic"}`}
+            dangerouslySetInnerHTML={{ __html: n.comment.content.replace(/<\/?[^>]+\/?>/g, '') }}
+        />
     </BaseNotification>
 }
 
