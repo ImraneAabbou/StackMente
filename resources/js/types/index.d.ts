@@ -62,6 +62,12 @@ export type PageProps<
     };
 
     results: Results;
+
+    hero_stats: {
+        questions_count: number;
+        articles_count: number;
+        subjects_count: number;
+    };
 };
 
 export interface Results {
