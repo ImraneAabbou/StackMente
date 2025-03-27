@@ -115,12 +115,12 @@ export default function Index() {
                     <div className="aspect-square relative size-full max-w-md mx-auto lg:mx-0 lg:max-w-xl">
                         <img
                             src="/images/hero/small-cloud.svg"
-                            className="absolute size-full"
+                            className="absolute size-full brightness-90"
                             style={{ animation: "driftLeftRight 15s ease-in-out infinite alternate 10s" }}
                         />
                         <img
                             src="/images/hero/big-cloud.svg"
-                            className="absolute size-full"
+                            className="absolute size-full brightness-95"
                             style={{ animation: "driftLeftRight 20s ease-in-out infinite alternate-reverse" }}
                         />
                         <img
