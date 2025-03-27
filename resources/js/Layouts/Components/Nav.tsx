@@ -4,7 +4,7 @@ import { avatar } from '@/Utils/helpers/path'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Link, router, useForm, usePage, usePoll } from '@inertiajs/react'
 import { useLaravelReactI18n } from 'laravel-react-i18n'
-import { ChangeEvent, FormEvent, ReactNode, useCallback, useRef } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, useCallback, useContext, useRef } from 'react'
 import { debounce } from "lodash"
 import { useState } from "react"
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
@@ -37,11 +37,18 @@ import Tags from '@/Components/icons/Tags'
 import Articles from '@/Components/icons/Articles'
 import Subjects from '@/Components/icons/Subjects'
 import UserMenu from '@/Components/UserMenu'
+import useSound from 'use-sound'
+import popSound from '@/Sounds/pop-sound.mp3'
+import SoundCtx from '@/Contexts/SoundCtx'
 
 const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.index", "articles.index", "subjects.index"]
 
 export default function Nav() {
     const { t } = useLaravelReactI18n()
+    const { isEnabled: isSoundEnabled } = useContext(SoundCtx)
+    const [playPopSound] = useSound(popSound, {
+        soundEnabled: isSoundEnabled
+    })
     const {
         auth: { user },
         notifications: { items: notifications }
@@ -60,8 +67,7 @@ export default function Nav() {
             (new Date(notifications[0].created_at)) > (new Date(lastNotificationTime))
         )
     ) {
-        console.log("notif 0 : ", notifications[0].created_at)
-        console.log("last notif : ", lastNotificationTime)
+        playPopSound()
         setLastNotificationTime(notifications[0].created_at)
         setHasNewNotifications(true)
     }

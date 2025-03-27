@@ -66,6 +66,7 @@ return [
     'users' => 'Users',
     'xp' => 'XP',
     'dark_mode' => 'Dark mode',
+    'sound' => 'Sound',
     'd' => 'd',
     'h' => 'h',
     'm' => 'm',
@@ -124,6 +125,6 @@ return [
     'feature_3_title' => 'Get Ranked',
     'feature_3_desc' => 'Earn points and climb the leaderboard as you showcase your expertise.',
     'questions_stats_desc' => "Read & Answer People's Wanders",
-    'subjects_stats_desc' => 'See a Perspective Through People\'s eyes',
+    'subjects_stats_desc' => "See a Perspective Through People's eyes",
     'articles_stats_desc' => 'Ready to Read Fruitful Articles',
 ];

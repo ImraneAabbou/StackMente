@@ -9,11 +9,15 @@ import DarkMode from '@/Components/icons/DarkMode'
 import Admin from '@/Components/icons/Admin'
 import { avatar } from "@/Utils/helpers/path";
 import ThemeCtx from "@/Contexts/ThemeCtx";
+import SoundCtx from "@/Contexts/SoundCtx";
+import SoundOn from "./icons/SoundOn";
+import SoundOff from "./icons/SoundOff";
 
-export default function UserMenu({ children, anchor }: { children?: ReactNode }) {
+export default function UserMenu({ children }: { children?: ReactNode }) {
     const { t } = useLaravelReactI18n()
     const { auth: { user } } = usePage().props
     const { isDark, setDark } = useContext(ThemeCtx)
+    const { isEnabled: isSoundEnabled, setEnabled: setSoundEnabled } = useContext(SoundCtx)
 
     return <Menu as="div" className="relative">
         <div>
@@ -63,7 +67,21 @@ export default function UserMenu({ children, anchor }: { children?: ReactNode })
                 >
                     <DarkMode size={20} />
                     {t("content.dark_mode")}
-                    <Switch checked={isDark} className='ms-auto bg-secondary pointer-events-none' />
+                    <Switch checked={isDark} className='ms-auto pointer-events-none' />
+                </button>
+            </MenuItem>
+            <MenuItem>
+                <button
+                    onClick={(e) => { e.preventDefault(); setSoundEnabled(!isSoundEnabled) }}
+                    className="flex gap-2 items-center text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
+                >
+                    {
+                        isSoundEnabled
+                            ? <SoundOn />
+                            : <SoundOff />
+                    }
+                    {t("content.sound")}
+                    <Switch checked={isSoundEnabled} className='ms-auto pointer-events-none' />
                 </button>
             </MenuItem>
             <MenuItem>
