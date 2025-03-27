@@ -9,6 +9,7 @@ use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UsersRankingController;
 use App\Models\Mission;
+use App\Models\Post;
 use App\Models\Report;
 use Illuminate\Support\Facades\Route;
 
@@ -55,7 +56,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/sync', fn() => SyncEverything::execute());
 });
 
-Route::inertia('/', 'Index');
+Route::inertia('/', 'Index', [
+    "hero_stats" => [
+        "questions_count" => Post::questions()->count(),
+        "articles_count" => Post::articles()->count(),
+        "subjects_count" => Post::subjects()->count(),
+    ]
+]);
 
 Route::get('/articles', [PostController::class, 'index'])->name('articles.index');
 Route::get('/articles/{post:slug}', [PostController::class, 'show'])->name('articles.show');

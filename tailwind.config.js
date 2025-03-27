@@ -29,6 +29,10 @@ export default {
                 light: "#54BF59",
                 dark: "#54BF59",
             },
+            onSuccess: {
+                light: "#ffffff",
+                dark: "#ffffff",
+            },
             error: {
                 light: "#f31616",
                 dark: "#ff5b5b",

@@ -1,8 +1,51 @@
-import { Link } from "@inertiajs/react"
+import Comments from "@/Components/icons/Comments"
+import Facebook from "@/Components/icons/Facebook"
+import Github from "@/Components/icons/Github"
+import Instagram from "@/Components/icons/Instagram"
+import Medal from "@/Components/icons/Medal"
+import Rank from "@/Components/icons/Rank"
+import { Link, usePage } from "@inertiajs/react"
 import { useLaravelReactI18n } from "laravel-react-i18n"
+import { FormattedNumber } from "react-intl"
 
+const socials = [
+    {
+        name: 'Facebook',
+        href: '#',
+        icon: <Facebook />,
+    },
+    {
+        name: 'Instagram',
+        href: '#',
+        icon: <Instagram />,
+    },
+    {
+        name: 'GitHub',
+        href: '#',
+        icon: <Github />,
+    },
+]
 export default function Index() {
     const { t } = useLaravelReactI18n()
+    const { hero_stats: stats } = usePage().props
+
+    const features = [
+        {
+            name: t("content.feature_1_title"),
+            description: t("content.feature_1_desc"),
+            icon: <Medal />,
+        },
+        {
+            name: t("content.feature_2_title"),
+            description: t("content.feature_2_desc"),
+            icon: <Comments />,
+        },
+        {
+            name: t("content.feature_3_title"),
+            description: t("content.feature_3_desc"),
+            icon: <Rank />,
+        },
+    ]
 
     return (
         <div>
@@ -25,19 +68,19 @@ export default function Index() {
                 }
                 @keyframes floatUpDown {
                     0%, 100% {
-                        transform: translateY(0);
+                        transform: translateY(0) rotate(-2.5deg);
                     }
                     50% {
-                        transform: translateY(-20px);
+                        transform: translateY(-20px) rotate(2.5deg);
                     }
                 }
 
                 @keyframes driftLeftRight {
                     0%, 100% {
-                        transform: translateX(-25px) translateY(0px);
+                        transform: translateX(-25px) translateY(0px) rotate(-2.5deg);
                     }
                     50% {
-                        transform: translateX(0px) translateY(-25px);
+                        transform: translateX(0px) translateY(-25px) rotate(0deg);
                     }
                 }
             `}
@@ -64,7 +107,7 @@ export default function Index() {
                         </Link>
                         <Link
                             href={route("register")}
-                            className="bg-primary shadow-sm hover:bg-primary/90 text-onPrimary rounded-md px-3.5 py-2.5 bg-gray/25 hover:bg-gray/50 text-sm font-semibold shadow-xs"
+                            className="bg-primary shadow-sm hover:bg-primary/90 text-onPrimary rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs"
                         >
                             {t("content.register")}
                         </Link>
@@ -72,7 +115,7 @@ export default function Index() {
                 </nav>
             </header>
 
-            <div className="relative isolate pt-14">
+            <div className="relative isolate pt-14 bg-gradient-to-b from-transparent to-surface-light/75 dark:to-surface-dark/75">
                 <svg
                     className="absolute inset-0 -z-10 h-full w-full stroke-onBackground-dark/10 dark:stroke-onBackground-light/10 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
                     aria-hidden="true"
@@ -111,7 +154,7 @@ export default function Index() {
                         className="relative left-[calc(50%-11rem)] aspect-1155/678 w-[36.125rem] bg-gradient-to-tr from-secondary to-primary opacity-25 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem] size-full origin-bottom"
                     />
                 </div>
-                <div className="min-h-screen flex gap-16 lg:gap-0 flex-col-reverse lg:flex-row lg:items-center lg:justify-between container">
+                <div className="lg:min-h-[780px] flex gap-16 lg:gap-0 flex-col-reverse lg:flex-row lg:items-center lg:justify-between container">
                     <div className="aspect-square relative size-full max-w-md mx-auto lg:mx-0 lg:max-w-xl">
                         <img
                             src="/images/hero/small-cloud.svg"
@@ -139,15 +182,142 @@ export default function Index() {
                                     }
                                 }
                             />
-                            <p className="mt-8 text-gray text-pretty text-sm lg:text-base">
+                            <p className="mt-8 pretty text-sm lg:text-base">
                                 {
                                     t("content.subheadline")
                                 }
                             </p>
                         </div>
+                        <div className="flex justify-center mt-8">
+                            <Link
+                                href={route("feed")}
+                                className="bg-success-light text-onSuccess-light dark:bg-success-dark dark:text-onSuccess-dark shadow-sm hover:bg-success-light/90 dark:hover:bg-success-dark/90 rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs"
+                            >
+                                {t("content.to_feed")}
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+
+            <div className="bg-gradient-to-b from-surface-light/75 dark:from-surface-dark/75 to-surface-light dark:to-surface-dark text-onSurface-dark dark:text-onSurface-light">
+                <div className="container py-16 lg:py-32  flex flex-col gap-32">
+                    <div className="flex lg:flex-row-reverse flex-col justify-between items-center gap-16">
+                        <img src="/images/hero/winners.svg" className="max-w-sm mx-auto w-full min-w-64" />
+                        <div className="max-w-2xl text-center">
+                            <h2 className="text-base font-semibold leading-7">{t("content.features_title")}</h2>
+                            <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+                                {t("content.features_subtitle")}
+                            </p>
+                            <p className="mt-6 text-lg leading-8 text-secondary">
+                                {t("content.features_desc")}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="mx-auto max-w-6xl">
+                        <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
+                            {features.map((feature) => (
+                                <div key={feature.name as string} className="flex flex-col">
+                                    <dt className="text-base font-semibold leading-7">
+                                        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-onPrimary">
+                                            {feature.icon}
+                                        </div>
+                                        {feature.name}
+                                    </dt>
+                                    <dd className="mt-1 flex flex-auto flex-col text-base leading-7 text-secondary">
+                                        <p className="flex-auto">{feature.description}</p>
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+                </div>
+
+
+                <div className="container py-16 lg:py-32 flex flex-col gap-24 justify-center">
+                    <div>
+                        <img src="/images/hero/people.svg" className="max-w-sm mx-auto w-full" />
+                        <h1 className="text-center text-5xl leading-normal">{t("content.join_our_massive_community")}</h1>
+                    </div>
+                    <dl className="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
+                        <div className="mx-auto flex max-w-xs flex-col gap-y-4">
+                            <dt className="text-base/7">{t("content.questions_stats_desc")}</dt>
+                            <dd className="order-first text-3xl font-semibold tracking-tight sm:text-5xl">
+                                <FormattedNumber value={stats.questions_count} style="decimal" notation="compact" />
+                                {" "}
+                                {t("content.questions")}
+                            </dd>
+                        </div>
+                        <div className="mx-auto flex max-w-xs flex-col gap-y-4">
+                            <dt className="text-base/7">{t("content.articles_stats_desc")}</dt>
+                            <dd className="order-first text-3xl font-semibold tracking-tight sm:text-5xl">
+                                <FormattedNumber value={stats.articles_count} style="decimal" notation="compact" />
+                                {" "}
+                                {t("content.articles")}
+                            </dd>
+                        </div>
+                        <div className="mx-auto flex max-w-xs flex-col gap-y-4">
+                            <dt className="text-base/7">{t("content.subjects_stats_desc")}</dt>
+                            <dd className="order-first text-3xl font-semibold tracking-tight sm:text-5xl">
+                                <FormattedNumber value={stats.subjects_count} style="decimal" notation="compact" />
+                                {" "}
+                                {t("content.subjects")}
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div className="container flex flex-col gap-12 py-16 lg:py-32">
+                    <h2 className="text-center text-lg lg:text-xl leading-8">
+                        {t("content.plateform_supported_by")}
+                    </h2>
+                    <div className="mx-auto grid max-w-md items-center gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-10 lg:mx-0 lg:max-w-none">
+                        <img
+                            className="max-h-32 w-full object-contain"
+                            src="/images/hero/ofppt.svg"
+                            alt="OFPPT"
+                            width={158}
+                            height={32}
+                        />
+                        <img
+                            className="max-h-32 w-full object-contain"
+                            src="/images/hero/cad.png"
+                            alt="CAD"
+                            width={158}
+                            height={32}
+                        />
+                        <img
+                            className="max-h-32 w-full object-contain"
+                            src="/images/hero/career-center.png"
+                            alt="Career Center"
+                            width={158}
+                            height={48}
+                        />
+                    </div>
+                </div>
+            </div>
+            <footer aria-labelledby="footer-heading" className="relative">
+                <h2 id="footer-heading" className="sr-only">
+                    Footer
+                </h2>
+                <div className="mx-auto max-w-7xl px-6 pb-8 pt-4 lg:px-8">
+                    <div className="border-t border-white/10 pt-8 md:flex md:items-center md:justify-between">
+                        <div className="flex space-x-6 md:order-2">
+                            {socials.map((item) => (
+                                <a key={item.name} href={item.href} className="hover:text-secondary transition-colors">
+                                    <span className="sr-only">{item.name}</span>
+                                    {item.icon}
+                                </a>
+                            ))}
+                        </div>
+                        <p className="mt-8 text-xs leading-5 text-secondary md:order-1 md:mt-0">
+                            &copy; {(new Date()).getFullYear()} StackMente, Inc. All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </footer>
+
+        </div >
     )
 }
