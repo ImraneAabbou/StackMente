@@ -216,6 +216,7 @@ type CreatePostLink = {
 
 const CreatePostItems = () => {
     const { t } = useLaravelReactI18n()
+    const { auth: { user } } = usePage().props
     const createPostsLinks: CreatePostLink[] = [
         {
             header: t("content.ask") as string,
@@ -244,22 +245,32 @@ const CreatePostItems = () => {
             "
     >
         {
-            createPostsLinks.map(
-                l => <MenuItem key={l.href}>
-                    <Link
-                        href={l.href}
-                        className="grow p-2 hover:bg-background-light dark:hover:bg-background-dark rounded flex items-center gap-2 text-start"
-                    >
-                        <div className="basis-16 shrink-0 flex justify-center items-center">
-                            {l.icon}
-                        </div>
-                        <div>
-                            <h3 className="font-semibold leading-loose">{l.header}</h3>
-                            <p className="text-secondary text-xs tracking-tight leading-tight">{l.paragraph}</p>
-                        </div>
-                    </Link>
+            user.email_verified_at
+                ? createPostsLinks.map(
+                    l => <MenuItem key={l.href}>
+                        <Link
+                            href={l.href}
+                            className="grow p-2 hover:bg-background-light dark:hover:bg-background-dark rounded flex items-center gap-2 text-start"
+                        >
+                            <div className="basis-16 shrink-0 flex justify-center items-center">
+                                {l.icon}
+                            </div>
+                            <div>
+                                <h3 className="font-semibold leading-loose">{l.header}</h3>
+                                <p className="text-secondary text-xs tracking-tight leading-tight">{l.paragraph}</p>
+                            </div>
+                        </Link>
+                    </MenuItem>
+                )
+                : <MenuItem>
+                    <div className='flex justify-center items-center h-24'>
+                        <p className='text-center text-sm text-secondary'>
+                            {t("content.you_cant_publish", {
+                                here: <Link href={route("profile.edit")} className='underline'>{t("content.here")}</Link>
+                            })}
+                        </p>
+                    </div>
                 </MenuItem>
-            )
         }
     </MenuItems>
 }

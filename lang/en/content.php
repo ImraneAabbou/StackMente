@@ -127,4 +127,6 @@ return [
     'questions_stats_desc' => "Read & Answer People's Wanders",
     'subjects_stats_desc' => "See a Perspective Through People's eyes",
     'articles_stats_desc' => 'Ready to Read Fruitful Articles',
+    'you_cant_publish' => 'You can have posts after your email verification :here.',
+    'here' => 'here',
 ];

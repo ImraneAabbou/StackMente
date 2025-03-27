@@ -16,11 +16,13 @@ use App\Models\Report;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
-    Route::inertia('/articles/create', 'Posts/CreateArticle')->name('articles.create');
-    Route::inertia('/subjects/create', 'Posts/CreateSubject')->name('subjects.create');
-    Route::inertia('/questions/create', 'Posts/CreateQuestion')->name('questions.create');
+    Route::middleware('verified')->group(function () {
+        Route::inertia('/articles/create', 'Posts/CreateArticle')->name('articles.create');
+        Route::inertia('/subjects/create', 'Posts/CreateSubject')->name('subjects.create');
+        Route::inertia('/questions/create', 'Posts/CreateQuestion')->name('questions.create');
+        Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    });
 
-    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::put('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy')->can('delete', [Post::class]);
 
