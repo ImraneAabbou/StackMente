@@ -2,5 +2,5 @@
 
 
 return [
-    "enable_custom_error_pages" => true,
+    "enable_custom_error_pages" => false,
 ];

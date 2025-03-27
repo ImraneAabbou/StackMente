@@ -22,9 +22,10 @@ import { ToolbarConfig } from "quill/modules/toolbar";
 import Error from "@/Components/ui/Error";
 import Input from "@/Components/ui/Input";
 import { FiSend } from "react-icons/fi";
+import Trash from "@/Components/icons/Trash";
 
 
-export default function PostsIndex() {
+export default function PostShow() {
     const { post: { comments, is_commented, ...post } } = usePage().props;
 
     return <Layout>
@@ -198,7 +199,22 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                         && <span className="text-success-light dark:text-success-dark"><Check size={16} /></span>
                 }
             </div>
-            <div className="ms-auto text-xs">
+            <div className="ms-auto text-xs flex items-center gap-2">
+                {
+                    user.role != "USER"
+                    &&
+                    <>
+                        <Link
+                            href={route("comments.destroy", { comment: comment.id })}
+                            method="delete"
+                            className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
+                        >
+                            {t("content.delete")}
+                            <Trash size={12} />
+                        </Link>
+                        <span className="text-secondary/25">|</span>
+                    </>
+                }
                 {
                     comment.user_id !== user?.id
                         ? <button
@@ -391,35 +407,52 @@ const Reply = ({ reply }: { reply: ReplyType }) => {
                         : <span className="font-bold text-secondary">Someone</span>
                 }
             </Link>
-            {
-                reply.user_id !== user?.id
-                    ? <button
-                        className="text-2xs flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
-                        onClick={
-                            () => setReportAction(route("replies.report", { reportable: reply.id }))
-                        }
-                    >
-                        {t("content.report")}
-                        <Flag size={10} />
-                    </button>
-                    : <button
-                        className={
-                            clsx(
-                                `flex gap-1 items-center`,
-                                !editable ? "text-secondary hover:text-current" : "px-2 py-1 rounded hover:bg-secondary/50 bg-secondary/25",
-                            )
-                        }
-                        type={editable ? "submit" : "button"}
-                        form="update-reply-form"
-                        onClick={
-                            () => {
-                                setEditable(!editable)
+            <div className="flex items-center gap-1">
+                {
+                    user.role != "USER"
+                    &&
+                    <>
+                        <Link
+                            href={route("replies.destroy", { reply: reply.id })}
+                            method="delete"
+                            className="text-2xs flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
+                        >
+                            {t("content.delete")}
+                            <Trash size={10} />
+                        </Link>
+                        <span className="text-secondary/25">|</span>
+                    </>
+                }
+                {
+                    reply.user_id !== user?.id
+                        ? <button
+                            className="text-2xs flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
+                            onClick={
+                                () => setReportAction(route("replies.report", { reportable: reply.id }))
                             }
-                        }
-                    >
-                        {editable ? t('content.save') : t('content.edit')}
-                    </button>
-            }
+                        >
+                            {t("content.report")}
+                            <Flag size={10} />
+                        </button>
+                        : <button
+                            className={
+                                clsx(
+                                    `flex gap-1 items-center`,
+                                    !editable ? "text-secondary hover:text-current" : "px-2 py-1 rounded hover:bg-secondary/50 bg-secondary/25",
+                                )
+                            }
+                            type={editable ? "submit" : "button"}
+                            form="update-reply-form"
+                            onClick={
+                                () => {
+                                    setEditable(!editable)
+                                }
+                            }
+                        >
+                            {editable ? t('content.save') : t('content.edit')}
+                        </button>
+                }
+            </div>
         </div>
         {
             !editable
@@ -502,6 +535,21 @@ const Post = ({ p }: { p: PostType }) => {
                     }
                 </div>
                 <div className="ms-auto flex gap-2.5 items-center">
+                    {
+                        user.role != "USER"
+                        &&
+                        <>
+                            <Link
+                                href={route("posts.destroy", { post: p.slug })}
+                                method="delete"
+                                className="flex gap-2 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark"
+                            >
+                                {t("content.delete")}
+                                <Trash size={16} />
+                            </Link>
+                            <span className="text-secondary/25">|</span>
+                        </>
+                    }
                     {
 
                         isPostOwned

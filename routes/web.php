@@ -8,8 +8,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UsersRankingController;
+use App\Models\Comment;
 use App\Models\Mission;
 use App\Models\Post;
+use App\Models\Reply;
 use App\Models\Report;
 use Illuminate\Support\Facades\Route;
 
@@ -20,29 +22,29 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::put('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy')->can('delete', [Post::class]);
 
     Route::post('/posts/{reportable}/reports', [PostController::class, 'report'])->name('posts.report');
-    Route::delete('/posts/{reportable}/reports', [PostController::class, 'clearReports'])->name("posts.clearReports")->can('delete', [Report::class]);
+    Route::delete('/posts/{reportable}/reports', [PostController::class, 'clearReports'])->name('posts.clearReports')->can('delete', [Report::class]);
 
     Route::post('/posts/{votable}/vote', [PostController::class, 'vote'])->name('posts.vote');
     Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote'])->name('posts.unvote');
 
     Route::post('/posts/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::post('/comments/{reportable}/reports', [CommentController::class, 'report'])->name('comments.report');
-    Route::delete('/comments/{reportable}/reports', [CommentController::class, 'clearReports'])->name("comments.clearReports")->can('delete', [Report::class]);
+    Route::delete('/comments/{reportable}/reports', [CommentController::class, 'clearReports'])->name('comments.clearReports')->can('delete', [Report::class]);
     Route::put('/comments/{comment}/mark', [CommentController::class, 'mark'])->name('comments.mark');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name("comments.destroy");
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy')->can('delete', [Comment::class]);
 
     Route::post('/comments/{votable}/vote', [CommentController::class, 'vote'])->name('comments.vote');
     Route::delete('/comments/{votable}/vote', [CommentController::class, 'unvote'])->name('comments.unvote');
 
     Route::post('/comments/{comment}/replies', [ReplyController::class, 'store'])->name('replies.store');
     Route::post('/replies/{reportable}/reports', [ReplyController::class, 'report'])->name('replies.report');
-    Route::delete('/replies/{reportable}/reports', [ReplyController::class, 'clearReports'])->name("replies.clearReports")->can('delete', [Report::class]);
+    Route::delete('/replies/{reportable}/reports', [ReplyController::class, 'clearReports'])->name('replies.clearReports')->can('delete', [Report::class]);
     Route::put('/replies/{reply}', [ReplyController::class, 'update'])->name('replies.update');
-    Route::delete('/replies/{reply}', [ReplyController::class, 'destroy'])->name('replies.destroy');
+    Route::delete('/replies/{reply}', [ReplyController::class, 'destroy'])->name('replies.destroy')->can('delete', [Reply::class]);
 
     Route::put('/notifications/{id}', [NotificationController::class, 'update'])->name('notifications.update');
     Route::delete('/notifications', [NotificationController::class, 'destroy'])->name('notifications.destroy');
@@ -57,10 +59,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::inertia('/', 'Index', [
-    "hero_stats" => [
-        "questions_count" => Post::questions()->count(),
-        "articles_count" => Post::articles()->count(),
-        "subjects_count" => Post::subjects()->count(),
+    'hero_stats' => [
+        'questions_count' => Post::questions()->count(),
+        'articles_count' => Post::articles()->count(),
+        'subjects_count' => Post::subjects()->count(),
     ]
 ]);
 
@@ -76,11 +78,11 @@ Route::get('/questions/{post:slug}', [PostController::class, 'show'])->name('que
 Route::get('/posts', [PostController::class, 'index'])->name('feed');
 
 Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
-Route::delete('/profile/{user:username}', [ProfileController::class, 'delete'])->name("users.delete");
-Route::post('/profile/{user:username}/ban', [ProfileController::class, 'ban'])->name("profile.ban");
-Route::delete('/profile/{user:username}/ban', [ProfileController::class, 'unban'])->name("profile.unban");
-Route::post('/profile/{reportable}/reports', [ProfileController::class, 'report'])->name("profile.report");
-Route::delete('/profile/{reportable}/reports', [ProfileController::class, 'clearReports'])->name("profile.clearReports")->can('delete', [Report::class]);
+Route::delete('/profile/{user:username}', [ProfileController::class, 'delete'])->name('users.delete');
+Route::post('/profile/{user:username}/ban', [ProfileController::class, 'ban'])->name('profile.ban');
+Route::delete('/profile/{user:username}/ban', [ProfileController::class, 'unban'])->name('profile.unban');
+Route::post('/profile/{reportable}/reports', [ProfileController::class, 'report'])->name('profile.report');
+Route::delete('/profile/{reportable}/reports', [ProfileController::class, 'clearReports'])->name('profile.clearReports')->can('delete', [Report::class]);
 
 Route::get('/rank', UsersRankingController::class)->name('rank');
 

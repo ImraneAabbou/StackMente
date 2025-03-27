@@ -40,6 +40,6 @@ class ReplyController extends Controller
     {
         $reply->delete();
 
-        return back()->with('status', 'deleted');
+        return back();
     }
 }

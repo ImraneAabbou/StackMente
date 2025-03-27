@@ -199,6 +199,6 @@ class PostController extends Controller
     public function destroy(Post $post): RedirectResponse
     {
         $post->delete();
-        return back();
+        return to_route('feed');
     }
 }
