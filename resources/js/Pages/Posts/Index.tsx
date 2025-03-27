@@ -18,6 +18,7 @@ import Filter from "@/Layouts/Components/Filter";
 import FilterIcon from "@/Components/icons/Filter"
 import { useState } from "react";
 import { useMediaQuery } from "@react-hook/media-query";
+import Search from "@/Components/icons/Search";
 
 export default function PostsIndex() {
     const { t, tChoice } = useLaravelReactI18n()
@@ -61,12 +62,19 @@ export default function PostsIndex() {
                 }
             </div>
             <div className="flex flex-col-reverse lg:flex-row gap-8">
-                <div>
-                    <div className="flex flex-col gap-4">
-                        {
-                            posts.map(p => <PostItem key={p.id} {...p} />)
-                        }
-                    </div>
+                <div className="w-full">
+                    {
+                        posts.length
+                            ?
+                            <div className="flex flex-col gap-4">
+                                {
+                                    posts.map(p => <PostItem key={p.id} {...p} />)
+                                }
+                            </div>
+                            : <div className="flex justify-center items-center size-full">
+                                <NothingFound />
+                            </div>
+                    }
                     {
                         next_page_url &&
                         <InfiniteScrollLoader
@@ -211,4 +219,13 @@ const PostItem = (p: Post) => {
             </div>
         </div>
     </div >
+}
+
+export const NothingFound = () => {
+    const { t } = useLaravelReactI18n()
+
+    return <div className="flex text-secondary justify-center items-center flex-col gap-4 text-2xl">
+        <Search size={48} />
+        {t("content.nothing_found")}
+    </div>
 }

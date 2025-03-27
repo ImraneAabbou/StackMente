@@ -218,7 +218,7 @@ export default function Index() {
                     <div className="mx-auto max-w-6xl">
                         <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
                             {features.map((feature) => (
-                                <div key={feature.name as string} className="flex flex-col">
+                                <div key={feature.name as string} className="flex flex-col bg-background-light p-4 rounded-lg">
                                     <dt className="text-base font-semibold leading-7">
                                         <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-onPrimary">
                                             {feature.icon}
