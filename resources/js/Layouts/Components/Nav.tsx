@@ -42,13 +42,29 @@ const SEARCHABLE_ROUTE_NAMES: RouteName[] = ["tags.index", "feed", "questions.in
 
 export default function Nav() {
     const { t } = useLaravelReactI18n()
-    const { auth: { user } } = usePage().props
+    const {
+        auth: { user },
+        notifications: { items: notifications }
+    } = usePage().props
     const { q } = route().params
     const { data, setData, get } = useForm({
         q
     })
     const results = usePage().props.results
+    const [hasNewNotifications, setHasNewNotifications] = useState(false)
     const [shouldShowSearchResult, setShouldShowSearchResult] = useState(false)
+    const [lastNotificationTime, setLastNotificationTime] = useState(notifications[0]?.created_at)
+
+    if (
+        (!!notifications[0]) && (
+            (new Date(notifications[0].created_at)) > (new Date(lastNotificationTime))
+        )
+    ) {
+        console.log("notif 0 : ", notifications[0].created_at)
+        console.log("last notif : ", lastNotificationTime)
+        setLastNotificationTime(notifications[0].created_at)
+        setHasNewNotifications(true)
+    }
     const searchAction = SEARCHABLE_ROUTE_NAMES.includes(route().current() as string)
         ? route(route().current() as string)
         : false
@@ -140,12 +156,22 @@ export default function Nav() {
                                     <Menu as="div" className="relative">
                                         <MenuButton className="flex rounded-full text-sm">
                                             <button
+                                                onClick={() => setHasNewNotifications(false)}
                                                 type="button"
-                                                className="rounded-full text-secondary hover:text-current"
+                                                className="rounded-full text-secondary hover:text-current relative"
                                             >
                                                 <span className="absolute -inset-1.5" />
                                                 <span className="sr-only">View notifications</span>
                                                 <Notifications size={24} />
+                                                {
+                                                    hasNewNotifications &&
+                                                    <div className='absolute inset-0'>
+                                                        <span className="relative flex size-2.5">
+                                                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
+                                                            <span className="relative inline-flex size-2.5 rounded-full bg-primary"></span>
+                                                        </span>
+                                                    </div>
+                                                }
                                             </button>
                                         </MenuButton>
                                         <NotificationsItems />
@@ -529,14 +555,6 @@ const NotificationsItems = () => {
         notifications: { items: notifications, next_page_url }
     } = usePage().props
     const { t } = useLaravelReactI18n()
-    const [lastNotificationTime, setLastNotificationTime] = useState(notifications[0]?.created_at)
-
-    if (
-        (!!notifications[0]) && (notifications[0].created_at != lastNotificationTime)
-    ) {
-        setLastNotificationTime(notifications[0].created_at)
-        alert(`new notification came`)
-    }
 
     usePoll(5000, {
         only: ["notifications"],
