@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'SPAM_OR_SCAM' => 'بريد مزعج / احتيال',
+    'FALSE_INFORMATION' => 'معلومات خاطئة',
+    'CHEATING' => 'غش',
+    'INAPPROPRIATE_CONTENT' => 'محتوى غير لائق',
+    'OFFENSIVE_LANGUAGE' => 'لغة مسيئة',
+    'OTHER' => 'سبب آخر...',
+    'modal_title' => 'الإبلاغ عن مشكلة',
+    'modal_desc' => 'ساعدنا في الحفاظ على نظافة المنصة!',
+    'reason' => 'السبب',
+    'explanation' => 'التفسير',
+    'explanation_desc' => 'قدّم مزيد من التفاصيل (إذا لزم الأمر)',
+    'reported_users_title' => 'المستخدمين المبلغ عنهم',
+    'reported_users_desc' => 'اطّلع على تقارير المستخدمين واتخذ الإجراءات ضدهم',
+    'search_placeholder' => 'بحث...',
+    'last_report_date' => 'آخر تقرير في',
+    'show_messages' => 'الرسائل',
+    'messages_title' => 'ماذا يقول المبلّغون؟',
+    'messages_desc' => 'اقرأ التفسيرات، ثم اتخذ قرارًا دقيقًا بشأن الهدف',
+    'reports_count' => 'عدد التقارير',
+    'reported_posts_title' => 'المنشورات المبلغ عنها',
+    'reported_posts_desc' => 'اطّلع على التقارير المتعلقة بالمنشورات واتخذ الإجراءات ضدها',
+    'reported_replies_title' => 'الردود المبلغ عنها',
+    'reported_replies_desc' => 'اطّلع على التقارير المتعلقة بالردود واتخذ الإجراءات ضدها',
+    'reported_comments_title' => 'التعليقات المبلغ عنها',
+    'reported_comments_desc' => 'اطّلع على التقارير المتعلقة بالتعليقات واتخذ الإجراءات ضدها',
+];
+

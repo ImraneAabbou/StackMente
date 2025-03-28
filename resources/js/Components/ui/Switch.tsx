@@ -11,6 +11,7 @@ export default function Switch({ className, checked, ...props }: SwitchProps) {
 
     return (
         <HUISwitch
+            dir="ltr"
             {...props}
             checked={checked}
             className={clsx(`${checked ? 'bg-primary' : 'bg-secondary'}

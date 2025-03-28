@@ -129,4 +129,7 @@ return [
     'articles_stats_desc' => 'Ready to Read Fruitful Articles',
     'you_cant_publish' => 'You can have posts after your email verification :here.',
     'here' => 'here',
+    'apply' => 'Apply',
+    'ops' => 'Ooops !',
+    'language' => 'Language',
 ];

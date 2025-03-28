@@ -1,4 +1,4 @@
-import Layout from "@/Layouts/Layout";
+import ErrorPageLayout from "@/Layouts/ErrorPageLayout";
 import { Link } from "@inertiajs/react";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 
@@ -6,7 +6,7 @@ export default function Err419() {
     const { t } = useLaravelReactI18n()
 
     return (
-        <Layout>
+        <ErrorPageLayout>
             <main className="min-h-screen flex flex-col lg:flex-row-reverse items-center justify-center gap-12 px-4">
                 <img src="/images/errors/419.svg" className="max-w-sm w-full" />
                 <div className="text-center">
@@ -26,6 +26,6 @@ export default function Err419() {
                     </div>
                 </div>
             </main>
-        </Layout>
+        </ErrorPageLayout>
     )
 }

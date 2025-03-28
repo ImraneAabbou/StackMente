@@ -11,7 +11,10 @@ export default function Providers({ children }: { children: ReactNode }) {
 
     return <ThemeProvider>
         <SoundProvider>
-            <LaravelReactI18nProvider files={import.meta.glob('/lang/*.json')}>
+            <LaravelReactI18nProvider
+                files={import.meta.glob('/lang/*.json')}
+                fallbackLocale="en"
+            >
                 <ReactIntlProvider>
                     <ReportActionProvider>
                         <ProfileDeleteProvider>

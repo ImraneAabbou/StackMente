@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
+            \App\Http\Middleware\LocaleMiddleware::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
@@ -24,11 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->respond(function (Response $response, Throwable $_, Request $request) {
             if (in_array($response->getStatusCode(), [500, 404, 403, 419]) && config('inertia.enable_custom_error_pages')) {
-                return Inertia::render('Errors/Err' . $response->getStatusCode(), [
-                    "auth" => [
-                        "user" => $request->user()
-                    ]
-                ])
+                return Inertia::render('Errors/Err' . $response->getStatusCode())
                     ->toResponse($request)
                     ->setStatusCode($response->getStatusCode());
             }

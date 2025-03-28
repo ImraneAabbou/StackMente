@@ -211,7 +211,7 @@ export default function Filter() {
                     type="submit"
                     className="p-2 px-4 bg-secondary/25 rounded-md border hover:bg-secondary/50"
                 >
-                    Apply
+                    {t("content.apply")}
                 </button>
                 <Link
                     href={route(route().current() as string)}
@@ -219,7 +219,7 @@ export default function Filter() {
                     className="p-2 px-4 rounded border border-transparent"
                     preserveScroll
                 >
-                    Reset
+                    {t("common.reset")}
                 </Link>
             </div>
         </form>

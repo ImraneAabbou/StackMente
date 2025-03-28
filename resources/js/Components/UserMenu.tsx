@@ -12,6 +12,8 @@ import ThemeCtx from "@/Contexts/ThemeCtx";
 import SoundCtx from "@/Contexts/SoundCtx";
 import SoundOn from "./icons/SoundOn";
 import SoundOff from "./icons/SoundOff";
+import Languages from "./icons/Languages";
+import LangSelect from "./LangSelect";
 
 export default function UserMenu({ children }: { children?: ReactNode }) {
     const { t } = useLaravelReactI18n()
@@ -36,7 +38,7 @@ export default function UserMenu({ children }: { children?: ReactNode }) {
         <MenuItems
             className="
                 flex flex-col gap-1 p-1 py-2 mt-2 z-10 bg-surface-light dark:bg-surface-dark
-                sm:absolute w-screen left-0 sm:left-auto fixed right-0 sm:max-w-64 rounded-md shadow-lg
+                sm:absolute w-screen start-0 sm:start-auto fixed end-0 sm:max-w-64 rounded-md shadow-lg
             "
         >
             <MenuItem>
@@ -52,6 +54,15 @@ export default function UserMenu({ children }: { children?: ReactNode }) {
                 </Link>
             </MenuItem>
             <MenuItem>
+                <div
+                    className="flex gap-2 items-center text-start px-4 py-2 text-sm rounded"
+                >
+                    <Languages size={20} />
+                    {t("content.language")}
+                    <LangSelect onClick={(e) => e.preventDefault()} className="ms-auto" />
+                </div>
+            </MenuItem>
+            <MenuItem>
                 <Link
                     href={route("admin.index")}
                     className="flex gap-2 items-center hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
@@ -63,25 +74,29 @@ export default function UserMenu({ children }: { children?: ReactNode }) {
             <MenuItem>
                 <button
                     onClick={(e) => { e.preventDefault(); setDark(!isDark) }}
-                    className="flex gap-2 items-center text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
+                    className="flex gap-2 items-center justify-between text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
                 >
-                    <DarkMode size={20} />
-                    {t("content.dark_mode")}
-                    <Switch checked={isDark} className='ms-auto pointer-events-none' />
+                    <span className="flex gap-2 items-center">
+                        <DarkMode size={20} />
+                        {t("content.dark_mode")}
+                    </span>
+                    <Switch checked={isDark} className='pointer-events-none' />
                 </button>
             </MenuItem>
             <MenuItem>
                 <button
                     onClick={(e) => { e.preventDefault(); setSoundEnabled(!isSoundEnabled) }}
-                    className="flex gap-2 items-center text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
+                    className="flex gap-2 items-center justify-between text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
                 >
-                    {
-                        isSoundEnabled
-                            ? <SoundOn />
-                            : <SoundOff />
-                    }
-                    {t("content.sound")}
-                    <Switch checked={isSoundEnabled} className='ms-auto pointer-events-none' />
+                    <span className="flex gap-2 items-center">
+                        {
+                            isSoundEnabled
+                                ? <SoundOn />
+                                : <SoundOff />
+                        }
+                        {t("content.sound")}
+                    </span>
+                    <Switch checked={isSoundEnabled} className='pointer-events-none' />
                 </button>
             </MenuItem>
             <MenuItem>

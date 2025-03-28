@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    dir="{{ in_array(app()->getLocale(), ['ar']) ? 'rtl' : 'ltr' }}"
     class="bg-background-light text-onBackground-dark dark:text-onBackground-light dark:bg-background-dark scroll-smooth">
 
 <head>

@@ -1,12 +1,11 @@
-import Layout from "@/Layouts/Layout";
-import { Link } from "@inertiajs/react";
+import ErrorPageLayout from "@/Layouts/ErrorPageLayout";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function Err404() {
     const { t } = useLaravelReactI18n()
 
     return (
-        <Layout>
+        <ErrorPageLayout>
             <main className="min-h-screen flex flex-col lg:flex-row items-center justify-center gap-12 px-4">
                 <img src="/images/errors/404.svg" className="max-w-sm w-full" />
                 <div className="text-center">
@@ -18,6 +17,6 @@ export default function Err404() {
                     </p>
                 </div>
             </main>
-        </Layout>
+        </ErrorPageLayout>
     )
 }

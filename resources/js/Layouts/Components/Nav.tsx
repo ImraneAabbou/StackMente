@@ -241,7 +241,7 @@ const CreatePostItems = () => {
     return <MenuItems
         className="
                 flex flex-col gap-1 p-1 mt-4 z-10 bg-surface-light dark:bg-surface-dark
-                sm:absolute w-screen left-0 sm:left-auto fixed right-0 sm:max-w-xs sm:mt-4 rounded-md shadow-lg
+                sm:absolute w-screen start-0 sm:start-auto fixed end-0 sm:max-w-xs sm:mt-4 rounded-md shadow-lg
             "
     >
         {
@@ -285,7 +285,7 @@ const SearchResult = ({ results }: { results?: Results }) => {
         ? null
         : <ul
             className="
-                flex flex-col w-full gap-1 mt-3 pb-12 sm:pb-2 left-0 sm:left-auto
+                flex flex-col w-full gap-1 mt-3 pb-12 sm:pb-2 start-0 sm:start-auto
                 fixed z-10 h-[calc(100vh-100%)] sm:max-h-96
                 overflow-y-auto bg-surface-light dark:bg-surface-dark
                 sm:absolute sm:rounded-md sm:shadow-lg
@@ -579,8 +579,8 @@ const NotificationsItems = () => {
 
     return <MenuItems
         className="
-                flex flex-col gap-1 w-screen mt-4 left-0 sm:left-auto
-                fixed right-0 z-10 h-[calc(100vh-100%)] sm:max-h-96
+                flex flex-col gap-1 w-screen mt-4 start-0 sm:start-auto
+                fixed end-0 z-10 h-[calc(100vh-100%)] sm:max-h-96
                 overflow-y-auto bg-surface-light dark:bg-surface-dark
                 sm:absolute sm:max-w-xs sm:mt-4 sm:rounded-md sm:shadow-lg
             "

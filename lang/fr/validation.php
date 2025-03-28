@@ -1,0 +1,108 @@
+<?php
+
+return [
+    /*
+     * |--------------------------------------------------------------------------
+     * | Validation Language Lines
+     * |--------------------------------------------------------------------------
+     * |
+     * | Les lignes suivantes contiennent les messages d'erreur par défaut utilisés par
+     * | la classe de validation. Certaines de ces règles ont plusieurs versions telles
+     * | que les règles de taille. N'hésitez pas à personnaliser chaque message ici.
+     * |
+     */
+    'accepted' => 'Le champ :attribute doit être accepté.',
+    'accepted_if' => 'Le champ :attribute doit être accepté lorsque :other est :value.',
+    'active_url' => 'Le champ :attribute doit être une URL valide.',
+    'after' => 'Le champ :attribute doit être une date après :date.',
+    'after_or_equal' => 'Le champ :attribute doit être une date après ou égale à :date.',
+    'alpha' => 'Le champ :attribute doit contenir uniquement des lettres.',
+    'alpha_dash' => 'Le champ :attribute doit contenir uniquement des lettres, des chiffres, des tirets et des underscores.',
+    'alpha_num' => 'Le champ :attribute doit contenir uniquement des lettres et des chiffres.',
+    'array' => 'Le champ :attribute doit être un tableau.',
+    'ascii' => 'Le champ :attribute doit contenir uniquement des caractères alphanumériques à un seul octet et des symboles.',
+    'before' => 'Le champ :attribute doit être une date avant :date.',
+    'before_or_equal' => 'Le champ :attribute doit être une date avant ou égale à :date.',
+    'between' => [
+        'array' => 'Le champ :attribute doit avoir entre :min et :max éléments.',
+        'file' => 'Le champ :attribute doit être entre :min et :max kilooctets.',
+        'numeric' => 'Le champ :attribute doit être entre :min et :max.',
+        'string' => 'Le champ :attribute doit être entre :min et :max caractères.',
+    ],
+    'boolean' => 'Le champ :attribute doit être vrai ou faux.',
+    'can' => 'Le champ :attribute contient une valeur non autorisée.',
+    'confirmed' => 'La confirmation du champ :attribute ne correspond pas.',
+    'contains' => 'Le champ :attribute ne contient pas la valeur requise.',
+    'current_password' => 'Le mot de passe est incorrect.',
+    'date' => 'Le champ :attribute doit être une date valide.',
+    'date_equals' => 'Le champ :attribute doit être une date égale à :date.',
+    'date_format' => 'Le champ :attribute doit correspondre au format :format.',
+    'decimal' => 'Le champ :attribute doit comporter :decimal décimales.',
+    'declined' => 'Le champ :attribute doit être décliné.',
+    'declined_if' => 'Le champ :attribute doit être décliné lorsque :other est :value.',
+    'different' => 'Le champ :attribute et :other doivent être différents.',
+    'digits' => 'Le champ :attribute doit comporter :digits chiffres.',
+    'digits_between' => 'Le champ :attribute doit comporter entre :min et :max chiffres.',
+    'dimensions' => "Le champ :attribute a des dimensions d'image invalides.",
+    'distinct' => 'Le champ :attribute a une valeur dupliquée.',
+    'doesnt_end_with' => "Le champ :attribute ne doit pas se terminer par l'un des suivants : :values.",
+    'doesnt_start_with' => "Le champ :attribute ne doit pas commencer par l'un des suivants : :values.",
+    'email' => 'Le champ :attribute doit être une adresse e-mail valide.',
+    'ends_with' => "Le champ :attribute doit se terminer par l'un des suivants : :values.",
+    'enum' => "L'élément sélectionné :attribute est invalide.",
+    'exists' => "L'élément sélectionné :attribute est invalide.",
+    'extensions' => "Le champ :attribute doit avoir l'une des extensions suivantes : :values.",
+    'file' => 'Le champ :attribute doit être un fichier.',
+    'filled' => 'Le champ :attribute doit avoir une valeur.',
+    'gt' => [
+        'array' => 'Le champ :attribute doit avoir plus de :value éléments.',
+        'file' => 'Le champ :attribute doit être supérieur à :value kilooctets.',
+        'numeric' => 'Le champ :attribute doit être supérieur à :value.',
+        'string' => 'Le champ :attribute doit comporter plus de :value caractères.',
+    ],
+    'gte' => [
+        'array' => 'Le champ :attribute doit avoir :value éléments ou plus.',
+        'file' => 'Le champ :attribute doit être supérieur ou égal à :value kilooctets.',
+        'numeric' => 'Le champ :attribute doit être supérieur ou égal à :value.',
+        'string' => 'Le champ :attribute doit comporter :value caractères ou plus.',
+    ],
+    'hex_color' => 'Le champ :attribute doit être une couleur hexadécimale valide.',
+    'image' => 'Le champ :attribute doit être une image.',
+    'in' => "L'élément sélectionné :attribute est invalide.",
+    'in_array' => 'Le champ :attribute doit exister dans :other.',
+    'integer' => 'Le champ :attribute doit être un entier.',
+    'ip' => 'Le champ :attribute doit être une adresse IP valide.',
+    'ipv4' => 'Le champ :attribute doit être une adresse IPv4 valide.',
+    'ipv6' => 'Le champ :attribute doit être une adresse IPv6 valide.',
+    'json' => 'Le champ :attribute doit être une chaîne JSON valide.',
+    'lt' => [
+        'array' => 'Le champ :attribute doit avoir moins de :value éléments.',
+        'file' => 'Le champ :attribute doit être inférieur à :value kilooctets.',
+        'numeric' => 'Le champ :attribute doit être inférieur à :value.',
+        'string' => 'Le champ :attribute doit comporter moins de :value caractères.',
+    ],
+    'lte' => [
+        'array' => 'Le champ :attribute ne doit pas avoir plus de :value éléments.',
+        'file' => 'Le champ :attribute doit être inférieur ou égal à :value kilooctets.',
+        'numeric' => 'Le champ :attribute doit être inférieur ou égal à :value.',
+        'string' => 'Le champ :attribute doit comporter :value caractères ou moins.',
+    ],
+    'mac_address' => 'Le champ :attribute doit être une adresse MAC valide.',
+    'max' => [
+        'array' => 'Le champ :attribute ne doit pas avoir plus de :max éléments.',
+        'file' => 'Le champ :attribute ne doit pas dépasser :max kilooctets.',
+        'numeric' => 'Le champ :attribute ne doit pas être supérieur à :max.',
+        'string' => 'Le champ :attribute ne doit pas dépasser :max caractères.',
+    ],
+    'max_digits' => 'Le champ :attribute ne doit pas avoir plus de :max chiffres.',
+    'mimes' => 'Le champ :attribute doit être un fichier de type : :values.',
+    'mimetypes' => 'Le champ :attribute doit être un fichier de type : :values.',
+    'min' => [
+        'array' => 'Le champ :attribute doit avoir au moins :min éléments.',
+        'file' => "Le champ :attribute doit être d'au moins :min kilooctets.",
+        'numeric' => 'Le champ :attribute doit être au moins :min.',
+        'string' => 'Le champ :attribute doit comporter au moins :min caractères.',
+    ],
+    'min_digits' => 'Le champ :attribute doit comporter au moins :min chiffres.',
+    'missing' => 'Le champ :attribute doit être manquant.',
+];

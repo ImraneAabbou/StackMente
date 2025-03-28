@@ -4,6 +4,7 @@ import Github from "@/Components/icons/Github"
 import Instagram from "@/Components/icons/Instagram"
 import Medal from "@/Components/icons/Medal"
 import Rank from "@/Components/icons/Rank"
+import LangSelect from "@/Components/LangSelect"
 import { Link, usePage } from "@inertiajs/react"
 import { useLaravelReactI18n } from "laravel-react-i18n"
 import { FormattedNumber } from "react-intl"
@@ -218,7 +219,7 @@ export default function Index() {
                     <div className="mx-auto max-w-6xl">
                         <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
                             {features.map((feature) => (
-                                <div key={feature.name as string} className="flex flex-col bg-background-light p-4 rounded-lg">
+                                <div key={feature.name as string} className="flex flex-col bg-background-light dark:bg-background-dark p-4 rounded-lg">
                                     <dt className="text-base font-semibold leading-7">
                                         <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-onPrimary">
                                             {feature.icon}
@@ -304,6 +305,7 @@ export default function Index() {
                 <div className="mx-auto max-w-7xl px-6 pb-8 pt-4 lg:px-8">
                     <div className="border-t border-white/10 pt-8 md:flex md:items-center md:justify-between">
                         <div className="flex space-x-6 md:order-2">
+                            <LangSelect />
                             {socials.map((item) => (
                                 <a key={item.name} href={item.href} className="hover:text-secondary transition-colors">
                                     <span className="sr-only">{item.name}</span>
