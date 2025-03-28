@@ -93,7 +93,6 @@ export default function Index() {
                         <Link href="/">
                             <span className="sr-only">StackMente</span>
                             <img
-                                alt=""
                                 src="/favicon.svg"
                                 className="h-8 w-auto"
                             />
@@ -155,7 +154,7 @@ export default function Index() {
                         className="relative left-[calc(50%-11rem)] aspect-1155/678 w-[36.125rem] bg-gradient-to-tr from-secondary to-primary opacity-25 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem] size-full origin-bottom"
                     />
                 </div>
-                <div className="lg:min-h-[780px] flex gap-16 lg:gap-0 flex-col-reverse lg:flex-row lg:items-center lg:justify-between container">
+                <div className="lg:min-h-[780px] flex gap-16 lg:gap-0 flex-col-reverse lg:flex-row lg:items-center lg:justify-between container" dir="ltr">
                     <div className="aspect-square relative size-full max-w-md mx-auto lg:mx-0 lg:max-w-xl">
                         <img
                             src="/images/hero/small-cloud.svg"
@@ -304,8 +303,8 @@ export default function Index() {
                 </h2>
                 <div className="mx-auto max-w-7xl px-6 pb-8 pt-4 lg:px-8">
                     <div className="border-t border-white/10 pt-8 md:flex md:items-center md:justify-between">
-                        <div className="flex space-x-6 md:order-2">
-                            <LangSelect />
+                        <div className="flex items-center space-x-4 md:order-2">
+                            <LangSelect className="me-8" />
                             {socials.map((item) => (
                                 <a key={item.name} href={item.href} className="hover:text-secondary transition-colors">
                                     <span className="sr-only">{item.name}</span>
