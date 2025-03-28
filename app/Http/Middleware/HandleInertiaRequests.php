@@ -157,7 +157,10 @@ class HandleInertiaRequests extends Middleware
         $user = $request->user();
 
         if (!$user)
-            return null;
+            return [
+                "items" => [],
+                "next_page_url" => null
+            ];
 
         $notifications = collect();
 

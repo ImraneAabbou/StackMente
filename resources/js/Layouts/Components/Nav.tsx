@@ -114,7 +114,7 @@ export default function Nav() {
             <div className="container">
                 <div className="flex gap-4 h-16 items-center justify-between">
                     <div className="flex flex-1 gap-4 items-center">
-                        <Link href="#" className="flex shrink-0 items-center">
+                        <Link href={route("feed")} className="flex shrink-0 items-center">
                             <img
                                 alt="StackMente"
                                 src="/favicon.ico"
@@ -187,13 +187,13 @@ export default function Nav() {
                                 : <>
                                     <Link
                                         href={route("login")}
-                                        className="rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
+                                        className="rounded-md hover:bg-secondary/10 px-3.5 py-2.5 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
                                     >
                                         {t("content.login")}
                                     </Link>
                                     <Link
                                         href={route("register")}
-                                        className="rounded-md px-3.5 py-2.5 bg-secondary/25 hover:bg-secondary/50 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
+                                        className="rounded-md bg-primary hover:bg-primary/90 px-3.5 py-2.5 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
                                     >
                                         {t("content.register")}
                                     </Link>
