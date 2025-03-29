@@ -15,8 +15,6 @@ use App\Models\Reply;
 use App\Models\Report;
 use Illuminate\Support\Facades\Route;
 
-Route::view("/ss", "pdf.certificate", ["title" => "hiiii", "subtitle" => "soooo", "text" => "flakjsdlf loremlakdjf laksjfd df lkas dlfkajsd lfjas dlf aslkdfj lskdf lksjd lksajdlfkasjd lkjasd fjalksd flksdflkj ", "fullname" => "someone"]);
-
 Route::middleware('auth')->group(function () {
     Route::middleware('verified')->group(function () {
         Route::inertia('/articles/create', 'Posts/CreateArticle')->name('articles.create');
@@ -53,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/notifications/{id}', [NotificationController::class, 'update'])->name('notifications.update');
     Route::delete('/notifications', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 
-    Route::inertia('/profile', 'Profile/Index', ['missions' => fn() => Mission::all()])->name('profile.index');
+    Route::inertia('/profile', 'Profile/Index')->name('profile.index');
     Route::inertia('/profile/delete', 'Profile/Delete')->name('profile.delete');
     Route::inertia('/profile/settings', 'Profile/Edit')->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');

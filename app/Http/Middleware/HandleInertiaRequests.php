@@ -41,7 +41,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $this->getAuthUser($request),
+                'user' => fn() => $this->getAuthUser($request),
             ],
             'notifications' => fn() => $this->getAuthUserNotifications($request),
             'status' => Inertia::always(fn() => $request->session()->get('status')),
@@ -158,8 +158,8 @@ class HandleInertiaRequests extends Middleware
 
         if (!$user)
             return [
-                "items" => [],
-                "next_page_url" => null
+                'items' => [],
+                'next_page_url' => null
             ];
 
         $notifications = collect();
