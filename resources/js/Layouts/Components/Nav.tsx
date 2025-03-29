@@ -193,7 +193,7 @@ export default function Nav() {
                                     </Link>
                                     <Link
                                         href={route("register")}
-                                        className="rounded-md bg-primary hover:bg-primary/90 px-3.5 py-2.5 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
+                                        className="rounded-md text-onPrimary bg-primary hover:bg-primary/90 px-3.5 py-2.5 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
                                     >
                                         {t("content.register")}
                                     </Link>
