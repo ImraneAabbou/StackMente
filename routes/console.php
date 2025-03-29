@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
-
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
+Schedule::command('season:reset daily')->daily();
+Schedule::command('season:reset weekly')->weekly();
+Schedule::command('season:reset monthly')->monthly();
+Schedule::command('season:reset yearly')->yearly();
