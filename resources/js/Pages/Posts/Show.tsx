@@ -649,7 +649,7 @@ const Post = ({ p }: { p: PostType }) => {
             <div>
                 <div className="flex gap-2 sm:gap-4 flex-wrap text-xs text-secondary justify-end mt-2">
                     <div className="flex gap-1">
-                        <span className="">Published</span>
+                        <span className="">{t("content.published")}</span>
                         <span>
                             {formatDate(p.created_at)}
                         </span>

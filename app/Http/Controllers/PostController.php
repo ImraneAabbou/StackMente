@@ -131,8 +131,11 @@ class PostController extends Controller
             'user_id' => auth()->user()->id
         ]);
 
-        foreach ($postData['tags'] as $tagName) {
-            $tag = Tag::firstOrCreate(['name' => $tagName]);
+        foreach ($postData['tags'] as $tagData) {
+            $tag = Tag::firstOrCreate(
+                ['name' => $tagData['name']],
+                ['description' => $tagData['description']]
+            );
 
             if (!$p->tags->contains($tag->id)) {
                 $p->tags()->attach($tag->id);

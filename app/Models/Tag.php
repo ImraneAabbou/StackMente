@@ -11,6 +11,7 @@ class Tag extends Model
 {
     protected $fillable = [
         'name',
+        'description',
     ];
 
     /** @use HasFactory<\Database\Factories\TagFactory> */

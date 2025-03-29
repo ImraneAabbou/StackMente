@@ -12,17 +12,19 @@ import { useLaravelReactI18n } from "laravel-react-i18n"
 import Quill from "quill"
 import InputChips from "@/Components/ui/InputChips"
 import Tag from "@/Components/ui/Tag"
+import { Tag as TagType } from "@/types/tag"
+import CreateTagsModal from "@/Components/modals/CreateTagsModal"
 
 export default function PostsCreate() {
     const { t } = useLaravelReactI18n()
     const editorRef = useRef<Quill | null>(null)
-    const { errors, data, setData, post, reset } = useForm("CreateQuestion", {
+    const { errors, data, setData, post, reset, setError } = useForm("CreateQuestion", {
         title: "",
-        tags: [] as string[],
+        tags: [] as Omit<TagType, "created_at" | "id">[],
         type: QUESTION,
         content: "",
     })
-
+    const errorTags = errors.tags as string[] | string | undefined
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
         post("/posts", {
@@ -31,6 +33,10 @@ export default function PostsCreate() {
     }
 
     return <Layout>
+        {
+            typeof errorTags !== "string" &&
+            <CreateTagsModal setTags={(tags) => setData("tags", tags)} tags={data.tags} errors={errors} errorTags={errorTags} onClose={() => setError("tags", "")} />
+        }
         <div className="flex flex-col gap-8 my-12">
             <form onSubmit={handleSubmit} className="flex flex-col gap-8">
                 <Field className="flex lg:items-center flex-col lg:flex-row gap-4 justify-between max-w-3xl">
@@ -50,25 +56,31 @@ export default function PostsCreate() {
                         <div>
                             <Label className="font-bold">{t("content.tags")}</Label>
                             <Description className="text-sm text-secondary">{t("posts.question_tags_description")}</Description>
-                            <Error>{errors.tags}</Error>
+                            <Error>{typeof errors.tags == "string" ? errors.tags : ""}</Error>
                         </div>
                         <div className="flex flex-col gap-2 w-full max-w-sm">
                             <InputChips
                                 maxLength={6}
                                 className="w-full max-w-sm bg-surface-light dark:bg-surface-dark"
                                 type="text"
-                                onChange={(chips) => setData('tags', chips)}
-                                value={data.tags}
+                                onChange={
+                                    (chips) => setData(
+                                        'tags',
+                                        chips.length
+                                            ? [...data.tags, { name: chips[chips.length - 1], description: "" }]
+                                            : []
+                                    )}
+                                value={data.tags.map(t => t.name)}
                             />
                             <div className="flex flex-wrap gap-1">
                                 {
                                     data.tags.map(
                                         t => <button
-                                            key={t}
+                                            key={t.name}
                                             onClick={
                                                 () => setData("tags", [...data.tags.filter(i => i !== t)])}
                                         >
-                                            <Tag>{t}</Tag>
+                                            <Tag>{t.name}</Tag>
                                         </button>
                                     )
                                 }
