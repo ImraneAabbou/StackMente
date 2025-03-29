@@ -25,7 +25,7 @@ export default function ProfileMe() {
     const { user } = usePage().props
     const fixedFormat = useFixedDateFormat()
     const percentToNextLevel = user.stats.xp.percent_to_next_level * 100
-    const d = Duration.fromMillis(user.stats.timespent).shiftTo("hours", "minutes", "seconds", "days")
+    const d = Duration.fromMillis(user.stats.timespent * 1000).shiftTo("hours", "minutes", "seconds", "days")
     const { t } = useLaravelReactI18n()
     const {setReportAction} = useContext(ReportActionCtx)
     const formattedTimespent = `
