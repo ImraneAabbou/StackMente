@@ -92,22 +92,26 @@ export default function ProfileMe() {
             && (user.bio !== "<p></p>") // not empty
             && <Editor className="mt-4" readOnly defaultValue={user.bio} />
         }
-        <div className="mt-12">
-            <div>
-                <section className="my-8">
-                    <h2 className="font-bold text-2xl mb-8">{t("content.achievements")}</h2>
-                    <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-24">
-                        {
-                            user.missions.map(m =>
-                                <li key={m.id} className="basis-48">
-                                    <AchievementItem mission={m} />
-                                </li>
-                            )
-                        }
-                    </ul>
-                </section>
+        {
+
+            !!user.missions && <div className="mt-12">
+                <div>
+                    <section className="my-8">
+                        <h2 className="font-bold text-2xl mb-8">{t("content.achievements")}</h2>
+                        <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-24">
+                            {
+                                user.missions.map(m =>
+                                    <li key={m.id} className="basis-48">
+                                        <AchievementItem mission={m} />
+                                    </li>
+                                )
+                            }
+                        </ul>
+                    </section>
+                </div>
             </div>
-        </div>
+
+        }
         <div className="mt-12 flex flex-col lg:flex-row gap-12">
             <section className=" shrink-0">
                 <h2 className="font-bold text-2xl mb-8">
