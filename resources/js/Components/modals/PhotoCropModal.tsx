@@ -50,7 +50,6 @@ export default function PhotoCropModal({ onClose, onCrop, file }: PhotoCropModal
             if (!blob) return;
             const croppedFile = new File([blob], file.name, { type: file.type });
             onCrop(croppedFile);
-            console.log(cropWidth, cropHeight)
             onClose();
         }, file.type);
 
