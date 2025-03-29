@@ -31,7 +31,10 @@ class UserObserver
      */
     public function deleted(User $user): void
     {
-        (new StatsService($user))->resetStats();
+        $statsService = new StatsService($user);
+
+        $statsService->resetStats();
+        $statsService->resetStats();
 
         // clear reports
         Report::where('reportable_type', ReportableType::USER)

@@ -102,7 +102,10 @@ class ProfileController extends Controller
         $user->email_verified_at = null;
         $user->avatar = '';
         $user->providers = [];
-        (new StatsService($user))->resetStats();
+
+        $statsService = new StatsService($user);
+        $statsService->resetStats();
+        $statsService->resetStats();
 
         Auth::logout();
 
@@ -123,7 +126,10 @@ class ProfileController extends Controller
         $user->email_verified_at = null;
         $user->avatar = '';
         $user->providers = [];
-        (new StatsService($user))->resetStats();
+
+        $statsService = new StatsService($user);
+        $statsService->resetStats();
+        $statsService->resetStats();
 
         return back();
     }
