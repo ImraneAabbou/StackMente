@@ -14,6 +14,7 @@ class SyncUserAchievementsAndLevel
             return;
         $missionService = new MissionService(auth()->user());
         $statsService = new StatsService(auth()->user());
+        $statsService->syncTimespent();
 
         do {
             $statsService->syncLevel();
