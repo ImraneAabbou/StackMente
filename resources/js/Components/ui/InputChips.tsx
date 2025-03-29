@@ -1,5 +1,4 @@
 import { useState } from "react";
-import clsx from "clsx";
 import Input from "@/Components/ui/Input"
 
 interface InputChipsProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
@@ -14,7 +13,7 @@ export default function InputChips({ onChange, value, className, maxLength, ...p
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (!["Space", " ", ",", ";", "Enter"].includes(e.key)) return;
         e.preventDefault();
-        if (inputValue.trim() && !value.includes(inputValue.trim()) && (!maxLength || maxLength >= value.length)) {
+        if (inputValue.trim() && !value.includes(inputValue.trim()) && (!maxLength || maxLength > value.length)) {
             onChange([...value, inputValue.trim()])
         }
         setInputValue("");
