@@ -17,30 +17,30 @@ function NavigationLinks() {
 
     const navigation = [
         {
-            name: 'Dashboard',
+            name: t("content.dashboard"),
             href: route("admin.index"),
             icon: <Dashboard size={16} />,
             current: route().current("admin.index")
         },
         {
-            name: 'Missions',
+            name: t("content.missions_title"),
             href: route("missions.index"),
             icon: <Medal size={16} />,
             current: route().current("missions.*")
         },
         {
-            name: 'Bans',
+            name: t("content.banned_users_title"),
             href: route("admin.bans"),
             icon: <Prohibited size={16} />,
             current: route().current("admin.bans")
         },
         {
-            name: 'Reports',
+            name: t("content.reports"),
             links: [
-                { href: route("reports.users"), name: "Users", current: route().current("reports.users") },
-                { href: route("reports.posts"), name: "Posts", current: route().current("reports.posts") },
-                { href: route("reports.comments"), name: "Comments", current: route().current("reports.comments") },
-                { href: route("reports.replies"), name: "Replies", current: route().current("reports.replies") },
+                { href: route("reports.users"), name: t("content.users"), current: route().current("reports.users") },
+                { href: route("reports.posts"), name: t("content.posts"), current: route().current("reports.posts") },
+                { href: route("reports.comments"), name: t("content.comments"), current: route().current("reports.comments") },
+                { href: route("reports.replies"), name: t("content.replies"), current: route().current("reports.replies") },
             ],
             icon: <Flag size={16} />,
             current: route().current("reports.*")

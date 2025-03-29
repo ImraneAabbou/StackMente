@@ -63,7 +63,7 @@ export default function ReportModal({ onClose, reportAction }: ReportModalProps)
                                 <Field className="flex flex-col gap-1">
                                     <Label className="font-semibold text-sm">{t("reports.reason")}</Label>
                                     <div className="flex flex-col gap-1 grow">
-                                        <Select placeholder="Reason" className="w-full" onChange={(e) => setData("reason", e.target.value)} value={data.reason}>
+                                        <Select className="w-full" onChange={(e) => setData("reason", e.target.value)} value={data.reason}>
                                             <option value=""></option>
                                             <option value={CHEATING}>{t("reports." + CHEATING)}</option>
                                             <option value={FALSE_INFORMATION}>{t("reports." + FALSE_INFORMATION)}</option>
@@ -79,7 +79,7 @@ export default function ReportModal({ onClose, reportAction }: ReportModalProps)
                                     <Label className="font-semibold text-sm">{t("reports.explanation")}</Label>
                                     <Description className="text-xs text-secondary">{t("reports.explanation_desc")}</Description>
                                     <div className="flex flex-col gap-1 grow">
-                                        <Textarea placeholder="Few more details about report..." className="resize-none h-24" onChange={(e) => setData("explanation", e.target.value)} value={data.explanation} />
+                                        <Textarea className="resize-none h-24" onChange={(e) => setData("explanation", e.target.value)} value={data.explanation} />
                                         <Error className="ms-1">{errors.explanation}</Error>
                                     </div>
                                 </Field>

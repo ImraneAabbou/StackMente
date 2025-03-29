@@ -68,10 +68,10 @@ export default function AdminBackupIndex() {
                     : <table className="min-w-full divide-y divide-secondary/25">
                         <thead>
                             <tr>
-                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold sm:pl-0">
+                                <th scope="col" className="py-3.5 pl-4 pr-3 text-start text-sm font-semibold sm:pl-0">
                                     {t("backup.name")}
                                 </th>
-                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold hidden sm:table-cell">
+                                <th scope="col" className="px-3 py-3.5 text-start text-sm font-semibold hidden sm:table-cell">
                                     {t("backup.size")}
                                 </th>
                                 <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0"></th>

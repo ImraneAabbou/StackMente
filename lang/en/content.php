@@ -132,4 +132,7 @@ return [
     'apply' => 'Apply',
     'ops' => 'Ooops !',
     'language' => 'Language',
+    'dashboard' => "Dashboard",
+    'reports' => 'Reports',
+    'replies' => 'Replies',
 ];

@@ -50,8 +50,8 @@ export default function AdminReportsUsers() {
                     : <table className="min-w-full divide-y divide-secondary/25">
                         <thead>
                             <tr>
-                                <th scope="col" className="py-3.5 text-left text-sm font-semibold">{t("content.user")}</th>
-                                <th scope="col" className="py-3.5 text-left text-sm font-semibold hidden sm:table-cell">{t("reports.last_report_date")}</th>
+                                <th scope="col" className="py-3.5 text-start text-sm font-semibold">{t("content.user")}</th>
+                                <th scope="col" className="py-3.5 text-start text-sm font-semibold hidden sm:table-cell">{t("reports.last_report_date")}</th>
                                 <th scope="col" className="py-3.5 text-sm font-semibold hidden sm:table-cell">{t("reports.reports_count")}</th>
                                 <th scope="col" className="relative py-3.5"></th>
                             </tr>
@@ -82,7 +82,7 @@ export default function AdminReportsUsers() {
                                     <td className="whitespace-nowrap py-4 text-sm text-center font-medium hidden sm:table-cell">
                                         <FormattedNumber value={r.reports_count} style="decimal" notation="compact" />
                                     </td>
-                                    <td className="relative whitespace-nowrap py-4 text-right text-sm font-medium sm:pr-0">
+                                    <td className="relative whitespace-nowrap py-4 text-end text-sm font-medium sm:pr-0">
                                         <Menu as="div">
                                             <MenuButton className="py-1.5 px-3">
                                                 <VerticalDots />

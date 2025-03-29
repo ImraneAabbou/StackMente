@@ -37,7 +37,7 @@ export default function AdminBansIndex() {
                 <Input
                     type="search"
                     className="w-full"
-                    placeholder="Email, fullname or username to search"
+                    placeholder={t("reports.search_placeholder") as string}
                     onChange={e => setData("q", e.target.value)}
                     value={data.q}
                 />
