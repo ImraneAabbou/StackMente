@@ -2,8 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\Period;
+use App\Events\SeasonEnded;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Str;
 
 class ResetSeason extends Command
 {
@@ -19,6 +22,8 @@ class ResetSeason extends Command
             $this->error('Invalid type. Use one of: ' . implode(', ', $validTypes));
             return;
         }
+
+        event(new SeasonEnded(Period::from(Str::upper($type))));
 
         User::all()->each(function ($user) use ($type) {
             $stats = $user->stats;

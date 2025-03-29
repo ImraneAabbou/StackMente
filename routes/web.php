@@ -16,6 +16,8 @@ use App\Models\Reply;
 use App\Models\Report;
 use Illuminate\Support\Facades\Route;
 
+Route::view("/ss", "pdf.certificate", ["title" => "hiiii", "subtitle" => "soooo", "text" => "flakjsdlf loremlakdjf laksjfd df lkas dlfkajsd lfjas dlf aslkdfj lskdf lksjd lksajdlfkasjd lkjasd fjalksd flksdflkj ", "fullname" => "someone"]);
+
 Route::middleware('auth')->group(function () {
     Route::middleware('verified')->group(function () {
         Route::inertia('/articles/create', 'Posts/CreateArticle')->name('articles.create');
