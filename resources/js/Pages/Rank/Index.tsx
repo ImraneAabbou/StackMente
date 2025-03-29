@@ -1,12 +1,13 @@
 import Layout from "@/Layouts/Layout";
 import { avatar } from "@/Utils/helpers/path";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import clsx from "clsx";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 import Medal from "@/Components/icons/Medal";
 import { FormattedNumber } from "react-intl";
 import { DAILY, WEEKLY, MONTHLY, YEARLY, TOTAL } from "@/Enums/Period"
 import { Period } from "@/types/period"
+import { useTimer } from "react-timer-hook";
 
 export default function RankIndex() {
     const { rankings: { users }, auth: { user } } = usePage().props;
@@ -15,8 +16,8 @@ export default function RankIndex() {
 
     // check season query validity
     season = [DAILY, WEEKLY, MONTHLY, YEARLY, TOTAL].includes(season?.toUpperCase())
-    ? season.toUpperCase()
-    : DAILY
+        ? season.toUpperCase()
+        : DAILY
 
 
     const rankColors = [
@@ -29,7 +30,7 @@ export default function RankIndex() {
         <Layout>
             <div className="flex flex-col gap-8 mb-12">
                 <div className="mt-2">
-                    <div className="flex justify-between items-center flex-wrap">
+                    <div className="flex flex-col sm:flex-row gap-2 justify-between items-center">
                         <h1 className="text-2xl font-display leading-loose tracking-wider">{t("content.ranking")}</h1>
                         <div>
                             <div className="flex gap-1 self-end">
@@ -56,6 +57,11 @@ export default function RankIndex() {
                                     )
                                 }
                             </div>
+                        </div>
+                        <div className="text-lg w-24 mb-4 sm:mb-0">
+                            {
+                                (season !== "TOTAL") && < Timer />
+                            }
                         </div>
                     </div>
                     <p className="text-secondary text-sm">
@@ -134,3 +140,29 @@ export default function RankIndex() {
     );
 }
 
+function Timer({ className = "" }) {
+    const { rankings: { season_timeout } } = usePage().props
+    const {
+        seconds,
+        minutes,
+        hours,
+        days,
+        restart,
+    } = useTimer({
+        expiryTimestamp: new Date(season_timeout),
+        onExpire: () => router.reload({
+            onSuccess: ({ props }) => restart(new Date(props.rankings.season_timeout))
+        }),
+        interval: 1000
+    });
+
+    return <div className={className}>
+        <FormattedNumber value={days} minimumIntegerDigits={2} />
+        :
+        <FormattedNumber value={hours} minimumIntegerDigits={2} />
+        :
+        <FormattedNumber value={minutes} minimumIntegerDigits={2} />
+        :
+        <FormattedNumber value={seconds} minimumIntegerDigits={2} />
+    </div>
+}

@@ -31,6 +31,7 @@ export type PageProps<
         next_link_url?: string;
     };
     rankings: {
+        season_timeout: string;
         users: RankedUser[];
     };
     post: Post & {

@@ -94,5 +94,6 @@ Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
 Route::post('/sync', fn() => SyncUserAchievementsAndLevel::execute())->name('sync');
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/schedules.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/lang.php';
