@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Actions\SyncEverything;
 use App\Enums\ReportableType;
 use App\Models\Post;
 use App\Models\Report;
@@ -13,9 +12,7 @@ class PostObserver
      * Handle the Post "created" event.
      */
     public function created(Post $post): void
-    {
-        SyncEverything::execute();
-    }
+    { }
 
     /**
      * Handle the Post "updated" event.

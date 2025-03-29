@@ -1,6 +1,5 @@
 <?php
 
-use App\Actions\SyncEverything;
 use App\Actions\SyncUserAchievementsAndLevel;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
@@ -60,7 +59,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/sync', fn() => SyncEverything::execute());
 });
 
 Route::inertia('/', 'Index', [

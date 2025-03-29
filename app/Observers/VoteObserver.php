@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Actions\SyncEverything;
 use App\Enums\VotableType;
 use App\Enums\VoteType;
 use App\Events\Voted;
@@ -35,7 +34,6 @@ class VoteObserver
                 );
         }
 
-        SyncEverything::execute();
     }
 
     /**
@@ -58,7 +56,6 @@ class VoteObserver
                         : -config('rewards.receive_comment_vote')
                 );
 
-        SyncEverything::execute();
     }
 
     /**

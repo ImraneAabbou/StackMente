@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Actions\SyncEverything;
 use App\Enums\ReportableType;
 use App\Events\Commented;
 use App\Events\CommentMarked;
@@ -26,7 +25,6 @@ class CommentObserver
                 );
         }
 
-        SyncEverything::execute();
     }
 
     /**
@@ -57,7 +55,6 @@ class CommentObserver
                 );
         }
 
-        SyncEverything::execute();
     }
 
     /**
