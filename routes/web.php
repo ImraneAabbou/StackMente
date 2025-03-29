@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\SyncEverything;
+use App\Actions\SyncUserAchievementsAndLevel;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
@@ -89,6 +90,8 @@ Route::delete('/profile/{reportable}/reports', [ProfileController::class, 'clear
 Route::get('/rank', UsersRankingController::class)->name('rank');
 
 Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
+
+Route::post('/sync', fn() => SyncUserAchievementsAndLevel::execute())->name('sync');
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';

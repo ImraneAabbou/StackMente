@@ -6,7 +6,7 @@ use App\Events\MissionAccomplished;
 use App\Services\MissionService;
 use App\Services\StatsService;
 
-class SyncEverything
+class SyncUserAchievementsAndLevel
 {
     static function execute(): void
     {
