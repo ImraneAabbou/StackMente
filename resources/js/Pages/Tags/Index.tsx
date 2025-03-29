@@ -61,35 +61,38 @@ export default function TagsIndex() {
 }
 
 
-export const TagItem = ({ name, posts_count, articles_count, subjects_count, questions_count }: TagWithCounts) => {
+export const TagItem = ({ name, description, posts_count, articles_count, subjects_count, questions_count }: TagWithCounts) => {
     const { t, tChoice } = useLaravelReactI18n()
 
-    return <div className="group py-4 px-2.5 border border-secondary/25 hover:border-secondary/75 rounded flex flex-col gap-8 w-full max-w-xs">
-        <div className="text-xs flex gap-2 items-center justify-between">
-            <Link
-                href={route("feed", {
-                    _query: {
-                        tags: [name]
+    return <div className="group py-4 px-2.5 border border-secondary/25 hover:border-secondary/75 rounded flex flex-col gap-4 justify-between w-full max-w-xs">
+        <div className="flex flex-col gap-4">
+            <div className="text-xs flex gap-2 items-center justify-between">
+                <Link
+                    href={route("feed", {
+                        _query: {
+                            tags: [name]
+                        }
                     }
-                }
-                )
-                }
-            >
-                <Tag>
-                    {name}
-                </Tag>
-            </Link>
+                    )
+                    }
+                >
+                    <Tag>
+                        {name}
+                    </Tag>
+                </Link>
 
-            <span className="text-secondary group-hover:text-current">
-                {
-                    tChoice("tags.usage", posts_count, {
-                        count: <FormattedNumber value={posts_count} style="decimal" notation="compact" />
-                    })
-                }
-            </span>
+                <span className="text-secondary group-hover:text-current">
+                    {
+                        tChoice("tags.usage", posts_count, {
+                            count: <FormattedNumber value={posts_count} style="decimal" notation="compact" />
+                        })
+                    }
+                </span>
+            </div>
+            <p className="text-sm text-secondary group-hover:text-current">{description}</p>
         </div>
-        <div className="text-xs mt-4 grid gap-1 grid-cols-3">
 
+        <div className="text-xs mt-4 grid gap-1 grid-cols-3">
             <Link
                 href={
                     route("questions.index", {
@@ -152,7 +155,7 @@ export const TagItem = ({ name, posts_count, articles_count, subjects_count, que
                 <FormattedNumber value={articles_count} style="decimal" notation="compact" />
             </Link>
         </div>
-    </div>
+    </div >
 }
 
 
