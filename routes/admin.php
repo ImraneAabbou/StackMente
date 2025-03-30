@@ -27,6 +27,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/reports/posts/{reportable}', [AdminPanelController::class, 'reportMessages'])->name('reports.posts.messages');
 
     Route::group(['middleware' => 'role:super-admin'], function () {
+        // Privileges controle
+        Route::post('/profile/{user:username}/admin', [ProfileController::class, 'elevate'])->name('users.elevate');
+        Route::delete('/profile/{user:username}/admin', [ProfileController::class, 'delevate'])->name('users.delevate');
+
         // Missions
         Route::get('/admin/missions', [MissionController::class, 'index'])->name('missions.index');
         Route::get('/admin/missions/create', [MissionController::class, 'create'])->name('missions.create');

@@ -141,5 +141,8 @@ return [
     'create_tags_modal_desc' => "The following tags don't exist in our database, Please describe them with a small description so that the other users may recognize it or use them in their post if needed.",
     'someone' => 'Someone',
     'force_delete_title' => 'Force Delete',
-    'force_delete_desc' => 'if you checked this the user will be totally removed with their posts, comments and votes as well.'
+    'force_delete_desc' => 'if you checked this the user will be totally removed with their posts, comments and votes as well.',
+    'elevate' => 'Elevate',
+    'delevate' => 'Delevate',
+    'administrator' => 'Administrator',
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Events\UserBanned;
 use App\Http\Requests\Auth\RegisterationRequest;
 use App\Http\Requests\Profile\DeleteAccountRequest;
@@ -118,7 +119,7 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function delete(Request $request, User $user)
+    public function delete(Request $request, User $user): RedirectResponse
     {
         $user->username = 'deleted-' . Str::uuid();
         $user->fullname = $user->username;
@@ -180,5 +181,19 @@ class ProfileController extends Controller
                     ]
                 ),
             ]);
+    }
+
+    public function elevate(User $user): RedirectResponse
+    {
+        $user->role = Role::ADMIN;
+        $user->save();
+        return back();
+    }
+
+    public function delevate(User $user): RedirectResponse
+    {
+        $user->role = Role::USER;
+        $user->save();
+        return back();
     }
 }

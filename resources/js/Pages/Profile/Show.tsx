@@ -12,6 +12,9 @@ import { ARTICLE, QUESTION, SUBJECT } from "@/Enums/PostType"
 import useRelativeDateFormat from "@/Utils/hooks/useRelativeDateFormat"
 import Tag from "@/Components/ui/Tag"
 import Questions from "@/Components/icons/Questions"
+import Admin from "@/Components/icons/Admin"
+import Plus from "@/Components/icons/Plus"
+import Minus from "@/Components/icons/Minus"
 import Articles from "@/Components/icons/Articles"
 import Subjects from "@/Components/icons/Subjects"
 import Views from "@/Components/icons/Views"
@@ -65,8 +68,16 @@ export default function ProfileMe() {
             <div className="flex gap-4  flex-col items-center md:items-start text-center md:text-start md:flex-row">
                 <img src={avatar(user.avatar)} className="size-32 rounded-lg" />
 
-                <div className="flex flex-col">
-                    <div className="text-xl font-bold">{user.fullname}</div>
+                <div className="flex flex-col items-center md:items-start">
+                    <div className="text-xl font-bold flex flex-col items-center md:gap-2 md:flex-row">
+                        {user.fullname}
+                        {
+                            user.role != "USER" && auth.user.role != "USER"
+                            && <span className="text-success-light dark:text-success-dark" title={t("content.administrator") as string}>
+                                <Admin />
+                            </span>
+                        }
+                    </div>
                     <span className="text-xs text-secondary font-bold">
                         {user.username}
                     </span>
@@ -76,7 +87,7 @@ export default function ProfileMe() {
                             {t("content.member_since", { date: fixedFormat(user.created_at) })}
                         </span>
                     </span>
-                    <div className="flex gap-4 items-center">
+                    <div className="flex gap-4 items-center mt-4">
                         <span className="font-bold">
                             {user.stats.level}
                         </span>
@@ -140,6 +151,32 @@ export default function ProfileMe() {
                                     {t("content.delete")}
                                     <Trash size={12} />
                                 </button>
+                            </>
+                        }
+                        {
+                            auth.user.role === "SUPER_ADMIN" && user.role !== "SUPER_ADMIN" &&
+                            <>
+                                <span className="text-secondary/50">|</span>
+                                {
+
+                                    user.role !== "ADMIN"
+                                        ? <Link
+                                            method="post"
+                                            href={route("users.elevate", { user: user.username })}
+                                            className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center  text-xs"
+                                        >
+                                            {t("content.elevate")}
+                                            <Plus size={12} />
+                                        </Link>
+                                        : <Link
+                                            method="delete"
+                                            href={route("users.delevate", { user: user.username })}
+                                            className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-xs"
+                                        >
+                                            {t("content.delevate")}
+                                            <Minus size={12} />
+                                        </Link>
+                                }
                             </>
                         }
                     </div>
