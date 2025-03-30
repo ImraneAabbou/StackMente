@@ -139,5 +139,7 @@ return [
     'published' => 'Publié',
     'create_tags_modal_title' => 'Création de Tags',
     'create_tags_modal_desc' => "Les tags suivants n'existent pas dans notre base de données. Veuillez les décrire avec une petite description afin que les autres utilisateurs puissent les reconnaître ou les utiliser dans leurs publications si nécessaire.",
-    'someone' => "Quelqu'un"
+    'someone' => "Quelqu'un",
+    'force_delete_title' => 'Suppression forcée',
+    'force_delete_desc' => "Si vous cochez cette option, l'utilisateur sera totalement supprimé avec ses publications, commentaires et votes également."
 ];

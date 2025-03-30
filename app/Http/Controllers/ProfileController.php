@@ -12,6 +12,7 @@ use App\Services\UserService;
 use App\Traits\ReportableCtrl;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -94,6 +95,7 @@ class ProfileController extends Controller
      */
     public function destroy(DeleteAccountRequest $request): RedirectResponse
     {
+        dd($request->force);
         $user = $request->user();
         $user->username = 'deleted-' . Str::uuid();
         $user->fullname = $user->username;
@@ -117,7 +119,7 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function delete(User $user)
+    public function delete(Request $request, User $user)
     {
         $user->username = 'deleted-' . Str::uuid();
         $user->fullname = $user->username;
@@ -131,7 +133,9 @@ class ProfileController extends Controller
         $statsService->resetStats();
         $statsService->resetStats();
 
-        $user->delete();
+        $request->force
+            ? $user->forceDelete()
+            : $user->delete();
 
         return back();
     }

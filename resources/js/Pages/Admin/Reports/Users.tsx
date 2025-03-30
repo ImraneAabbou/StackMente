@@ -14,6 +14,7 @@ import { FormattedNumber } from "react-intl";
 import Minus from "@/Components/icons/Minus";
 import Trash from "@/Components/icons/Trash";
 import ConfirmDeleteCtx from "@/Contexts/ConfirmDeleteCtx";
+import ConfirmDeleteUserCtx from "@/Contexts/ConfirmDeleteUserCtx";
 import SearchInput from "./_Common/SearchInput";
 import Prohibited from "@/Components/icons/Prohibited";
 
@@ -24,6 +25,7 @@ type GrouppedUserReport = UserReport & {
 
 export default function AdminReportsUsers() {
     const { setAction } = useContext(ConfirmDeleteCtx)
+    const { setAction: setConfirmDeleteUserAction } = useContext(ConfirmDeleteUserCtx)
     const { reports: { items: reportItems, next_page_url } } = usePage().props
     const [reports, setReports] = useState(reportItems as GrouppedUserReport[])
     const { t } = useLaravelReactI18n()
@@ -120,7 +122,7 @@ export default function AdminReportsUsers() {
                                                 </MenuItem>
                                                 <MenuItem>
                                                     <button
-                                                        onClick={() => setAction(route("profile.ban", { user: r.reportable.username }))}
+                                                        onClick={() => setConfirmDeleteUserAction(route("users.delete", { user: r.reportable.username }))}
                                                         className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-background-light dark:hover:bg-background-dark text-error-light dark:text-error-dark">
                                                         <Trash size={16} />
                                                         {t("content.delete")}

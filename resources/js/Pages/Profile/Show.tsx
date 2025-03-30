@@ -22,9 +22,9 @@ import { useContext } from "react"
 import ReportActionCtx from "@/Contexts/ReportActionCtx"
 import Flag from "@/Components/icons/Flag"
 import Trash from "@/Components/icons/Trash"
-import ConfirmDeleteCtx from "@/Contexts/ConfirmDeleteCtx"
 import Prohibited from "@/Components/icons/Prohibited"
 import Refresh from "@/Components/icons/Refresh"
+import ConfirmDeleteUserCtx from "@/Contexts/ConfirmDeleteUserCtx"
 
 export default function ProfileMe() {
     const { user, auth } = usePage().props
@@ -33,7 +33,7 @@ export default function ProfileMe() {
     const d = Duration.fromMillis(user.stats.timespent * 1000).shiftTo("hours", "minutes", "seconds", "days")
     const { t } = useLaravelReactI18n()
     const { setReportAction } = useContext(ReportActionCtx)
-    const { setAction: setConfirmDeleteAction } = useContext(ConfirmDeleteCtx)
+    const { setAction: setUserDeleteAction } = useContext(ConfirmDeleteUserCtx)
     const formattedTimespent = `
         ${d.days && Math.floor(d.days).toString().concat(t("content.d") as string) || ""}
         ${d.hours && Math.floor(d.hours).toString().concat(t("content.h") as string) || ""}
@@ -132,7 +132,7 @@ export default function ProfileMe() {
                                 <button
                                     onClick={
                                         () => !!auth.user
-                                            ? setConfirmDeleteAction(route("users.delete", { user: user.username }))
+                                            ? setUserDeleteAction(route("users.delete", { user: user.username }))
                                             : router.visit(route("login"))
                                     }
                                     className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark text-xs"

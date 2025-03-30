@@ -6,6 +6,7 @@ import ProfileDeleteProvider from "./ProfileDeleteProvider";
 import ThemeProvider from "./ThemeProvider"
 import SoundProvider from "./SoundProvider";
 import ConfirmDeleteProvider from "./ConfirmDeleteProvider";
+import ConfirmDeleteUserProvider from "./ConfirmDeleteUserProvider";
 
 export default function Providers({ children }: { children: ReactNode }) {
 
@@ -19,7 +20,9 @@ export default function Providers({ children }: { children: ReactNode }) {
                     <ReportActionProvider>
                         <ProfileDeleteProvider>
                             <ConfirmDeleteProvider>
-                                {children}
+                                <ConfirmDeleteUserProvider>
+                                    {children}
+                                </ConfirmDeleteUserProvider>
                             </ConfirmDeleteProvider>
                         </ProfileDeleteProvider>
                     </ReportActionProvider>
