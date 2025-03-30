@@ -7,6 +7,7 @@ use App\Events\UserUnbanned;
 use App\Models\Report;
 use App\Models\User;
 use App\Services\StatsService;
+use Illuminate\Support\Facades\DB;
 
 class UserObserver
 {
@@ -56,5 +57,7 @@ class UserObserver
     public function forceDeleted(User $user): void
     {
         $this->deleted($user);
+
+        DB::delete('delete from users where id = ?', [$user->id]);
     }
 }
