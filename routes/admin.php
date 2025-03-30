@@ -7,6 +7,7 @@ use App\Http\Controllers\MissionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\TagController;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Reply;
@@ -25,6 +26,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/reports/replies/{reportable}', [AdminPanelController::class, 'reportMessages'])->name('reports.replies.messages');
     Route::get('/admin/reports/posts', [AdminPanelController::class, 'reportsPosts'])->name('reports.posts');
     Route::get('/admin/reports/posts/{reportable}', [AdminPanelController::class, 'reportMessages'])->name('reports.posts.messages');
+
+    // Tags Management
+    Route::put('/tags/{tag}', [TagController::class, 'update'])->name('tags.update');
+    Route::delete('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
 
     Route::group(['middleware' => 'role:super-admin'], function () {
         // Privileges controle

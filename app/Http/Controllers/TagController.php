@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -35,5 +36,23 @@ class TagController extends Controller
                 'next_link_url' => $nextLinkUrl
             ]
         ]);
+    }
+
+    public function update(Tag $tag)
+    {
+        $validated = request()->validate([
+            'name' => ['required', 'string', 'max:50'],
+            'description' => ['string', 'min:25', 'max:125'],
+        ]);
+
+        $tag->update($validated);
+        return back();
+    }
+
+    public function destroy(Tag $tag)
+    {
+        $tag->delete();
+
+        return back();
     }
 }

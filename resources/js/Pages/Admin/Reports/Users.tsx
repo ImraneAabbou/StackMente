@@ -110,7 +110,6 @@ export default function AdminReportsUsers() {
                                                         {t("content.clear_reports")}
                                                     </button>
                                                 </MenuItem>
-                                                {console.log(r.reportable)}
                                                 {
                                                     r.reportable.can_ban && <>
                                                         <MenuItem>
