@@ -128,7 +128,7 @@ export const TagItem = ({ id, name, description, posts_count, articles_count, su
                             <Link
                                 href={route("feed", {
                                     _query: {
-                                        tags: [name]
+                                        inlcluded_tags: [name]
                                     }
                                 }
                                 )
@@ -166,7 +166,7 @@ export const TagItem = ({ id, name, description, posts_count, articles_count, su
                 href={
                     route("questions.index", {
                         _query: {
-                            tags: [name]
+                            included_tags: [name]
                         }
 
                     }
@@ -186,7 +186,7 @@ export const TagItem = ({ id, name, description, posts_count, articles_count, su
                 href={
                     route("subjects.index", {
                         _query: {
-                            tags: [name]
+                            included_tags: [name]
                         }
 
                     }
@@ -207,7 +207,7 @@ export const TagItem = ({ id, name, description, posts_count, articles_count, su
                 href={
                     route("articles.index", {
                         _query: {
-                            tags: [name]
+                            included_tags: [name]
                         }
 
                     }
