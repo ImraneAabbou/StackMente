@@ -203,9 +203,10 @@ function ResourcesUsage() {
                             {
                                 data: [system_usage.ram_usage_percent],
                                 backgroundColor:
-                                    system_usage.disk_usage_percent >= 75 ? "#FF0D01af"
-                                        :
-                                        system_usage.disk_usage_percent >= 50 ? "#FFED01a5"
+                                    system_usage.ram_usage_percent >= 75
+                                        ? "#FF0D01af"
+                                        : system_usage.ram_usage_percent >= 50
+                                            ? "#FFED01a5"
                                             : "#00ff0092",
                                 stack: "ram",
                             },
@@ -271,10 +272,11 @@ function ResourcesUsage() {
                             {
                                 data: [system_usage.disk_usage_percent, system_usage.disk_free_percent],
                                 backgroundColor: [
-                                    system_usage.disk_usage_percent >= 75 ? "#FF0D01af"
-                                        :
-                                        system_usage.disk_usage_percent >= 50 ? "#FFED01a5"
-                                            : "#0000ff52",
+                                    system_usage.disk_usage_percent >= 75
+                                        ? "#FF0D01af"
+                                        : system_usage.disk_usage_percent >= 50
+                                            ? "#FFED01a5"
+                                            : "#00ff0092",
                                     "#b1b1b175"
                                 ],
                             },
