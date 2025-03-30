@@ -62,6 +62,8 @@ export type PageProps<
         items: Report[];
     };
 
+    tags_completions: Tag[];
+
     results: Results;
 
     hero_stats: {

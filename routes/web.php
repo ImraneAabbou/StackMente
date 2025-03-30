@@ -9,7 +9,6 @@ use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UsersRankingController;
 use App\Models\Comment;
-use App\Models\Mission;
 use App\Models\Post;
 use App\Models\Reply;
 use App\Models\Report;
@@ -17,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::middleware('verified')->group(function () {
-        Route::inertia('/articles/create', 'Posts/CreateArticle')->name('articles.create');
-        Route::inertia('/subjects/create', 'Posts/CreateSubject')->name('subjects.create');
-        Route::inertia('/questions/create', 'Posts/CreateQuestion')->name('questions.create');
+        Route::get('/articles/create', [PostController::class, 'create'])->name('articles.create');
+        Route::get('/subjects/create', [PostController::class, 'create'])->name('subjects.create');
+        Route::get('/questions/create', [PostController::class, 'create'])->name('questions.create');
         Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     });
 
@@ -56,7 +55,6 @@ Route::middleware('auth')->group(function () {
     Route::inertia('/profile/settings', 'Profile/Edit')->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 });
 
 Route::inertia('/', 'Index', [

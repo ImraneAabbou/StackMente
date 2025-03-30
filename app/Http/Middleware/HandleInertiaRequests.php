@@ -9,6 +9,8 @@ use App\Models\Reply;
 use App\Models\Tag;
 use App\Models\User;
 use App\Services\StatsService;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Middleware;
@@ -46,14 +48,27 @@ class HandleInertiaRequests extends Middleware
             'notifications' => fn() => $this->getAuthUserNotifications($request),
             'status' => Inertia::always(fn() => $request->session()->get('status')),
             'results' => fn() => $this->getSearchResults($request),
+            'tags_completions' => fn() => $this->getTagsCompletions($request)
         ];
+    }
+
+    public function getTagsCompletions(Request $request): Collection|array
+    {
+        $q = $request->query('tags_completions_query');
+
+        return $q
+            ? Tag::whereLike('name', "%$q%")
+                ->orWhereLike('description', "%$q%")
+                ->limit(10)
+                ->get()
+            : [];
     }
 
     /**
      * Returns the results of the given search query
      * Returns null if not provided
      */
-    public function getSearchResults(Request $request)
+    public function getSearchResults(Request $request): ?array
     {
         $q = $request->query('q');
 

@@ -1,7 +1,8 @@
 import clsx from "clsx";
+import { ReactNode } from "react"
 
 interface TagProps {
-    children: string;
+    children: ReactNode;
     className?: string
 }
 

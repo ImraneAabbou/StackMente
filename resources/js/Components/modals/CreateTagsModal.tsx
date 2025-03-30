@@ -47,7 +47,7 @@ export default function CreateTagsModal({ errorTags, tags, setTags, errors, onCl
 
                                 {
                                     errorTags?.map(
-                                        (errTag, i) => <div className="text-start flex flex-col gap-4">
+                                        errTag => <div className="text-start flex flex-col gap-4">
                                             <Field className="flex flex-col gap-1">
                                                 <Label className="font-semibold text-sm">{errTag}</Label>
                                                 <div className="flex flex-col gap-1 grow">

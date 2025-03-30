@@ -118,6 +118,19 @@ class PostController extends Controller
         ]);
     }
 
+    public function create(Request $request)
+    {
+        $page = match ($request->url()) {
+            route('subjects.create') => 'Posts/CreateSubject',
+            route('articles.create') => 'Posts/CreateArticle',
+            route('questions.create') => 'Posts/CreateQuestion',
+            default => 'Posts/CreateQuestion',
+        };
+        return inertia(
+            $page,
+        );
+    }
+
     /**
      * Store a newly created resource in storage.
      */
