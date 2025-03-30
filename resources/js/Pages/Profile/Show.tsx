@@ -233,7 +233,7 @@ export default function ProfileMe() {
             <section className="grow">
                 <h2 className="font-bold text-2xl mb-8">
                     {
-                        t("posts.posts_you_published")
+                        t("content.posts")
                     }
                 </h2>
                 <div className="">
