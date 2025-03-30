@@ -63,15 +63,6 @@ export default function UserMenu({ children }: { children?: ReactNode }) {
                 </div>
             </MenuItem>
             <MenuItem>
-                <Link
-                    href={route("admin.index")}
-                    className="flex gap-2 items-center hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
-                >
-                    <Admin size={20} />
-                    {t("content.admin_panel")}
-                </Link>
-            </MenuItem>
-            <MenuItem>
                 <button
                     onClick={(e) => { e.preventDefault(); setDark(!isDark) }}
                     className="flex gap-2 items-center justify-between text-start hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
@@ -99,6 +90,18 @@ export default function UserMenu({ children }: { children?: ReactNode }) {
                     <Switch checked={isSoundEnabled} className='pointer-events-none' />
                 </button>
             </MenuItem>
+            {
+                (user.role == "ADMIN" || user.role == "SUPER_ADMIN") &&
+                <MenuItem>
+                    <Link
+                        href={route("admin.index")}
+                        className="flex gap-2 items-center hover:bg-background-light dark:hover:bg-background-dark px-4 py-2 text-sm rounded"
+                    >
+                        <Admin size={20} />
+                        {t("content.admin_panel")}
+                    </Link>
+                </MenuItem>
+            }
             <MenuItem>
                 <Link
                     href={route("logout")}
@@ -110,5 +113,5 @@ export default function UserMenu({ children }: { children?: ReactNode }) {
                 </Link>
             </MenuItem>
         </MenuItems>
-    </Menu>
+    </Menu >
 }

@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 import clsx from 'clsx'
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import Dashboard from '@/Components/icons/Dashboard'
 import Prohibited from '@/Components/icons/Prohibited'
 import Flag from '@/Components/icons/Flag'
@@ -14,19 +14,13 @@ import { useLaravelReactI18n } from 'laravel-react-i18n'
 
 function NavigationLinks() {
     const { t } = useLaravelReactI18n()
-
+    const { auth: { user } } = usePage().props
     const navigation = [
         {
             name: t("content.dashboard"),
             href: route("admin.index"),
             icon: <Dashboard size={16} />,
             current: route().current("admin.index")
-        },
-        {
-            name: t("content.missions_title"),
-            href: route("missions.index"),
-            icon: <Medal size={16} />,
-            current: route().current("missions.*")
         },
         {
             name: t("content.banned_users_title"),
@@ -45,13 +39,26 @@ function NavigationLinks() {
             icon: <Flag size={16} />,
             current: route().current("reports.*")
         },
-        {
-            name: t("backup.backup_and_restore"),
-            href: route("backups.index"),
-            icon: <DB size={16} />,
-            current: route().current("backups.*")
-        },
+        ...(
+            user.role == "SUPER_ADMIN"
+                ? [
+                    {
+                        name: t("content.missions_title"),
+                        href: route("missions.index"),
+                        icon: <Medal size={16} />,
+                        current: route().current("missions.*")
+                    },
+                    {
+                        name: t("backup.backup_and_restore"),
+                        href: route("backups.index"),
+                        icon: <DB size={16} />,
+                        current: route().current("backups.*")
+                    },
+                ]
+                : []
+        )
     ]
+
     return <ul role="list" className="-mx-2 space-y-1">
         {navigation.map((item) => (
             <li key={item.name as string}>
