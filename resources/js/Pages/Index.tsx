@@ -28,7 +28,7 @@ const socials = [
 ]
 export default function Index() {
     const { t } = useLaravelReactI18n()
-    const { hero_stats: stats } = usePage().props
+    const { hero_stats: stats, auth: { user } } = usePage().props
 
     const features = [
         {
@@ -99,18 +99,31 @@ export default function Index() {
                         </Link>
                     </div>
                     <div className="flex gap-2">
-                        <Link
-                            href={route("login")}
-                            className="rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs hover:bg-secondary/10"
-                        >
-                            {t("content.login")}
-                        </Link>
-                        <Link
-                            href={route("register")}
-                            className="bg-primary shadow-sm hover:bg-primary/90 text-onPrimary rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs"
-                        >
-                            {t("content.register")}
-                        </Link>
+                        {
+
+                            !user
+                                ? <>
+                                    <Link
+                                        href={route("login")}
+                                        className="rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs hover:bg-secondary/10"
+                                    >
+                                        {t("content.login")}
+                                    </Link>
+                                    <Link
+                                        href={route("register")}
+                                        className="bg-primary shadow-sm hover:bg-primary/90 text-onPrimary rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs"
+                                    >
+                                        {t("content.register")}
+                                    </Link>
+                                </>
+
+                                : <Link
+                                    href={route("feed")}
+                                    className="bg-success-light text-onSuccess-light dark:bg-success-dark dark:text-onSuccess-dark shadow-sm hover:bg-success-light/90 dark:hover:bg-success-dark/90 rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs"
+                                >
+                                    {t("content.to_feed")}
+                                </Link>
+                        }
                     </div>
                 </nav>
             </header>
@@ -188,14 +201,17 @@ export default function Index() {
                                 }
                             </p>
                         </div>
-                        <div className="flex justify-center mt-8">
-                            <Link
-                                href={route("feed")}
-                                className="bg-success-light text-onSuccess-light dark:bg-success-dark dark:text-onSuccess-dark shadow-sm hover:bg-success-light/90 dark:hover:bg-success-dark/90 rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs"
-                            >
-                                {t("content.to_feed")}
-                            </Link>
-                        </div>
+                        {
+
+                            !user && <div className="flex justify-center mt-8">
+                                <Link
+                                    href={route("feed")}
+                                    className="bg-success-light text-onSuccess-light dark:bg-success-dark dark:text-onSuccess-dark shadow-sm hover:bg-success-light/90 dark:hover:bg-success-dark/90 rounded-md px-3.5 py-2.5 text-sm font-semibold shadow-xs"
+                                >
+                                    {t("content.to_feed")}
+                                </Link>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
