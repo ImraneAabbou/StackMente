@@ -23,6 +23,8 @@ import ReportActionCtx from "@/Contexts/ReportActionCtx"
 import Flag from "@/Components/icons/Flag"
 import Trash from "@/Components/icons/Trash"
 import ConfirmDeleteCtx from "@/Contexts/ConfirmDeleteCtx"
+import Prohibited from "@/Components/icons/Prohibited"
+import Refresh from "@/Components/icons/Refresh"
 
 export default function ProfileMe() {
     const { user, auth } = usePage().props
@@ -83,17 +85,44 @@ export default function ProfileMe() {
                         </div>
                     </div>
                     <div className="flex gap-2 text-sm">
-                        <button
-                            onClick={
-                                () => !!auth.user
-                                    ? setReportAction(route("profile.report", { reportable: user.username }))
-                                    : router.visit(route("login"))
-                            }
-                            className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark text-xs"
-                        >
-                            {t("content.report")}
-                            <Flag size={12} />
-                        </button>
+                        {
+                            user.deleted_at
+                                ? <Link
+                                    method="delete"
+                                    href={route("profile.unban", { user: user.username })}
+                                    preserveState="errors"
+                                    className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-xs"
+                                >
+                                    {t("content.unban")}
+                                    <Refresh size={12} />
+                                </Link>
+
+                                : <>
+                                    <Link
+                                        method="post"
+                                        href={route("profile.ban", { user: user.username })}
+                                        preserveState="errors"
+                                        className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-xs text-error-light dark:text-error-dark"
+                                    >
+                                        {t("content.ban")}
+                                        <Prohibited size={12} />
+                                    </Link>
+                                    <span className="text-secondary/50">|</span>
+                                </>
+                        }
+                        {
+                            !user.deleted_at && <button
+                                onClick={
+                                    () => !!auth.user
+                                        ? setReportAction(route("profile.report", { reportable: user.username }))
+                                        : router.visit(route("login"))
+                                }
+                                className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark text-xs"
+                            >
+                                {t("content.report")}
+                                <Flag size={12} />
+                            </button>
+                        }
                         {
 
                             (auth.user.role == "SUPER_ADMIN" || auth.user.role == "ADMIN") &&

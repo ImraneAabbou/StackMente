@@ -67,7 +67,9 @@ export default function AdminBansIndex() {
                                 <tr key={b.id}>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
                                         <div className="flex gap-2">
-                                            <img src={avatar(b.avatar)} className="rounded-full size-12 sm:size-16" />
+                                            <Link href={route("profile.show", { user: b.username })}>
+                                                <img src={avatar(b.avatar)} className="rounded-full size-12 sm:size-16" />
+                                            </Link>
                                             <div className="flex flex-col">
                                                 <p className="font-semibold text-sm">{b.fullname}</p>
                                                 <p className="text-secondary text-xm">{b.username}</p>
