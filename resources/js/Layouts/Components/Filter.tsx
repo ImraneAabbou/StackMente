@@ -158,7 +158,7 @@ export default function Filter() {
             </div>
             <div className="flex flex-col gap-2 rounded border border-secondary/25 p-4">
                 <h2 className="font-semibold">{t("content.tags")}</h2>
-                <ul className="ms-4 text-sm flex flex-col gap-8">
+                <ul className="text-sm flex flex-col gap-8">
                     <li>
                         <label className="flex flex-col gap-2">
                             <div className="flex gap-2 flex-wrap">
@@ -209,7 +209,7 @@ export default function Filter() {
             <div className="flex gap-4 items-center justify-between">
                 <button
                     type="submit"
-                    className="p-2 px-4 bg-secondary/25 rounded-md border hover:bg-secondary/50"
+                    className="p-2 px-4 bg-secondary/10 rounded-md hover:bg-secondary/25"
                 >
                     {t("content.apply")}
                 </button>
