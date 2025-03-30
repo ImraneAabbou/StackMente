@@ -208,6 +208,7 @@ class StatsService
                 'streak_started_at' => now(),
             ],
             'last_interaction' => now(),
+            'timespent' => 0,
             'level' => 1,
         ];
         $this->user->stats = $stats;
@@ -234,7 +235,7 @@ class StatsService
                     'total' => $this->getRank('total'),
                     'daily' => $this->getRank('daily'),
                     'weekly' => $this->getRank('weekly'),
-                    'monthly' =>$this->getRank('monthly'),
+                    'monthly' => $this->getRank('monthly'),
                     'yearly' => $this->getRank('yearly'),
                 ]
             ]
