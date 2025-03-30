@@ -97,7 +97,8 @@ export default function ProfileMe() {
                                     <Refresh size={12} />
                                 </Link>
 
-                                : <>
+                                : (auth.user.role == "ADMIN" || auth.user.role == "SUPER_ADMIN")
+                                && <>
                                     <Link
                                         method="post"
                                         href={route("profile.ban", { user: user.username })}
