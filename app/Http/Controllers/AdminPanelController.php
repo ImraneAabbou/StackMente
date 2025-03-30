@@ -217,7 +217,18 @@ class AdminPanelController extends Controller
             'Admin/Reports/Users',
             [
                 'reports' => [
-                    'items' => $reportsPagination->items(),
+                    'items' => collect(
+                        $reportsPagination->items()
+                    )
+                        ->map(
+                            fn($r) => array_merge_recursive([
+                                ...$r->toArray(),
+                            ], [
+                                'reportable' => [
+                                    'can_ban' => auth()->user()?->can('delete', $r->reportable)
+                                ]
+                            ])
+                        ),
                     'next_page_url' => $reportsPagination->nextPageUrl(),
                 ],
             ]

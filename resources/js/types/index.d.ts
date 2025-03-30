@@ -45,7 +45,7 @@ export type PageProps<
 
     mission: Mission;
 
-    user: User;
+    user: User & { can_ban: boolean };
 
     banned_users: {
         items: User[];

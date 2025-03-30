@@ -4,7 +4,7 @@ import Trash from "@/Components/icons/Trash";
 import VerticalDots from "@/Components/icons/VerticalDots";
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
 import Input from "@/Components/ui/Input";
-import ConfirmDeleteCtx from "@/Contexts/ConfirmDeleteCtx";
+import ConfirmDeleteUserCtx from "@/Contexts/ConfirmDeleteUserCtx";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { avatar } from "@/Utils/helpers/path";
 import useFixedDateFormat from "@/Utils/hooks/useFixedDateFormat";
@@ -17,7 +17,7 @@ export default function AdminBansIndex() {
     const { t } = useLaravelReactI18n()
     const { banned_users: { items, next_page_url } } = usePage().props
     const fixedFormat = useFixedDateFormat()
-    const { setAction } = useContext(ConfirmDeleteCtx)
+    const { setAction } = useContext(ConfirmDeleteUserCtx)
     const [users, setUsers] = useState(items)
     const { data, setData, get } = useForm({
         q: route().params.q

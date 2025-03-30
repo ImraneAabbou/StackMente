@@ -110,24 +110,29 @@ export default function AdminReportsUsers() {
                                                         {t("content.clear_reports")}
                                                     </button>
                                                 </MenuItem>
-                                                <MenuItem>
-                                                    <Link
-                                                        href={route("profile.ban", { user: r.reportable.username })}
-                                                        preserveState="errors"
-                                                        method="post"
-                                                        className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-background-light dark:hover:bg-background-dark text-error-light dark:text-error-dark">
-                                                        <Prohibited size={16} />
-                                                        {t("content.ban")}
-                                                    </Link>
-                                                </MenuItem>
-                                                <MenuItem>
-                                                    <button
-                                                        onClick={() => setConfirmDeleteUserAction(route("users.delete", { user: r.reportable.username }))}
-                                                        className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-background-light dark:hover:bg-background-dark text-error-light dark:text-error-dark">
-                                                        <Trash size={16} />
-                                                        {t("content.delete")}
-                                                    </button>
-                                                </MenuItem>
+                                                {console.log(r.reportable)}
+                                                {
+                                                    r.reportable.can_ban && <>
+                                                        <MenuItem>
+                                                            <Link
+                                                                href={route("profile.ban", { user: r.reportable.username })}
+                                                                preserveState="errors"
+                                                                method="post"
+                                                                className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-background-light dark:hover:bg-background-dark text-error-light dark:text-error-dark">
+                                                                <Prohibited size={16} />
+                                                                {t("content.ban")}
+                                                            </Link>
+                                                        </MenuItem>
+                                                        <MenuItem>
+                                                            <button
+                                                                onClick={() => setConfirmDeleteUserAction(route("users.delete", { user: r.reportable.username }))}
+                                                                className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-background-light dark:hover:bg-background-dark text-error-light dark:text-error-dark">
+                                                                <Trash size={16} />
+                                                                {t("content.delete")}
+                                                            </button>
+                                                        </MenuItem>
+                                                    </>
+                                                }
                                             </MenuItems>
                                         </Menu>
                                     </td>

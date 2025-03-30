@@ -23,13 +23,10 @@ class ReportObserver
             $u->ban();
         } elseif ($report->reportable_type === ReportableType::POST->value) {
             $report->reportable()->delete();
-            dd('deleted post');
         } elseif ($report->reportable_type === ReportableType::COMMENT->value) {
             $report->reportable()->delete();
-            dd('deleted comment');
         } elseif ($report->reportable_type === ReportableType::REPLY->value) {
             $report->reportable()->delete();
-            dd('deleted reply');
         }
 
         // clean reportable's reports

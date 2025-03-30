@@ -95,7 +95,6 @@ class ProfileController extends Controller
      */
     public function destroy(DeleteAccountRequest $request): RedirectResponse
     {
-        dd($request->force);
         $user = $request->user();
         $user->username = 'deleted-' . Str::uuid();
         $user->fullname = $user->username;
@@ -175,9 +174,11 @@ class ProfileController extends Controller
                             ]
                         )
                         ->toArray(),
-                    $userDetails
+                    [
+                        ...$userDetails,
+                        'can_ban' => auth()->user()?->can('delete', $user)
+                    ]
                 ),
-                'can_ban' => auth()->user()?->can('delete', $user)
             ]);
     }
 }

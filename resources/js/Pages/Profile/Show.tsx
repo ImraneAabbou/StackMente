@@ -86,30 +86,33 @@ export default function ProfileMe() {
                     </div>
                     <div className="flex gap-2 text-sm">
                         {
-                            user.deleted_at
-                                ? <Link
-                                    method="delete"
-                                    href={route("profile.unban", { user: user.username })}
-                                    preserveState="errors"
-                                    className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-xs"
-                                >
-                                    {t("content.unban")}
-                                    <Refresh size={12} />
-                                </Link>
+                            user.can_ban && <>
+                                {
+                                    user.deleted_at
+                                        ? <Link
+                                            method="delete"
+                                            href={route("profile.unban", { user: user.username })}
+                                            preserveState="errors"
+                                            className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-xs"
+                                        >
+                                            {t("content.unban")}
+                                            <Refresh size={12} />
+                                        </Link>
 
-                                : (auth.user.role == "ADMIN" || auth.user.role == "SUPER_ADMIN")
-                                && <>
-                                    <Link
-                                        method="post"
-                                        href={route("profile.ban", { user: user.username })}
-                                        preserveState="errors"
-                                        className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-xs text-error-light dark:text-error-dark"
-                                    >
-                                        {t("content.ban")}
-                                        <Prohibited size={12} />
-                                    </Link>
-                                    <span className="text-secondary/50">|</span>
-                                </>
+                                        : <>
+                                            <Link
+                                                method="post"
+                                                href={route("profile.ban", { user: user.username })}
+                                                preserveState="errors"
+                                                className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-xs text-error-light dark:text-error-dark"
+                                            >
+                                                {t("content.ban")}
+                                                <Prohibited size={12} />
+                                            </Link>
+                                            <span className="text-secondary/50">|</span>
+                                        </>
+                                }
+                            </>
                         }
                         {
                             !user.deleted_at && <button
@@ -125,15 +128,12 @@ export default function ProfileMe() {
                             </button>
                         }
                         {
-
-                            (auth.user.role == "SUPER_ADMIN" || auth.user.role == "ADMIN") &&
+                            user.can_ban &&
                             <>
                                 <span className="text-secondary/50">|</span>
                                 <button
                                     onClick={
-                                        () => !!auth.user
-                                            ? setUserDeleteAction(route("users.delete", { user: user.username }))
-                                            : router.visit(route("login"))
+                                        () => setUserDeleteAction(route("users.delete", { user: user.username }))
                                     }
                                     className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark text-xs"
                                 >

@@ -38,7 +38,7 @@ export interface BaseReport {
 
 export interface UserReport extends BaseReport {
     reportableType: typeof USER;
-    reportable: User;
+    reportable: User & { can_ban: boolean };
 }
 
 export interface PostReport extends BaseReport {
