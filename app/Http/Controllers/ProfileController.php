@@ -131,6 +131,8 @@ class ProfileController extends Controller
         $statsService->resetStats();
         $statsService->resetStats();
 
+        $user->delete();
+
         return back();
     }
 
