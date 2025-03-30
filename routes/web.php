@@ -8,9 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UsersRankingController;
-use App\Models\Comment;
 use App\Models\Post;
-use App\Models\Reply;
 use App\Models\Report;
 use Illuminate\Support\Facades\Route;
 
@@ -23,10 +21,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::put('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy')->can('delete', [Post::class]);
 
     Route::post('/posts/{reportable}/reports', [PostController::class, 'report'])->name('posts.report');
-    Route::delete('/posts/{reportable}/reports', [PostController::class, 'clearReports'])->name('posts.clearReports')->can('delete', [Report::class]);
 
     Route::post('/posts/{votable}/vote', [PostController::class, 'vote'])->name('posts.vote');
     Route::delete('/posts/{votable}/vote', [PostController::class, 'unvote'])->name('posts.unvote');
@@ -36,20 +32,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/comments/{reportable}/reports', [CommentController::class, 'clearReports'])->name('comments.clearReports')->can('delete', [Report::class]);
     Route::put('/comments/{comment}/mark', [CommentController::class, 'mark'])->name('comments.mark');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy')->can('delete', [Comment::class]);
 
     Route::post('/comments/{votable}/vote', [CommentController::class, 'vote'])->name('comments.vote');
     Route::delete('/comments/{votable}/vote', [CommentController::class, 'unvote'])->name('comments.unvote');
 
     Route::post('/comments/{comment}/replies', [ReplyController::class, 'store'])->name('replies.store');
     Route::post('/replies/{reportable}/reports', [ReplyController::class, 'report'])->name('replies.report');
-    Route::delete('/replies/{reportable}/reports', [ReplyController::class, 'clearReports'])->name('replies.clearReports')->can('delete', [Report::class]);
+
     Route::put('/replies/{reply}', [ReplyController::class, 'update'])->name('replies.update');
-    Route::delete('/replies/{reply}', [ReplyController::class, 'destroy'])->name('replies.destroy')->can('delete', [Reply::class]);
 
     Route::put('/notifications/{id}', [NotificationController::class, 'update'])->name('notifications.update');
     Route::delete('/notifications', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 
+    Route::post('/profile/{reportable}/reports', [ProfileController::class, 'report'])->name('profile.report');
     Route::inertia('/profile', 'Profile/Index')->name('profile.index');
     Route::inertia('/profile/delete', 'Profile/Delete')->name('profile.delete');
     Route::inertia('/profile/settings', 'Profile/Edit')->name('profile.edit');
@@ -77,17 +72,10 @@ Route::get('/questions/{post:slug}', [PostController::class, 'show'])->name('que
 Route::get('/posts', [PostController::class, 'index'])->name('feed');
 
 Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
-Route::delete('/profile/{user:username}', [ProfileController::class, 'delete'])->name('users.delete');
-Route::post('/profile/{user:username}/ban', [ProfileController::class, 'ban'])->name('profile.ban');
-Route::delete('/profile/{user:username}/ban', [ProfileController::class, 'unban'])->name('profile.unban');
-Route::post('/profile/{reportable}/reports', [ProfileController::class, 'report'])->name('profile.report');
-Route::delete('/profile/{reportable}/reports', [ProfileController::class, 'clearReports'])->name('profile.clearReports')->can('delete', [Report::class]);
 
 Route::get('/rank', UsersRankingController::class)->name('rank');
 
 Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
-
-Route::post('/sync', fn() => SyncUserAchievementsAndLevel::execute())->name('sync');
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/schedules.php';
