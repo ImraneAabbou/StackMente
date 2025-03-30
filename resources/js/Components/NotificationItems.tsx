@@ -75,7 +75,7 @@ export const PostVoteReceived = ({ notification: n }: { notification: PostVoteRe
                         className="font-bold"
                     >
                         {
-                            n.user?.fullname ?? "Someone"
+                            n.user?.fullname ?? t("content.someone")
                         }
                     </span>
                 ,
@@ -103,7 +103,7 @@ export const CommentVoteReceived = ({ notification: n }: { notification: Comment
                 voter_fullname:
                     <span className="font-bold">
                         {
-                            n.user?.fullname ?? "Someone"
+                            n.user?.fullname ?? t("content.someone")
                         }
                     </span>
                 ,
@@ -132,7 +132,7 @@ export const CommentReceived = ({ notification: n }: { notification: CommentRece
                 commenter_fullname:
                     <span className="font-bold">
                         {
-                            n.user?.fullname ?? "Someone"
+                            n.user?.fullname ?? t("content.someone")
                         }
                     </span>
                 ,
@@ -165,7 +165,7 @@ export const ReplyReceived = ({ notification: n }: { notification: ReplyReceived
                 replier_fullname:
                     <span className="font-bold">
                         {
-                            n.user?.fullname ?? "Someone"
+                            n.user?.fullname ?? t("content.someone")
                         }
                     </span>
                 ,
@@ -224,7 +224,7 @@ export const CommentMarked = ({ notification: n }: { notification: CommentMarked
                 author_fullname:
                     <span className="font-bold">
                         {
-                            n.user?.fullname ?? "Someone"
+                            n.user?.fullname ?? t("content.someone")
                         }
                     </span>
                 ,

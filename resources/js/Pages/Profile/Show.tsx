@@ -1,5 +1,5 @@
 import useFixedDateFormat from "@/Utils/hooks/useFixedDateFormat"
-import { Link, usePage } from "@inertiajs/react"
+import { Link, router, usePage } from "@inertiajs/react"
 import { Mission } from "@/types/mission"
 import { avatar, mission_image } from "@/Utils/helpers/path"
 import { Duration } from "luxon"
@@ -20,14 +20,18 @@ import Editor from "@/Components/ui/Editor"
 import Layout from "@/Layouts/Layout"
 import { useContext } from "react"
 import ReportActionCtx from "@/Contexts/ReportActionCtx"
+import Flag from "@/Components/icons/Flag"
+import Trash from "@/Components/icons/Trash"
+import ConfirmDeleteCtx from "@/Contexts/ConfirmDeleteCtx"
 
 export default function ProfileMe() {
-    const { user } = usePage().props
+    const { user, auth } = usePage().props
     const fixedFormat = useFixedDateFormat()
     const percentToNextLevel = user.stats.xp.percent_to_next_level * 100
     const d = Duration.fromMillis(user.stats.timespent * 1000).shiftTo("hours", "minutes", "seconds", "days")
     const { t } = useLaravelReactI18n()
-    const {setReportAction} = useContext(ReportActionCtx)
+    const { setReportAction } = useContext(ReportActionCtx)
+    const { setAction: setConfirmDeleteAction } = useContext(ConfirmDeleteCtx)
     const formattedTimespent = `
         ${d.days && Math.floor(d.days).toString().concat(t("content.d") as string) || ""}
         ${d.hours && Math.floor(d.hours).toString().concat(t("content.h") as string) || ""}
@@ -78,8 +82,36 @@ export default function ProfileMe() {
                             <span className="bg-success-light dark:bg-success-dark absolute inset-0 rounded" style={{ width: `${percentToNextLevel}%` }}></span>
                         </div>
                     </div>
-                    <div>
-                        <button onClick={() => setReportAction(route("profile.report", {reportable: user.username}))}>report</button>
+                    <div className="flex gap-2 text-sm">
+                        <button
+                            onClick={
+                                () => !!auth.user
+                                    ? setReportAction(route("profile.report", { reportable: user.username }))
+                                    : router.visit(route("login"))
+                            }
+                            className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark text-xs"
+                        >
+                            {t("content.report")}
+                            <Flag size={12} />
+                        </button>
+                        {
+
+                            (auth.user.role == "SUPER_ADMIN" || auth.user.role == "ADMIN") &&
+                            <>
+                                <span className="text-secondary/50">|</span>
+                                <button
+                                    onClick={
+                                        () => !!auth.user
+                                            ? setConfirmDeleteAction(route("users.delete", { user: user.username }))
+                                            : router.visit(route("login"))
+                                    }
+                                    className="flex gap-1 font-semibold opacity-75 hover:opacity-100 shrink-0 items-center text-error-light dark:text-error-dark text-xs"
+                                >
+                                    {t("content.delete")}
+                                    <Trash size={12} />
+                                </button>
+                            </>
+                        }
                     </div>
                 </div>
             </div>
@@ -249,7 +281,7 @@ export default function ProfileMe() {
                 </div>
             </section>
         </div>
-    </Layout>
+    </Layout >
 }
 
 

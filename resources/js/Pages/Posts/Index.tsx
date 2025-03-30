@@ -206,7 +206,7 @@ const PostItem = (p: Post) => {
                         {
                             p.user_id === user?.id
                                 ? t("common.you")
-                                : p.user?.username
+                                : p.user?.username ?? t("content.someone")
                         }
                     </Link>
                     <span className="italic text-secondary flex gap-1 items-center">

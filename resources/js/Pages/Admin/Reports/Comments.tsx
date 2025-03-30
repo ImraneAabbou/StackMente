@@ -62,7 +62,7 @@ export default function AdminReportsComments() {
                                             target="_blank"
                                             href={route(`${r.reportable.post.type.toLowerCase()}s.show`, { post: r.reportable.post.slug }) + `#comment-${r.reportable_id}`}
                                         >
-                                            {r.reportable.user?.fullname ?? "Someone"}
+                                            {r.reportable.user?.fullname ?? t("content.someone")}
                                         </a>
                                     </td>
                                     <td className="whitespace-nowrap py-4 text-sm font-medium hidden sm:table-cell">

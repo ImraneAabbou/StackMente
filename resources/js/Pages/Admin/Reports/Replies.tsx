@@ -62,7 +62,7 @@ export default function AdminReportsReplies() {
                                             target="_blank"
                                             href={route(`${r.reportable.comment.post.type.toLowerCase()}s.show`, { post: r.reportable.comment.post.slug }) + `#comment-${r.reportable.comment_id}`}
                                         >
-                                            {r.reportable.user?.fullname ?? "Someone"}
+                                            {r.reportable.user?.fullname ?? t("content.someone")}
                                         </a>
                                     </td>
                                     <td className="whitespace-nowrap py-4 text-sm font-medium hidden sm:table-cell">

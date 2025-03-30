@@ -42,7 +42,7 @@ export default function AdminReportMessages() {
                                             <div
                                                 className={`font-semibold ${m.user ? "" : "text-secondary"}`}
                                             >
-                                                {m.user?.fullname ?? "Someone"}
+                                                {m.user?.fullname ?? t("content.someone")}
                                             </div>
                                         </div>
                                     </Link>

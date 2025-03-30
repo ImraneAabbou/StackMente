@@ -139,4 +139,5 @@ return [
     'published' => 'Published',
     'create_tags_modal_title' => 'Tags Creations',
     'create_tags_modal_desc' => "The following tags don't exist in our database, Please describe them with a small description so that the other users may recognize it or use them in their post if needed.",
+    'someone' => 'Someone',
 ];

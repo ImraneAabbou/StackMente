@@ -177,7 +177,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                             ? <span className="font-semibold">
                                 {comment.user_id === user?.id ? t("common.you") : comment.user?.fullname}
                             </span>
-                            : <span className="font-bold text-secondary">Someone</span>
+                            : <span className="font-bold text-secondary">{t("content.someone")}</span>
                     }
                 </Link>
                 {
@@ -404,7 +404,7 @@ const Reply = ({ reply }: { reply: ReplyType }) => {
                         ? <span className="font-semibold">
                             {reply.user_id === user?.id ? t("common.you") : reply.user?.fullname}
                         </span>
-                        : <span className="font-bold text-secondary">Someone</span>
+                        : <span className="font-bold text-secondary">{t("content.someone")}</span>
                 }
             </Link>
             <div className="flex items-center gap-1">
@@ -671,7 +671,7 @@ const Post = ({ p }: { p: PostType }) => {
                         {
                             p.user_id === user?.id
                                 ? t("common.you")
-                                : p.user?.username
+                                : p.user?.username ?? t("content.someone")
                         }
                     </Link>
                 </div>

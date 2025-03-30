@@ -139,4 +139,5 @@ return [
     'published' => 'Publié',
     'create_tags_modal_title' => 'Création de Tags',
     'create_tags_modal_desc' => "Les tags suivants n'existent pas dans notre base de données. Veuillez les décrire avec une petite description afin que les autres utilisateurs puissent les reconnaître ou les utiliser dans leurs publications si nécessaire.",
+    'someone' => "Quelqu'un"
 ];
