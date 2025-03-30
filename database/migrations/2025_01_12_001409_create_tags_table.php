@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Post::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Tag::class)->constrained()->cascadeOnDelete();
+            $table->unique(["post_id", "tag_id"]);
             $table->timestamps();
         });
     }

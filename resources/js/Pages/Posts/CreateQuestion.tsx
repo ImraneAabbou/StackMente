@@ -14,6 +14,7 @@ import InputChips from "@/Components/ui/InputChips"
 import Tag from "@/Components/ui/Tag"
 import { Tag as TagType } from "@/types/tag"
 import CreateTagsModal from "@/Components/modals/CreateTagsModal"
+import { uniqBy } from "lodash"
 
 export default function PostsCreate() {
     const { t } = useLaravelReactI18n()
@@ -67,7 +68,7 @@ export default function PostsCreate() {
                                     (chips) => setData(
                                         'tags',
                                         chips.length
-                                            ? [...data.tags, { name: chips[chips.length - 1], description: "" }]
+                                            ? uniqBy([...data.tags, { name: chips[chips.length - 1], description: "" }], "name")
                                             : []
                                     )}
                                 value={data.tags.map(t => t.name)}
