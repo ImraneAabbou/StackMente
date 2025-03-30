@@ -59,7 +59,7 @@ export default function InputChips({ onChange, value, className, maxLength, ...p
         <div className="flex flex-col relative">
             {
                 !!tags_completions?.length && inputValue &&
-                <ul className="absolute max-h-64 z-10 w-full overflow-y-auto bg-surface-light dark:bg-surface-dark text-onSurface-dark dark:text-onSurface-light top-1 rounded py-1 px-2 flex flex-col gap-1">
+                <ul className="absolute max-h-64 z-10 w-full overflow-y-auto bg-surface-light dark:bg-surface-dark text-onSurface-dark dark:text-onSurface-light top-1 rounded py-1 px-2 flex flex-col gap-1 shadow-lg">
                     {
                         tags_completions.map(t => <li>
                             <CompletionItem
@@ -98,7 +98,7 @@ function CompletionItem({ name, description, onSelect }: (TagType & { onSelect: 
                 />
             </Tag>
         </div>
-        <p className="text-secondary text-xs"
+        <p className="text-secondary text-xs break-all"
             dangerouslySetInnerHTML={{
                 __html:
                     description.replace(
