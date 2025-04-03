@@ -258,27 +258,42 @@ export default function Index() {
                     </div>
                     <dl className="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
                         <div className="mx-auto flex max-w-xs flex-col gap-y-4">
-                            <dt className="text-base/7">{t("content.questions_stats_desc")}</dt>
-                            <dd className="order-first text-3xl font-semibold tracking-tight sm:text-5xl">
-                                <FormattedNumber value={stats.questions_count} style="decimal" notation="compact" />
-                                {" "}
-                                {t("content.questions")}
+                            <dt className="text-base/7 text-secondary">{t("content.questions_stats_desc")}</dt>
+                            <dd className="order-first">
+                                <div className="flex flex-col">
+                                    <span className="text-3xl font-semibold tracking-tight sm:text-5xl">
+                                        <FormattedNumber value={stats.questions_count} style="decimal" notation="compact" />
+                                    </span>
+                                    <span className="text-4xl">
+                                        {t("content.questions")}
+                                    </span>
+                                </div>
                             </dd>
                         </div>
                         <div className="mx-auto flex max-w-xs flex-col gap-y-4">
-                            <dt className="text-base/7">{t("content.articles_stats_desc")}</dt>
-                            <dd className="order-first text-3xl font-semibold tracking-tight sm:text-5xl">
-                                <FormattedNumber value={stats.articles_count} style="decimal" notation="compact" />
-                                {" "}
-                                {t("content.articles")}
+                            <dt className="text-base/7 text-secondary">{t("content.articles_stats_desc")}</dt>
+                            <dd className="order-first">
+                                <div className="flex flex-col">
+                                    <span className="text-3xl font-semibold tracking-tight sm:text-5xl">
+                                        <FormattedNumber value={stats.articles_count} style="decimal" notation="compact" />
+                                    </span>
+                                    <span className="text-4xl">
+                                        {t("content.articles")}
+                                    </span>
+                                </div>
                             </dd>
                         </div>
                         <div className="mx-auto flex max-w-xs flex-col gap-y-4">
-                            <dt className="text-base/7">{t("content.subjects_stats_desc")}</dt>
-                            <dd className="order-first text-3xl font-semibold tracking-tight sm:text-5xl">
-                                <FormattedNumber value={stats.subjects_count} style="decimal" notation="compact" />
-                                {" "}
-                                {t("content.subjects")}
+                            <dt className="text-base/7 text-secondary">{t("content.subjects_stats_desc")}</dt>
+                            <dd className="order-first">
+                                <div className="flex flex-col">
+                                    <span className=" text-3xl font-semibold tracking-tight sm:text-5xl">
+                                        <FormattedNumber value={stats.subjects_count} style="decimal" notation="compact" />
+                                    </span>
+                                    <span className="text-3xl">
+                                        {t("content.subjects")}
+                                    </span>
+                                </div>
                             </dd>
                         </div>
                     </dl>
