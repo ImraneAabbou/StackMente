@@ -54,9 +54,9 @@ Route::middleware('auth')->group(function () {
 
 Route::inertia('/', 'Index', [
     'hero_stats' => [
-        'questions_count' => Post::questions()->count(),
-        'articles_count' => Post::articles()->count(),
-        'subjects_count' => Post::subjects()->count(),
+        'questions_count' => fn() => Post::questions()->count(),
+        'articles_count' => fn() => Post::articles()->count(),
+        'subjects_count' => fn() => Post::subjects()->count(),
     ]
 ]);
 
