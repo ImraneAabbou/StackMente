@@ -91,7 +91,7 @@ function CompletionItem({ name, description, onSelect }: (TagType & { onSelect: 
                         __html:
                             name
                                 .replace(
-                                    new RegExp(tags_completions_query, "gi"),
+                                    new RegExp(tags_completions_query as string, "gi"),
                                     `<span class="font-bold text-primary">${tags_completions_query}</span>`
                                 )
                     }}
@@ -102,7 +102,7 @@ function CompletionItem({ name, description, onSelect }: (TagType & { onSelect: 
             dangerouslySetInnerHTML={{
                 __html:
                     description.replace(
-                        new RegExp(tags_completions_query, "gi"),
+                        new RegExp(tags_completions_query as string, "gi"),
                         `<span class="font-bold">${tags_completions_query}</span>`
                     )
             }}

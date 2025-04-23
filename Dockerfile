@@ -37,35 +37,6 @@ RUN npm run build
 # =============================
 FROM php:8.4-fpm-alpine AS runner
 
-ARG APP_KEY
-ARG DB_CONNECTION
-ARG DB_HOST
-ARG DB_PORT
-ARG DB_DATABASE
-ARG DB_USERNAME
-ARG DB_PASSWORD
-ARG GITHUB_CLIENT_ID
-ARG GITHUB_CLIENT_SECRET
-ARG GOOGLE_CLIENT_ID
-ARG GOOGLE_CLIENT_SECRET
-ARG FACEBOOK_CLIENT_ID
-ARG FACEBOOK_CLIENT_SECRET
-
-ENV APP_KEY=${APP_KEY} \
-    DB_CONNECTION=${DB_CONNECTION} \
-    DB_PORT=${DB_PORT} \
-    DB_HOST=stackmente-db \
-    DB_DATABASE=${DB_DATABASE} \
-    DB_USERNAME=${DB_USERNAME} \
-    DB_PASSWORD=${DB_PASSWORD} \
-    GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID} \
-    GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
-    FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID} \
-    FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET} \
-    GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID} \
-    GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-
-
 WORKDIR /app
 
 # Install extension installer
@@ -100,14 +71,14 @@ COPY --from=frontend-builder /app/public/build ./public/build
 # Clean frontend source if needed
 RUN rm -rf node_modules resources/js
 
-RUN php artisan config:cache
-RUN php artisan event:cache
-RUN php artisan view:cache
-
 
 RUN curl -o /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
     && chmod +x /usr/local/bin/wait-for-it.sh
 
 RUN apk add --no-cache bash
 
-ENTRYPOINT sh -c "wait-for-it.sh ${DB_HOST}:3306 --timeout=30 --strict -- php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=80"
+ENTRYPOINT sh -c "\
+php artisan config:cache && php artisan event:cache && php artisan view:cache && \
+wait-for-it.sh ${DB_HOST}:3306 --timeout=30 --strict && \
+php artisan migrate --force --seed ; \
+php artisan serve --host=0.0.0.0 --port=80"

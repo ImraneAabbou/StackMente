@@ -56,7 +56,7 @@ export default function PostsIndex() {
                 {
                     !!q && <p className="text-secondary mt-4">
                         {t("content.results_of_query", {
-                            q: <span className="">"{q}":</span>
+                            q: <span className="">"{q as string}":</span>
                         })}
                     </p>
                 }

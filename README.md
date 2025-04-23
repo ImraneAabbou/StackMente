@@ -7,6 +7,7 @@ Stackmente is a community-driven web platform designed to facilitate the exchang
 This project was created as part of a final-year academic requirement. The goal was to design and build a functional, interactive, and scalable platform that encourages learning, sharing experiences, and collective thinking.
 
 The name **Stackmente** is a combination of:
+
 - **Stack**: symbolizing the accumulation of knowledge and interactions.
 - **Mente**: meaning "mind" in Italian, emphasizing the platform’s focus on thoughtful exchange and collective intelligence.
 
@@ -22,8 +23,9 @@ Before diving into the technical construction, it's important to view the platfo
 
 The platform is hosted online via **Hostinger** and is publicly accessible. While a custom domain name is still pending, you can currently access the app using the following link:
 
-🔗 [https://XXXX](https://XXXX)  
-> *No installation needed – just open and explore.*
+🔗 [https://bit.ly/4lIO97u](https://bit.ly/4lIO97u)
+
+> _No installation needed – just open and explore._
 
 ---
 
@@ -32,16 +34,17 @@ The platform is hosted online via **Hostinger** and is publicly accessible. Whil
 If you'd like to run the platform locally for development or testing purposes, follow the steps below:
 
 #### ✅ Requirements:
+
 - Git
-- PHP (>=8.1.0)
+- PHP (>=8.4.0)
 - Composer (>=2.8.0)
-- Node.js (>=20.0.0)
+- Node.js (>=22.0.0)
 - NPM (>=10.0.0)
 
 #### 🛠 Steps:
 
-
 ##### 1. Clone the repository
+
 ```bash
 git clone https://www.github.com/ImraneAabbou/StackMente
 cd StackMente
@@ -55,6 +58,7 @@ npm install
 ```
 
 ##### 3. Copy the .env file and configure the following services
+
 **Note:** OAuth keys are not provided for security reasons, it should be configured.
 
 ```bash
@@ -62,6 +66,7 @@ cp .env.example .env
 ```
 
 ##### 4. Confirgure the following services
+
 ```env
 DB_HOST=<database-host>
 DB_PORT=<database-port>
@@ -95,14 +100,20 @@ npm run dev
 
 ---
 
-#### Run via Docker & Laravel Sail
-To avoid installing manual dependencies installation & configuration, you can use Docker via Laravel Sail.
+#### Run via Docker & Laravel Sail (development)
 
 ```bash
 composer install && ./vendor/bin/sail up
 ```
 
+#### Or via Docker (production)
+
+```bash
+docker compose -f ./docker-compose.production.yml up
+```
+
 ### ⚠️ Notes
+
 OAuth services (Google, GitHub, Facebook) and mailing won’t work unless valid credentials are provided.
 To test the full experience, you can use the hosted version mentioned above.
 
