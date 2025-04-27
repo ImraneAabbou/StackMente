@@ -6,7 +6,7 @@ import { FormEvent } from "react"
 export default function SearchInput() {
     const { t } = useLaravelReactI18n()
     const { setData, data, get } = useForm({
-        q: route().queryParams.q
+        q: route().queryParams.q as string
     })
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
