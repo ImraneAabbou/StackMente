@@ -81,4 +81,5 @@ ENTRYPOINT sh -c "\
 php artisan config:cache && php artisan event:cache && php artisan view:cache && \
 wait-for-it.sh ${DB_HOST}:3306 --timeout=30 --strict && \
 php artisan migrate --force --seed ; \
+php artisan schedule:work --no-interaction & \
 php artisan serve --host=0.0.0.0 --port=80"
