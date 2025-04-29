@@ -154,7 +154,7 @@ export default function ProfileMe() {
                             </>
                         }
                         {
-                            auth.user.role === "SUPER_ADMIN" && user.role !== "SUPER_ADMIN" &&
+                            auth.user?.role === "SUPER_ADMIN" && user.role !== "SUPER_ADMIN" &&
                             <>
                                 <span className="text-secondary/50">|</span>
                                 {
