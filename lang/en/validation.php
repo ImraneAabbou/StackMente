@@ -161,6 +161,8 @@ return [
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
     'unique_post' => 'The given title already exists in database.',
+    'backup_not_valid' => 'The given file is missing either public folder or dumped sql.',
+    'backup_corrupted' => 'Could not open the given backup file, it might be corrupted.',
 
     /*
     |--------------------------------------------------------------------------

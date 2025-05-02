@@ -105,4 +105,7 @@ return [
     ],
     'min_digits' => 'Le champ :attribute doit comporter au moins :min chiffres.',
     'missing' => 'Le champ :attribute doit être manquant.',
+    'unique_post' => 'Le titre fourni existe déjà dans la base de données.',
+    'backup_not_valid' => 'Le fichier fourni ne contient pas le dossier public ou le fichier SQL.',
+    'backup_corrupted' => 'Impossible d’ouvrir le fichier de sauvegarde fourni. Il est peut-être corrompu.',
 ];

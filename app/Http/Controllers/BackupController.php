@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use ZipArchive;
 
 class BackupController extends Controller
 {
-    protected $backupFolderPath = 'backups/';  // Inside storage/app/
+    protected $backupFolderPath = 'backups/';
 
     /**
      * @param int $bytes
@@ -47,16 +48,51 @@ class BackupController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'backup' => ['nullable', 'extensions:sql']
+            'backup' => ['nullable', 'file', 'mimes:zip'],
         ]);
 
         $backup_file = $request->file('backup');
 
         if ($backup_file) {
+            $zip = new ZipArchive;
+            if ($zip->open($backup_file->getPathname()) === true) {
+                $hasPublic = false;
+                $hasDump = false;
+
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $entry = $zip->getNameIndex($i);
+
+                    if (str_starts_with($entry, 'public/')) {
+                        $hasPublic = true;
+                    }
+
+                    if (basename($entry) === 'dump.sql') {
+                        $hasDump = true;
+                    }
+
+                    if ($hasPublic && $hasDump) {
+                        break;
+                    }
+                }
+
+                $zip->close();
+
+                if (!($hasPublic && $hasDump)) {
+                    return back()->withErrors([
+                        'backup' => __('validation.backup_backup_not_valid'),
+                    ]);
+                }
+            } else {
+                return back()->withErrors([
+                    'backup' => __('validation.backup_corrupted'),
+                ]);
+            }
+
             $backup_file->storeAs(
                 $this->backupFolderPath,
-                now()->format('Y-m-d_H-i-s') . '-backup.sql'
+                now()->format('Y-m-d_H-i-s') . '-backup.zip'
             );
+
             return back()->with('status', __('status.backup-upload-success'));
         }
 
