@@ -48,6 +48,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions
 RUN install-php-extensions pdo pdo_mysql zip gd
 
 # Copy app source
+COPY .php-production.ini /usr/local/etc/php/php.ini
 COPY composer.json .
 COPY artisan .
 COPY routes ./routes

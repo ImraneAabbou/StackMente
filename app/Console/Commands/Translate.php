@@ -27,7 +27,7 @@ class Translate extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $sourceLang = $this->argument('sourceLang');
         $targetLang = $this->argument('targetLang');
@@ -47,7 +47,7 @@ class Translate extends Command
         $files = File::files($sourcePath);
 
         foreach ($files as $file) {
-            $this->info("[*] Translating " . $file->getFilename());
+            $this->info('[*] Translating ' . $file->getFilename());
             if ($file->getExtension() === 'php') {
                 $this->translateFile($file->getRealPath(), $targetPath . '/' . $file->getFilename(), $targetLang);
             }
@@ -57,7 +57,12 @@ class Translate extends Command
         return 0;
     }
 
-    protected function translateFile($sourceFilePath, $targetFilePath, $targetLang)
+    /**
+     * @param mixed $sourceFilePath
+     * @param mixed $targetFilePath
+     * @param mixed $targetLang
+     */
+    protected function translateFile($sourceFilePath, $targetFilePath, $targetLang): void
     {
         $sourceData = require $sourceFilePath;
         $targetData = $this->translateArray($sourceData, $targetLang);
@@ -66,7 +71,12 @@ class Translate extends Command
         File::put($targetFilePath, $content);
     }
 
-    protected function translateArray(array $sourceArray, $targetLang)
+    /**
+     * @param array<string> $sourceArray
+     * @param string $targetLang
+     * @return array<array<string>,string>
+     */
+    protected function translateArray(array $sourceArray, string $targetLang): array
     {
         $targetArray = [];
 
@@ -81,7 +91,11 @@ class Translate extends Command
         return $targetArray;
     }
 
-    protected function translateString($sourceString, $targetLang)
+    /**
+     * @param mixed $sourceString
+     * @param mixed $targetLang
+     */
+    protected function translateString($sourceString, $targetLang): string
     {
         $matches = [];
         preg_match_all('/(:[a-zA-Z0-9_]+)/', $sourceString, $matches);
@@ -96,33 +110,44 @@ class Translate extends Command
             return $sourceString;
         }
 
-        $prompt = "Translate the following text to $targetLang, keeping any words that start with a colon intact: " . $textToTranslate;
+        $attempt = 0;
+        while (true) {
+            $attempt++;
 
-        try {
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'x-goog-api-key' => $apiKey,
-            ])->post($apiEndpoint, [
-                'contents' => [
-                    [
+            try {
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                    'x-goog-api-key' => $apiKey,
+                ])->timeout(0)->post($apiEndpoint, [
+                    'system_instruction' => [
                         'parts' => [
                             [
-                                'text' => $prompt,
+                                'text' => "You are a helpful translator. Translate the following text/word to $targetLang, keeping any words that start with a colon intact.",
+                            ]
+                        ]
+                    ],
+                    'contents' => [
+                        [
+                            'parts' => [
+                                [
+                                    'text' => $textToTranslate,
+                                ],
                             ],
                         ],
                     ],
-                ],
-            ]);
+                ]);
 
-            $response->throw();
+                $response->throw();
 
-            $translatedText = $response->json('candidates.0.content.parts.0.text');
-
-            return str_replace(array_map(function($placeholder){return trim($placeholder);},array_unique($placeholders)) , array_unique($placeholders), $translatedText);
-
-        } catch (\Exception $e) {
-            $this->error('Translation failed: ' . $e->getMessage());
-            return $sourceString;
+                $translatedText = str_replace(PHP_EOL, '', $response->json('candidates.0.content.parts.0.text'));
+                return str_replace(array_map(function ($placeholder) {
+                    return trim($placeholder);
+                }, array_unique($placeholders)), array_unique($placeholders), $translatedText);
+            } catch (\Exception $e) {
+                sleep(3);
+            }
         }
+
+        return $sourceString;
     }
 }
