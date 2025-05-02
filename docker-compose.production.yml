@@ -1,20 +1,27 @@
 services:
-  stackmente-app:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
     env_file: .env.production
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     ports:
       - "${APP_PORT:-80}:80"
     networks:
-      - stackmente
+      - net
     depends_on:
-      - stackmente-db
+      db:
+        condition: service_healthy
 
-  stackmente-db:
+  db:
     image: "mariadb:latest"
+    healthcheck:
+      test:
+        - CMD
+        - healthcheck.sh
+        - "--connect"
+        - "--innodb_initialized"
+      retries: 3
+      timeout: 5s
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
       MARIADB_DATABASE: "${DB_DATABASE}"
@@ -23,14 +30,14 @@ services:
       MARIADB_ROOT_PASSWORD: "${DB_PASSWORD}"
       MARIADB_PASSWORD: "${DB_PASSWORD}"
     volumes:
-      - "stackmente-data:/var/lib/mysql"
+      - "data:/var/lib/mysql"
     networks:
-      - stackmente
+      - net
 
 networks:
-  stackmente:
+  net:
     driver: bridge
 
 volumes:
-  stackmente-data:
+  data:
     driver: local

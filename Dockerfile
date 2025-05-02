@@ -72,15 +72,10 @@ COPY --from=frontend-builder /app/public/build ./public/build
 # Clean frontend source if needed
 RUN rm -rf node_modules resources/js
 
-
-RUN curl -o /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
-    && chmod +x /usr/local/bin/wait-for-it.sh
-
 RUN apk add --no-cache bash
 
 ENTRYPOINT sh -c "\
 php artisan config:cache && php artisan event:cache && php artisan view:cache && \
-wait-for-it.sh ${DB_HOST}:3306 --timeout=30 --strict && \
 php artisan migrate --force --seed ; \
 php artisan schedule:work --no-interaction & \
 php artisan serve --host=0.0.0.0 --port=80"
