@@ -78,7 +78,15 @@ const CommentingForm = ({ action }: { action: string }) => {
         })
     }
 
-    return <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    return <form onSubmit={handleSubmit} className={`flex flex-col gap-2 relative ${!user?.id && "opacity-50"}`}>
+        <Link
+            href={route('login')}
+            className={clsx(
+                user?.id && "hidden",
+                "size-full absolute z-10"
+            )}
+        >
+        </Link>
         <div className="flex gap-2 items-center">
             <img src={avatar(user?.avatar)} className="size-8 rounded-full" />
             <span className="font-bold">
@@ -201,7 +209,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
             </div>
             <div className="ms-auto text-xs flex items-center gap-2">
                 {
-                    user.role != "USER"
+                    user?.role != "USER"
                     &&
                     <>
                         <Link
@@ -409,7 +417,7 @@ const Reply = ({ reply }: { reply: ReplyType }) => {
             </Link>
             <div className="flex items-center gap-1">
                 {
-                    user.role != "USER"
+                    user?.role != "USER"
                     &&
                     <>
                         <Link
@@ -536,7 +544,7 @@ const Post = ({ p }: { p: PostType }) => {
                 </div>
                 <div className="ms-auto flex gap-2.5 items-center">
                     {
-                        user.role != "USER"
+                        user?.role != "USER"
                         &&
                         <>
                             <Link
