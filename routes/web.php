@@ -10,11 +10,6 @@ use App\Http\Controllers\UsersRankingController;
 use App\Models\Post;
 use App\Models\Report;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
-
-if (env('APP_ENV') === 'production') {
-    URL::forceHttps();
-}
 
 Route::middleware('auth')->group(function () {
     Route::middleware('verified')->group(function () {
