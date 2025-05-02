@@ -220,16 +220,29 @@ class StatsService
      */
     public function getUserStats(): ?array
     {
-        $userXP = $this->user['stats->xp->total'];
-        $currLevelTotal = static::calcToNextLevelTotalXPByLevel($this->user->stats['level'] - 1);
-        $nextLevelTotal = static::calcToNextLevelTotalXPByLevel($this->user->stats['level']);
+        $userXP = $this->user->stats['xp']['total'];
+        /* $currLevelTotal = static::calcToNextLevelTotalXPByLevel($this->user->stats['level'] - 1); */
+        /* $nextLevelTotal = static::calcToNextLevelTotalXPByLevel($this->user->stats['level']); */
+
+        /* $userXP = $this->user['stats->xp->total']; */
+        $currentLevel = $this->user->stats['level'];
+
+        $currLevelTotal = static::calcToNextLevelTotalXPByLevel($currentLevel);
+        $nextLevelTotal = static::calcToNextLevelTotalXPByLevel($currentLevel + 1);
+
+        $xpSinceCurrentLevel = $currLevelTotal - $userXP;
+        $xpNeededForNextLevel = $nextLevelTotal - $currLevelTotal;
+
+        $percentToNextLevel = $xpNeededForNextLevel > 0
+            ? ($xpSinceCurrentLevel / $xpNeededForNextLevel)
+            : 1;
 
         $userStats = [
             'stats' => [
                 'xp' => [
                     'curr_level_total' => $currLevelTotal,
                     'next_level_total' => $nextLevelTotal,
-                    'percent_to_next_level' => ($currLevelTotal - $userXP) / ($nextLevelTotal - $userXP)
+                    'percent_to_next_level' => $percentToNextLevel
                 ],
                 'rank' => [
                     'total' => $this->getRank('total'),
