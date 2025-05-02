@@ -2,38 +2,97 @@
 
 namespace App\Console\Commands;
 
+use Ifsnop\Mysqldump as IMysqldump;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use ZipArchive;
 
 class DatabaseBackup extends Command
 {
     protected $signature = 'db:backup';
-    protected $backupFolderPath = 'private/backups';
-    protected $description = 'Backup the database and store it in storage/app/backups';
+    protected $description = 'Backup the database and public folder into a zip file';
+    protected string $backupFolderPath;
 
-    /**
-     * @return int
-     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->backupFolderPath = storage_path('app/private/backups');
+    }
+
     public function handle(): int
     {
         $dbName = env('DB_DATABASE');
         $user = env('DB_USERNAME');
         $pass = env('DB_PASSWORD');
+        $host = env('DB_HOST', '127.0.0.1');
+        $port = env('DB_PORT', 3306);
 
-        $fileName = now()->format('Y-m-d_H-i-s') . '-backup.sql';
-        $backupPath = storage_path("app/{$this->backupFolderPath}/{$fileName}");
+        $timestamp = now()->format('Y-m-d_H:i:s');
+        $zipFileName = "{$timestamp}.zip";
+        $zipFullPath = "{$this->backupFolderPath}/{$zipFileName}";
 
-        Storage::makeDirectory('backups');
+        $tempDir = "/tmp/stackmente/backup/{$timestamp}";
+        $sqlPath = "{$tempDir}/dump.sql";
 
-        $command = "mysqldump -u {$user} -p'{$pass}' {$dbName} > {$backupPath}";
-        exec($command, $output, $returnVar);
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0777, true);
+        }
 
-        if ($returnVar === 0) {
-            $this->info("Backup created: {$fileName}");
-            return 0;
-        } else {
-            $this->error('Backup failed.');
+        try {
+            $dump = new IMysqldump\Mysqldump(
+                "mysql:host={$host};port={$port};dbname={$dbName}",
+                $user,
+                $pass,
+                [
+                    'insert-ignore' => true,
+                    'add-drop-trigger' => false,
+                    'if-not-exists' => true,
+                ]
+            );
+            $dump->start($sqlPath);
+        } catch (\Exception $e) {
+            $this->error('DB Dump failed: ' . $e->getMessage());
             return 1;
+        }
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipFullPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            $this->error('Failed to create zip archive.');
+            return 1;
+        }
+
+        $zip->addFile($sqlPath, 'dump.sql');
+
+        $this->addFolderToZip(public_path(), $zip, 'public');
+
+        $zip->close();
+
+        unlink($sqlPath);
+        rmdir($tempDir);
+
+        $this->info("Backup created: {$this->backupFolderPath}/{$zipFileName}");
+        return 0;
+    }
+
+    /**
+     * @param mixed $folderPath
+     * @param mixed $zipSubfolder
+     */
+    protected function addFolderToZip($folderPath, ZipArchive $zip, $zipSubfolder = ''): void
+    {
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($folderPath, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($files as $file) {
+            $relativePath = $zipSubfolder . '/' . ltrim(Str::replaceFirst($folderPath, '', $file), '/\\');
+
+            if ($file->isDir()) {
+                $zip->addEmptyDir($relativePath);
+            } else {
+                $zip->addFile($file, $relativePath);
+            }
         }
     }
 }
