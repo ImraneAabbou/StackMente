@@ -119,7 +119,7 @@ const PostItem = (p: Post) => {
                     data={{
                         type: "UP"
                     }}
-                    only={["posts", "next_page_url"]}
+                    only={["posts", "next_page_url", "auth"]}
                     preserveScroll
                     preserveState={false}
                     className={
@@ -144,7 +144,7 @@ const PostItem = (p: Post) => {
                     data={{
                         type: "DOWN"
                     }}
-                    only={["posts", "next_page_url"]}
+                    only={["posts", "next_page_url", "auth"]}
                     preserveScroll
                     preserveState={false}
                     className={
