@@ -14,13 +14,13 @@ class DatabaseSeeder extends Seeder
         // seed missions
         $this->call([
             UserSeeder::class,
-            MissionSeeder::class,
             TagSeeder::class,
             PostSeeder::class,
             CommentSeeder::class,
             ReplySeeder::class,
             VoteSeeder::class,
-            ReportSeeder::class
+            ReportSeeder::class,
+            MissionSeeder::class,
         ]);
     }
 }
