@@ -1,0 +1,40 @@
+services:
+  app:
+    image: imraneaabbou/stackmente:latest
+    env_file: .env
+    ports:
+      - "8000:80"
+    networks:
+      - net
+    depends_on:
+      - db
+
+  db:
+    image: "mariadb:latest"
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+      MARIADB_DATABASE: "${DB_DATABASE}"
+      MARIADB_ROOT_HOST: "%"
+      MARIADB_USER: "${DB_USERNAME}"
+      MARIADB_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MARIADB_PASSWORD: "${DB_PASSWORD}"
+    healthcheck:
+      test:
+        - CMD
+        - healthcheck.sh
+        - "--connect"
+        - "--innodb_initialized"
+      retries: 3
+      timeout: 5s
+    volumes:
+      - "data:/var/lib/mysql"
+    networks:
+      - net
+
+networks:
+  net:
+    driver: overlay
+
+volumes:
+  data:
+    driver: local
