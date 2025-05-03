@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Role;
+use App\Notifications\ResetPassword;
 use App\Observers\UserObserver;
 use App\Traits\Reportable;
 use Illuminate\Auth\MustVerifyEmail;
@@ -138,5 +139,15 @@ class User extends Authenticatable implements IMustVerifyEmail, HasLocalePrefere
     public function preferredLocale(): string
     {
         return $this->locale;
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param string $token
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPassword($token, $this->fullname));
     }
 }
