@@ -2,9 +2,8 @@ name: Production Deployment Workflow
 
 on:
   push:
-    branches: ["production"]
-  pull_request:
-    branches: ["production"]
+    tags:
+      - "*"
 
 jobs:
   build-and-push:
@@ -24,7 +23,7 @@ jobs:
         with:
           tags: |
             ${{ secrets.DOCKER_REGISTRY }}/stackmente:latest
-            ${{ secrets.DOCKER_REGISTRY }}/stackmente:${{ github.sha }}
+            ${{ secrets.DOCKER_REGISTRY }}/stackmente:${{ github.ref_name }}
           push: true
           file: Dockerfile
           context: .
