@@ -69,11 +69,6 @@ COPY --from=php-deps /app/vendor ./vendor
 # Copy built frontend from Node stage
 COPY --from=frontend-builder /app/public/build ./public/build
 
-# Clean frontend source if needed
-RUN rm -rf node_modules resources/js
-
-RUN apk add --no-cache bash
-
 ENTRYPOINT sh -c "\
 php artisan config:cache && php artisan event:cache && php artisan view:cache && \
 php artisan migrate --force --seed ; \
