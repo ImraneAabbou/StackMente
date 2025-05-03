@@ -2,9 +2,9 @@ name: Deployment Workflow
 
 on:
   push:
-    branches: ["master"]
+    branches: ["production"]
   pull_request:
-    branches: ["master"]
+    branches: ["production"]
 
 jobs:
   build-and-push:
@@ -36,10 +36,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: ${{ github.repository }}
+      - name: Create Environment Variables file
+        env:
+          ENV_STRING: ${{ secrets.ENV_VARS }}
+        run: |
+          echo -e "$ENV_STRING" > .env
+
+      - name: Docker Stack Deploy
         uses: cssnr/stack-deploy-action@v1.3.1
         with:
-          file: docker-compose.production.yml
+          name: stackmente
+          file: docker-stack.yml
+          env_file: .env
           user: root
           host: ${{ secrets.DEPLOY_SSH_HOST }}
           ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
