@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
@@ -7,7 +8,7 @@ $languages = collect(File::directories(lang_path()))->map(fn($dir) => basename($
 
 Route::post(
     'lang/{lang}',
-    fn(string $lang) => App::setLocale($lang) || session(['locale' => $lang])
+    LocaleController::class
 )
     ->whereIn('lang', $languages)
     ->name('lang.store');

@@ -145,4 +145,7 @@ return [
     'elevate' => 'Elevate',
     'delevate' => 'Delevate',
     'administrator' => 'Administrator',
+    'hello' => 'Hello!',
+    'regards' => 'Regards,',
+    'trouble_link' => "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:",
 ];

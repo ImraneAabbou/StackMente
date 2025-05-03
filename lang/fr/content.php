@@ -145,4 +145,7 @@ return [
     'elevate' => 'Élever',
     'delevate' => 'Rétrograder',
     'administrator' => 'Administrateur',
+    'hello' => 'Bonjour !',
+    'regards' => 'Cordialement,',
+    'trouble_link' => 'Si vous avez des difficultés à cliquer sur le bouton ":actionText", copiez et collez l’URL ci-dessous dans votre navigateur :',
 ];

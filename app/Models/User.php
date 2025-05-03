@@ -7,6 +7,7 @@ use App\Observers\UserObserver;
 use App\Traits\Reportable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as IMustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,7 +19,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 #[ObservedBy(UserObserver::class)]
-class User extends Authenticatable implements IMustVerifyEmail
+class User extends Authenticatable implements IMustVerifyEmail, HasLocalePreference
 {
     use HasFactory, Notifiable, MustVerifyEmail, SoftDeletes, Reportable;
 
@@ -129,5 +130,13 @@ class User extends Authenticatable implements IMustVerifyEmail
         return $this->withTrashed(
             collect([Role::ADMIN, Role::SUPER_ADMIN])->contains(auth()->user()?->role)
         )->where($field ?? 'id', $value)->firstOrFail();
+    }
+
+    /**
+     * Get the user's preferred locale.
+     */
+    public function preferredLocale(): string
+    {
+        return $this->locale;
     }
 }

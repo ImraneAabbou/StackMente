@@ -145,4 +145,7 @@ return array (
   'elevate' => 'Elevar',
   'delevate' => 'Delegar',
   'administrator' => 'Administrador',
+  'hello' => '¡Hola!',
+  'regards' => 'Saludos,',
+  'trouble_link' => 'Si tienes problemas al hacer clic en el botón ":actionText", copia y pega la siguiente URL en tu navegador:',
 );
