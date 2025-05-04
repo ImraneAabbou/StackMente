@@ -2,6 +2,8 @@ services:
   app:
     image: imraneaabbou/stackmente:latest
     env_file: .env
+    deploy:
+      replicas: 2
     ports:
       - "8000:80"
     networks:
