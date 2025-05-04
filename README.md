@@ -23,7 +23,7 @@ Before diving into the technical construction, it's important to view the platfo
 
 The platform is hosted online via **Hostinger** and is publicly accessible. While a custom domain name is still pending, you can currently access the app using the following link:
 
-🔗 [https://bit.ly/4lIO97u](https://bit.ly/4lIO97u)
+🔗 [https://stackmente.duckdns.org](https://stackmente.duckdns.org)
 
 > _No installation needed – just open and explore._
 
@@ -106,10 +106,10 @@ npm run dev
 composer install && ./vendor/bin/sail up
 ```
 
-#### Or via Docker (production)
+#### Or via Docker Stack (production)
 
 ```bash
-docker compose -f ./docker-compose.production.yml up
+docker stack deploy -c docker-stack.yml stackmente
 ```
 
 ### ⚠️ Notes
