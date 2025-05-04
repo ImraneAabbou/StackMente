@@ -17,6 +17,7 @@ import type { TagWithCounts } from "@/types/tag";
 import { useState, useContext, FormEvent, } from "react";
 import InfiniteScrollLoader from "@/Components/IntiniteScrollLoader";
 import Tags from "@/Components/icons/Tags";
+import { ADMIN, SUPER_ADMIN } from "@/Enums/Role"
 
 export default function TagsIndex() {
     const { t } = useLaravelReactI18n()
@@ -89,7 +90,7 @@ export const TagItem = ({ id, name, description, posts_count, articles_count, su
 
         {
 
-            user?.role != "USER" && <div className="hidden group-hover:flex gap-4 absolute -top-2 end-2">
+            [ADMIN, SUPER_ADMIN].includes(user?.role) && <div className="hidden group-hover:flex gap-4 absolute -top-2 end-2">
                 {
                     !editable && <button
                         type="button"
