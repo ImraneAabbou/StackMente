@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - "*"
+    branches: ["production"]
+  pull_request:
+    branches: ["production"]
 
 jobs:
   build-and-push:
