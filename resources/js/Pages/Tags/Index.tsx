@@ -89,7 +89,7 @@ export const TagItem = ({ id, name, description, posts_count, articles_count, su
 
         {
 
-            user.role != "USER" && <div className="hidden group-hover:flex gap-4 absolute -top-2 end-2">
+            user?.role != "USER" && <div className="hidden group-hover:flex gap-4 absolute -top-2 end-2">
                 {
                     !editable && <button
                         type="button"
