@@ -23,7 +23,7 @@ import Error from "@/Components/ui/Error";
 import Input from "@/Components/ui/Input";
 import { FiSend } from "react-icons/fi";
 import Trash from "@/Components/icons/Trash";
-
+import { ADMIN, SUPER_ADMIN } from "@/Enums/Role"
 
 export default function PostShow() {
     const { post: { comments, is_commented, ...post } } = usePage().props;
@@ -209,7 +209,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
             </div>
             <div className="ms-auto text-xs flex items-center gap-2">
                 {
-                    user?.role != "USER"
+                    [ADMIN, SUPER_ADMIN].includes(user?.role)
                     &&
                     <>
                         <Link
@@ -417,7 +417,7 @@ const Reply = ({ reply }: { reply: ReplyType }) => {
             </Link>
             <div className="flex items-center gap-1">
                 {
-                    user?.role != "USER"
+                    [ADMIN, SUPER_ADMIN].includes(user?.role)
                     &&
                     <>
                         <Link
@@ -544,7 +544,7 @@ const Post = ({ p }: { p: PostType }) => {
                 </div>
                 <div className="ms-auto flex gap-2.5 items-center">
                     {
-                        user?.role != "USER"
+                        [ADMIN, SUPER_ADMIN].includes(user?.role)
                         &&
                         <>
                             <Link
