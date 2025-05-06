@@ -14,7 +14,7 @@ export default function ConfirmDeleteUserModal({ action, onClose }: ConfirmDelet
     const { t } = useLaravelReactI18n()
     const { delete: destroy, reset, data, setData } = useForm({
         password: "",
-        force: false
+        force: false as boolean
     })
 
     const handleSubmit = (e: FormEvent) => {

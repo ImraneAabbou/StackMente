@@ -13,7 +13,7 @@ export default function Login() {
     const { post, errors, data, setData } = useForm(`LoginForm`, {
         login: "",
         password: "",
-        remember: false,
+        remember: false as boolean,
     })
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()

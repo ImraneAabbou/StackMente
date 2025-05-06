@@ -19,6 +19,7 @@ export default function AdminBackupIndex() {
 
     if (data.backup) {
         post(route("backups.store"), {
+            // @ts-ignore
             data: {
                 backup: data.backup
             },
