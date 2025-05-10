@@ -10,6 +10,8 @@ services:
       - net
     depends_on:
       - db
+    volumes:
+      - "images-data:/app/public/images"
 
   db:
     image: "mariadb:latest"
@@ -29,7 +31,7 @@ services:
       retries: 3
       timeout: 5s
     volumes:
-      - "data:/var/lib/mysql"
+      - "db-data:/var/lib/mysql"
     networks:
       - net
 
@@ -38,5 +40,7 @@ networks:
     driver: overlay
 
 volumes:
-  data:
+  db-data:
+    driver: local
+  images-data:
     driver: local
