@@ -136,7 +136,7 @@ class User extends Authenticatable implements IMustVerifyEmail, HasLocalePrefere
     /**
      * Get the user's preferred locale.
      */
-    public function preferredLocale(): string
+    public function preferredLocale(): ?string
     {
         return $this->locale;
     }
