@@ -69,8 +69,18 @@ COPY --from=php-deps /app/vendor ./vendor
 # Copy built frontend from Node stage
 COPY --from=frontend-builder /app/public/build ./public/build
 
+# wait for it script installation
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /usr/local/bin/wait-for-it
+RUN apk add --no-cache bash curl
+
+# Make it executable
+RUN chmod +x /usr/local/bin/wait-for-it
+
 ENTRYPOINT sh -c "\
-php artisan config:cache && php artisan event:cache && php artisan view:cache && \
-php artisan migrate --force --seed ; \
-php artisan schedule:work --no-interaction & \
+/usr/local/bin/wait-for-it ${DB_HOST}:${DB_PORT} --timeout=30 --strict -- \
+&& php artisan config:cache \
+&& php artisan event:cache \
+&& php artisan view:cache \
+&& php artisan migrate --force --seed \
+&& php artisan schedule:work --no-interaction & \
 php artisan serve --host=0.0.0.0 --port=80"

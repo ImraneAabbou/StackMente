@@ -22,14 +22,6 @@ services:
       MARIADB_USER: "${DB_USERNAME}"
       MARIADB_ROOT_PASSWORD: "${DB_PASSWORD}"
       MARIADB_PASSWORD: "${DB_PASSWORD}"
-    healthcheck:
-      test:
-        - CMD
-        - healthcheck.sh
-        - "--connect"
-        - "--innodb_initialized"
-      retries: 5
-      timeout: 10s
     volumes:
       - "db-data:/var/lib/mysql"
     networks:
