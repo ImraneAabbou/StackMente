@@ -5,7 +5,11 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import ImageResize from "quill-resize-image";
 import clsx from "clsx";
+import katex from "katex";
+import "katex/dist/katex.css";
 
+// @ts-ignore
+window.katex = katex;
 
 interface EditorProps {
     readOnly?: boolean;
