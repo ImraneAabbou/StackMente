@@ -14,17 +14,23 @@ import SoundOn from "./icons/SoundOn";
 import SoundOff from "./icons/SoundOff";
 import Languages from "./icons/Languages";
 import LangSelect from "./LangSelect";
+import dir from "@/Utils/helpers/dir";
 
 export default function UserMenu({ children }: { children?: ReactNode }) {
-    const { t } = useLaravelReactI18n()
+    const { t, currentLocale } = useLaravelReactI18n()
+    const isRTL = dir(currentLocale()) === "rtl"
     const { auth: { user } } = usePage().props
     const { isDark, setDark } = useContext(ThemeCtx)
     const { isEnabled: isSoundEnabled, setEnabled: setSoundEnabled } = useContext(SoundCtx)
+    const percentToNextLevelDirectioned =
+        isRTL
+            ? (1 - user.stats.xp.percent_to_next_level)
+            : (user.stats.xp.percent_to_next_level - 1)
 
     return <Menu as="div" className="relative">
         <div>
             <MenuButton className="relative flex rounded-full text-sm items-center gap-3">
-                <ProgressCircle size={48} value={user.stats.xp.percent_to_next_level}>
+                <ProgressCircle size={48} value={percentToNextLevelDirectioned}>
                     <span className="absolute -inset-1.5" />
                     <img
                         alt=""

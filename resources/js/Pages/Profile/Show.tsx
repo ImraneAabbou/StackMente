@@ -32,7 +32,7 @@ import ConfirmDeleteUserCtx from "@/Contexts/ConfirmDeleteUserCtx"
 export default function ProfileMe() {
     const { user, auth } = usePage().props
     const fixedFormat = useFixedDateFormat()
-    const percentToNextLevel = user.stats.xp.percent_to_next_level * 100
+    const currentPercentLevel = 100 - (user.stats.xp.percent_to_next_level * 100)
     const d = Duration.fromMillis(user.stats.timespent * 1000).shiftTo("hours", "minutes", "seconds", "days")
     const { t } = useLaravelReactI18n()
     const { setReportAction } = useContext(ReportActionCtx)
@@ -92,7 +92,7 @@ export default function ProfileMe() {
                             {user.stats.level}
                         </span>
                         <div className="rounded-full w-32 h-2 bg-secondary/25 relative overflow-hidden">
-                            <span className="bg-success-light dark:bg-success-dark absolute inset-0 rounded" style={{ width: `${percentToNextLevel}%` }}></span>
+                            <span className="bg-success-light dark:bg-success-dark absolute inset-0 rounded" style={{ width: `${currentPercentLevel}%` }}></span>
                         </div>
                     </div>
                     <div className="flex gap-2 text-sm">
