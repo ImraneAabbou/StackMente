@@ -9,7 +9,7 @@ WORKDIR /app
 COPY composer.json ./
 
 # Install only production dependencies
-RUN composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+RUN composer install --ignore-platform-req=ext-calendar --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
 # =============================
 # Stage 2: Frontend build
@@ -45,7 +45,8 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 RUN chmod +x /usr/local/bin/install-php-extensions
 
 # Install required PHP extensions (no need for manual apk or docker-php-ext*)
-RUN install-php-extensions pdo pdo_mysql zip gd
+RUN install-php-extensions pdo pdo_mysql zip gd calendar
+RUN php --ri calendar
 
 # Copy app source
 COPY .php-production.ini /usr/local/etc/php/php.ini
