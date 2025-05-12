@@ -6,7 +6,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Str;
+use Illuminate\Support\Str;
 
 class SeasonTopThreeCongratsNotification extends Notification
 {
@@ -46,7 +46,7 @@ class SeasonTopThreeCongratsNotification extends Notification
             [
                 'title' => __('certificate.title'),
                 'subtitle' => __('certificate.subtitle'),
-                'text' => __('certificate.text', ['rank' => $this->rank, 'season' => __("certificate.$this->period")]),
+                'text' => __('certificate.text', ['rank' => $this->rank, 'season' => __('certificate.' . Str::lower($this->period))]),
                 'fullname' => $notifiable->fullname
             ]
         )
@@ -55,7 +55,7 @@ class SeasonTopThreeCongratsNotification extends Notification
 
         return (new MailMessage)
             ->subject(__('certificate.title'))
-            ->line(__('certificate.text', ['rank' => $this->rank, 'season' => __("certificate.$this->period")]))
+            ->line(__('certificate.text', ['rank' => $this->rank, 'season' => __('certificate.' . Str::lower($this->period))]))
             ->line(__('certificate.check_attachments'))
             ->attach($this->pdfPath);
     }
