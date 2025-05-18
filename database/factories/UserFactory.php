@@ -51,7 +51,7 @@ class UserFactory extends Factory
         $streak = fake()->numberBetween(0, 25);
         $max_streak = fake()->numberBetween($streak, $streak + fake()->numberBetween(0, 15));
         $streak_started_at = now()->subDays($streak);
-        $timespent = (int) (($streak + $max_streak) * (60 ** 2) * fake()->randomFloat(0.5, 2.5));
+        $timespent = (int) (($streak + $max_streak) * fake()->randomFloat(0.5, 2.5));
         $last_interaction = now()->subHours(fake()->numberBetween(-23, 0));
         $userImages = collect(File::files(public_path('images/users/')))->map(fn($f) => $f->getFilename());
         $totalXP = fake()->numberBetween(500000, 5500000);
