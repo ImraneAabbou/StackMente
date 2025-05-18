@@ -189,7 +189,9 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                     }
                 </Link>
                 {
-                    isPostOwned && post.type !== "SUBJECT"
+                    isPostOwned
+                        && post.type !== "SUBJECT"
+                        && post.type !== "ARTICLE"
                         ? <Link href={route("comments.mark", { comment: comment.id })} method="put" className="flex gap-2 items-center">
                             {
                                 <span
