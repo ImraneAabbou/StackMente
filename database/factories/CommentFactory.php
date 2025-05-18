@@ -16,11 +16,8 @@ class CommentFactory extends Factory
      */
     public function definition(): array
     {
-        $is_marked = fake()->numberBetween(0, 50) === 42;
-
         return [
             'content' => fake()->realTextBetween(500, 1500),
-            'is_marked' => $is_marked,
         ];
     }
 }
