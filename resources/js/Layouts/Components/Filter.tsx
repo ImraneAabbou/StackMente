@@ -45,44 +45,47 @@ export default function Filter() {
 
     return <div className="basis-64 shrink-0 grow">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-xs mx-auto">
-            <div className="flex flex-col gap-2 rounded border border-secondary/25 p-4">
-                <h2 className="font-semibold">{t("content.filter")}</h2>
-                <ul className="ms-4 text-sm">
-                    <li>
-                        <label className="flex gap-2 justify-between items-center">
-                            {t("filter.any")}
-                            <Input
-                                type="radio"
-                                name="filter"
-                                onChange={() => setData("filter", ANY)}
-                                checked={data.filter === ANY}
-                            />
-                        </label>
-                    </li>
-                    <li>
-                        <label className="flex gap-2 justify-between items-center">
-                            {t("filter.answered")}
-                            <Input
-                                type="radio"
-                                name="filter"
-                                onChange={() => setData("filter", HAS_MARKED_ANSWER)}
-                                checked={data.filter === HAS_MARKED_ANSWER}
-                            />
-                        </label>
-                    </li>
-                    <li>
-                        <label className="flex gap-2 justify-between items-center">
-                            {t("filter.unanswered")}
-                            <Input
-                                type="radio"
-                                name="filter"
-                                onChange={() => setData("filter", NO_MARKED_ANSWER)}
-                                checked={data.filter === NO_MARKED_ANSWER}
-                            />
-                        </label>
-                    </li>
-                </ul>
-            </div>
+            {
+                (route().current("questions.index") || route().current("feed")) &&
+                <div className="flex flex-col gap-2 rounded border border-secondary/25 p-4">
+                    <h2 className="font-semibold">{t("content.filter")}</h2>
+                    <ul className="ms-4 text-sm">
+                        <li>
+                            <label className="flex gap-2 justify-between items-center">
+                                {t("filter.any")}
+                                <Input
+                                    type="radio"
+                                    name="filter"
+                                    onChange={() => setData("filter", ANY)}
+                                    checked={data.filter === ANY}
+                                />
+                            </label>
+                        </li>
+                        <li>
+                            <label className="flex gap-2 justify-between items-center">
+                                {t("filter.answered")}
+                                <Input
+                                    type="radio"
+                                    name="filter"
+                                    onChange={() => setData("filter", HAS_MARKED_ANSWER)}
+                                    checked={data.filter === HAS_MARKED_ANSWER}
+                                />
+                            </label>
+                        </li>
+                        <li>
+                            <label className="flex gap-2 justify-between items-center">
+                                {t("filter.unanswered")}
+                                <Input
+                                    type="radio"
+                                    name="filter"
+                                    onChange={() => setData("filter", NO_MARKED_ANSWER)}
+                                    checked={data.filter === NO_MARKED_ANSWER}
+                                />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            }
             <div className="flex flex-col gap-2 rounded border border-secondary/25 p-4">
                 <h2 className="font-semibold">{t("content.sort")}</h2>
                 <ul className="ms-4 text-sm">
