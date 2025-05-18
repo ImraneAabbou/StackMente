@@ -16,7 +16,7 @@ return new class extends Migration {
         Schema::create('missions', function (Blueprint $table) {
             $table->id();
             $table->string('image');
-            $table->string('translation_key');
+            $table->string('translation_key')->unique();
             $table->enum('type', array_column(MissionType::cases(), 'value'));
             $table->integer('threshold');
             $table->integer('xp_reward');

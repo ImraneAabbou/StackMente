@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // seed missions
         $this->call([
+            MissionSeeder::class,
             UserSeeder::class,
             TagSeeder::class,
             PostSeeder::class,
@@ -20,7 +21,6 @@ class DatabaseSeeder extends Seeder
             ReplySeeder::class,
             VoteSeeder::class,
             ReportSeeder::class,
-            MissionSeeder::class,
         ]);
     }
 }
