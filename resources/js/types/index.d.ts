@@ -6,7 +6,7 @@ import { Comment } from "./comment";
 import { Backup } from "./backup";
 import { Analysis } from "./analysis";
 import { Mission } from "./mission";
-import { Report } from "./report";
+import { Report, ReportReason } from "./report";
 
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
@@ -61,6 +61,8 @@ export type PageProps<
         next_page_url?: string;
         items: Report[];
     };
+
+    count_items: Record<ReportReason, int>;
 
     tags_completions: Tag[];
 

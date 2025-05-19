@@ -21,16 +21,18 @@ trait ReportableCtrl
         $reportable
             ->report(auth()->user(), $reason, $data->explanation);
 
-        return back()->with('reported');
+        return back();
     }
 
     /**
      * Clear all the reports of the given reportable
+     *
+     * @param App\Traits\Reportable $reportable
      */
     public function clearReports($reportable): RedirectResponse
     {
         $reportable->clearReports();
 
-        return back()->with('cleared');
+        return back();
     }
 }

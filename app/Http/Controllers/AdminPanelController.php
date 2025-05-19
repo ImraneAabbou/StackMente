@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ReportableType;
+use App\Enums\ReportReason;
 use App\Enums\Role;
 use App\Models\Comment;
 use App\Models\Post;
@@ -10,6 +11,7 @@ use App\Models\Reply;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -235,10 +237,31 @@ class AdminPanelController extends Controller
         );
     }
 
-    public function reportMessages($reportable)
+    /**
+     * @param mixed $reportable
+     */
+    public function reportMessages($reportable, Request $request): Response
     {
-        $reportsWithMessagesPagination = $reportable->reports()->with(['user'])->cursorPaginate(1);
+        $reason = ReportReason::tryFrom(Str::upper($request->query('reason')))?->value;
+
+        $reportsWithMessages = $reportable
+            ->reports()
+            ->with(['user']);
+
+        $reportsWithMessagesPagination = (clone $reportsWithMessages)
+            ->when(
+                $reason,
+                function ($query) use ($reason) {
+                    return $query
+                        ->where('reason', $reason);
+                }
+            )
+            ->cursorPaginate(10);
+
         return Inertia::render('Admin/Reports/Messages', [
+            'count_items' =>
+                collect(ReportReason::cases())
+                    ->flatMap(fn($i) => [$i->value => (clone $reportsWithMessages)->where('reason', $i->value)->count()]),
             'reportableWithMessages' => [
                 'items' => $reportsWithMessagesPagination->items(),
                 'next_page_url' => $reportsWithMessagesPagination->nextPageUrl(),
