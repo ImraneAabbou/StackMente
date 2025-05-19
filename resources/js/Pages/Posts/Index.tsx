@@ -172,6 +172,11 @@ const PostItem = (p: Post) => {
                         </span>
                     </Link>
                 }
+                {
+                    route().current("feed") && <span className="italic text-secondary flex gap-1 items-center">
+                        {t(`content.${p.type.toLowerCase()}`)}
+                    </span>
+                }
                 <span className="text-secondary flex gap-1 items-center">
                     <FormattedNumber value={p.comments_count} style="decimal" notation="compact" />
                     <span className="hidden sm:block">{t("content.comments")}</span>
